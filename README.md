@@ -1,5 +1,7 @@
 # Project Stars
 
+https://iusmusic.github.io/stars/
+
 **Project Stars** is a browser-native research graph for exploring concepts as a network of ideas, references, and reviewable relationships.
 It is implemented as a **single static HTML application** with embedded CSS and JavaScript, so it can be hosted directly on GitHub Pages or any static web server.
 
