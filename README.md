@@ -1,4 +1,4 @@
-project Stars
+Project Stars
 
 
 https://iusmusic.github.io/stars/
