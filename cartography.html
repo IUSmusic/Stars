@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Stars</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --void: #03030a; --glow-gold: #ffffff; --glow-gold-dim: rgba(163, 15, 15, 1);
+  --text: #ffffff; --muted: #6878a0; --panel: rgba(6,6,20,0.92);
+}
+html,body { width:100%; height:100%; background:var(--void); color:var(--text);
+  font-family:'Josefin Sans',sans-serif; overflow:hidden; user-select:none; }
+canvas#bg { position:fixed; inset:0; z-index:0; pointer-events:none; }
+canvas#graph { position:fixed; inset:0; z-index:1; }
+canvas#minimap { position:fixed; bottom:88px; left:18px; z-index:12;
+  border:1px solid rgba(163, 15, 15, 1); background:rgba(3,3,12,0.85);
+  backdrop-filter:blur(6px); width:160px; height:110px; cursor:crosshair; }
+
+/* ── HEADER ── */
+#header { position:fixed; top:0; left:0; right:0; z-index:10;
+  padding:22px 32px 0; display:flex; align-items:flex-start; justify-content:space-between;
+  pointer-events:none; }
+#title-block h1 { font-family:'Cormorant Garamond',serif; font-size:1.75rem; font-weight:300;
+  letter-spacing:0.15em; color:var(--glow-gold); text-shadow:0 0 40px rgba(163, 15, 15, 1); line-height:1; }
+#title-block p { font-size:0.55rem; letter-spacing:0.38em; text-transform:uppercase; color:var(--muted); margin-top:5px; }
+#stats { text-align:right; }
+#stats .num { font-family:'Cormorant Garamond',serif; font-size:1.9rem; font-weight:300;
+  color:var(--glow-gold); opacity:.65; line-height:1; }
+#stats .lbl { font-size:0.48rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--muted); }
+
+/* ── SEARCH ── */
+#search-wrap { position:fixed; top:22px; left:50%; transform:translateX(-50%); z-index:10; }
+#search { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
+  color:var(--text); font-family:'Josefin Sans',sans-serif; font-size:0.62rem;
+  letter-spacing:0.22em; padding:9px 18px; width:240px; outline:none;
+  transition:all .3s; backdrop-filter:blur(8px); text-align:center; }
+#search::placeholder { color:var(--muted); }
+#search:focus { border-color:rgba(163, 15, 15, 1); box-shadow:0 0 18px rgba(163, 15, 15, 1); }
+
+/* ── DOMAIN FILTERS ── */
+#filters { position:fixed; top:72px; left:50%; transform:translateX(-50%); z-index:10;
+  display:flex; gap:6px; flex-wrap:wrap; justify-content:center; max-width:820px; }
+.filter-chip { font-family:'Josefin Sans',sans-serif; font-size:0.48rem; letter-spacing:0.2em;
+  text-transform:uppercase; padding:5px 12px; cursor:pointer;
+  border:1px solid rgba(255,255,255,0.1); color:var(--muted);
+  background:rgba(255,255,255,0.02); transition:all .25s; white-space:nowrap; }
+.filter-chip:hover { color:var(--text); border-color:rgba(255,255,255,0.25); }
+.filter-chip.active { color:#fff; border-color:var(--chip-color,#fff); background:rgba(255,255,255,0.06);
+  box-shadow:0 0 12px var(--chip-glow,transparent); }
+
+/* ── ZOOM CONTROLS ── */
+#zoom-controls { position:fixed; right:18px; top:50%; transform:translateY(-50%);
+  z-index:12; display:flex; flex-direction:column; gap:6px; }
+.zc-btn { width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+  background:var(--panel); border:1px solid rgba(163, 15, 15, 1); color:var(--glow-gold);
+  font-size:1.1rem; cursor:pointer; transition:all .25s; backdrop-filter:blur(8px); }
+.zc-btn:hover { background:rgba(163, 15, 15, 1); border-color:rgba(163, 15, 15, 1);
+  box-shadow:0 0 16px rgba(163, 15, 15, 1); }
+.zc-btn.fit { font-size:0.55rem; letter-spacing:0.1em; }
+.zc-divider { height:1px; background:rgba(240,192,96,0.12); margin:3px 0; }
+
+/* ── LEGEND (right side) ── */
+#legend { position:fixed; right:70px; top:50%; transform:translateY(-50%);
+  z-index:10; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+.leg-item { display:flex; align-items:center; gap:8px; }
+.leg-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.leg-lbl { font-size:0.46rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--muted); }
+
+/* ── BOTTOM CONTROLS ── */
+#controls { position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+  z-index:12; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+.ctrl-btn { background:rgba(255,255,255,0.03); border:1px solid rgba(163, 15, 15, 1);
+  color:var(--glow-gold); font-family:'Josefin Sans',sans-serif;
+  font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase;
+  padding:9px 20px; cursor:pointer; transition:all .3s; backdrop-filter:blur(8px); }
+.ctrl-btn:hover { background:rgba(240,192,96,0.09); border-color:rgba(163, 15, 15, 1);
+  box-shadow:0 0 16px rgba(163, 15, 15, 1); }
+.ctrl-btn.accent { background:rgba(163, 15, 15, 1); border-color:rgba(163, 15, 15, 1); }
+.ctrl-btn.green { color:#ffffff; border-color:rgba(80,216,128,0.3); background:rgba(80,216,128,0.04); }
+.ctrl-btn.green:hover { background:rgba(80,216,128,0.12); border-color:rgba(80,216,128,0.6); }
+.ctrl-btn.active { background:rgba(163, 15, 15, 1); border-color:rgba(163, 15, 15, 1); }
+
+/* ── DETAIL PANEL ── */
+#detail-panel { position:fixed; left:18px; top:50%; transform:translateY(-50%);
+  width:210px; background:var(--panel); border:1px solid rgba(163, 15, 15, 1);
+  backdrop-filter:blur(18px); padding:20px 18px; z-index:12;
+  opacity:0; pointer-events:none; transition:opacity .3s; max-height:70vh; overflow-y:auto; }
+#detail-panel.show { opacity:1; pointer-events:all; }
+#dp-close { position:absolute; top:10px; right:12px; background:none; border:none;
+  color:var(--muted); cursor:pointer; font-size:0.85rem; transition:color .2s; }
+#dp-close:hover { color:var(--glow-gold); }
+#dp-name { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:300;
+  color:var(--glow-gold); margin-bottom:4px; }
+.dp-cat { font-size:0.47rem; letter-spacing:0.26em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+.dp-desc { font-size:0.6rem; line-height:1.75; color:rgba(232,228,216,0.65); margin-bottom:12px; }
+.dp-ref { font-size:0.5rem; letter-spacing:0.1em; color:rgba(163, 15, 15, 1); font-style:italic; margin-bottom:12px; line-height:1.6; }
+.dp-section-title { font-size:0.46rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.dp-conn-list { display:flex; flex-wrap:wrap; gap:4px; }
+.dp-conn-tag { font-size:0.5rem; letter-spacing:0.1em; border:1px solid rgba(255,255,255,0.1);
+  padding:3px 7px; color:rgba(232,228,216,0.45); cursor:pointer; transition:all .2s; }
+.dp-conn-tag:hover { border-color:rgba(163, 15, 15, 1); color:var(--glow-gold); }
+
+/* ── TOOLTIP ── */
+#tooltip { position:fixed; pointer-events:none; background:var(--panel);
+  border:1px solid rgba(163, 15, 15, 1); backdrop-filter:blur(16px);
+  padding:12px 16px; max-width:240px; opacity:0; transition:opacity .18s; z-index:20; }
+#tooltip.show { opacity:1; }
+#tooltip h3 { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400;
+  color:var(--glow-gold); margin-bottom:3px; }
+#tooltip p { font-size:0.56rem; letter-spacing:0.08em; color:var(--muted); line-height:1.6; }
+#tooltip .tt-tag { display:inline-block; margin-top:6px; font-size:0.46rem;
+  letter-spacing:0.2em; text-transform:uppercase; color:var(--muted);
+  border:1px solid rgba(255,255,255,0.1); padding:2px 7px; }
+
+/* ── ADD MODAL ── */
+#modal-bg { position:fixed; inset:0; z-index:30; background:rgba(3,3,10,0.82);
+  backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; }
+#modal-bg.open { display:flex; }
+#modal { background:rgba(5,5,18,0.98); border:1px solid rgba(163, 15, 15, 1);
+  padding:36px 44px; min-width:380px; animation:fadeIn .28s; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+#modal h2 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300;
+  color:var(--glow-gold); margin-bottom:24px; }
+.field { margin-bottom:15px; }
+.field label { display:block; font-size:0.5rem; letter-spacing:0.3em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:6px; }
+.field input,.field select,.field textarea { width:100%; background:rgba(255,255,255,0.025);
+  border:1px solid rgba(255,255,255,0.1); color:var(--text);
+  font-family:'Josefin Sans',sans-serif; font-size:0.72rem; padding:9px 12px; outline:none; }
+.field input:focus,.field select:focus,.field textarea:focus { border-color:rgba(240,192,96,0.38); }
+.field select option { background:#07071a; }
+.field textarea { resize:vertical; min-height:60px; }
+#modal-btns { display:flex; gap:8px; margin-top:20px; justify-content:flex-end; }
+.modal-btn { font-family:'Josefin Sans',sans-serif; font-size:0.55rem; letter-spacing:0.2em;
+  text-transform:uppercase; padding:9px 22px; cursor:pointer; border:1px solid; transition:all .3s; }
+.modal-btn.cancel { background:transparent; border-color:rgba(255,255,255,0.1); color:var(--muted); }
+.modal-btn.cancel:hover { border-color:rgba(255,255,255,0.28); color:var(--text); }
+.modal-btn.confirm { background:rgba(163, 15, 15, 1); border-color:rgba(163, 15, 15, 1); color:var(--glow-gold); }
+.modal-btn.confirm:hover { background:rgba(163, 15, 15, 1); box-shadow:0 0 18px rgba(163, 15, 15, 1); }
+
+/* ── TOAST ── */
+#toast { position:fixed; bottom:72px; left:50%; transform:translateX(-50%);
+  background:var(--panel); border:1px solid rgba(80,216,128,0.38); color:#ffffff;
+  font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase;
+  padding:9px 22px; z-index:50; opacity:0; transition:opacity .4s; pointer-events:none; }
+#toast.show { opacity:1; }
+
+/* ── SIMULATION STATUS ── */
+#sim-status { position:fixed; bottom:60px; right:18px; z-index:12;
+  font-size:0.46rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+
+#hint { position:fixed; bottom:56px; left:50%; transform:translateX(-50%);
+  font-size:0.46rem; letter-spacing:0.24em; text-transform:uppercase;
+  color:rgba(104,120,160,0.4); pointer-events:none; white-space:nowrap; z-index:10; }
+
+/* Scrollbar */
+#detail-panel::-webkit-scrollbar { width:3px; }
+#detail-panel::-webkit-scrollbar-track { background:transparent; }
+#detail-panel::-webkit-scrollbar-thumb { background:rgba(163, 15, 15, 1); }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<canvas id="graph"></canvas>
+<canvas id="minimap"></canvas>
+
+<div id="header">
+  <div id="title-block">
+    <h1>Project Stars</h1>
+    <p>map human thoughts</p>
+  </div>
+  <div id="stats">
+    <div class="num" id="node-count">0</div>
+    <div class="lbl">thoughts charted</div>
+  </div>
+</div>
+
+<div id="search-wrap">
+  <input type="text" id="search" placeholder="Search">
+</div>
+
+<div id="filters"></div>
+<div id="legend"></div>
+
+<div id="zoom-controls">
+  <div class="zc-btn" id="zc-in" title="Zoom In">+</div>
+  <div class="zc-btn" id="zc-out" title="Zoom Out">−</div>
+  <div class="zc-divider"></div>
+  <div class="zc-btn fit" id="zc-fit" title="Fit All">FIT</div>
+  <div class="zc-btn" id="zc-home" title="Reset">⌂</div>
+</div>
+
+<div id="detail-panel">
+  <button id="dp-close">✕</button>
+  <div id="dp-name"></div>
+  <div class="dp-cat" id="dp-cat"></div>
+  <div class="dp-desc" id="dp-desc"></div>
+  <div class="dp-ref" id="dp-ref"></div>
+  <div class="dp-section-title">Connected Thoughts</div>
+  <div class="dp-conn-list" id="dp-conns"></div>
+</div>
+
+<div id="tooltip">
+  <h3 id="tt-name"></h3>
+  <p id="tt-desc"></p>
+  <div class="tt-tag" id="tt-cat"></div>
+</div>
+
+<div id="controls">
+  <button class="ctrl-btn accent" id="add-btn">Add Thought</button>
+  <button class="ctrl-btn" id="connect-btn">Connect Mode</button>
+  <button class="ctrl-btn" id="pause-btn">Pause</button>
+  <button class="ctrl-btn" id="layout-btn">Rearrange</button>
+  <button class="ctrl-btn green" id="export-btn">Export Map</button>
+</div>
+
+<div id="hint">Drag to pan · Scroll to zoom · Click a node to inspect · Double-click for detail</div>
+<div id="sim-status"></div>
+<div id="toast"></div>
+
+<div id="modal-bg">
+  <div id="modal">
+    <h2>Chart a New Thought</h2>
+    <div class="field"><label>Concept / Thought</label>
+      <input type="text" id="m-name" placeholder="e.g. Embodied Cognition, Dark Energy…"></div>
+    <div class="field"><label>Description</label>
+      <textarea id="m-desc" placeholder="What does this concept encompass?"></textarea></div>
+    <div class="field"><label>Scientific Reference (optional)</label>
+      <input type="text" id="m-ref" placeholder="e.g. Clark & Chalmers, 1998"></div>
+    <div class="field"><label>Domain</label><select id="m-cat"></select></div>
+    <div class="field"><label>Connect to (node name, optional)</label>
+      <input type="text" id="m-connect" placeholder="e.g. Consciousness, Memory…"></div>
+    <div id="modal-btns">
+      <button class="modal-btn cancel" id="modal-cancel">Cancel</button>
+      <button class="modal-btn confirm" id="modal-confirm">Chart It</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// CATEGORIES
+// ═══════════════════════════════════════════════════════════
+const CATEGORIES = [
+  { id:'philosophy',   label:'Philosophy',         color:'#9060f0', glow:'rgba(144,96,240,.55)' },
+  { id:'emotion',      label:'Emotion',            color:'#e06080', glow:'rgba(224,96,128,.55)' },
+  { id:'neuroscience', label:'Neuroscience',       color:'#40c8e0', glow:'rgba(64,200,224,.55)' },
+  { id:'physics',      label:'Physics & Math',     color:'#c0c8e0', glow:'rgba(192,200,224,.55)' },
+  { id:'cognitive',    label:'Cognitive Science',  color:'#f0a040', glow:'rgba(240,160,64,.55)' },
+  { id:'art',          label:'Art & Creativity',   color:'#f0c060', glow:'rgba(240,192,96,.55)' },
+  { id:'self',         label:'Self & Identity',    color:'#50d880', glow:'rgba(80,216,128,.55)' },
+  { id:'society',      label:'Society & Ethics',   color:'#e8954a', glow:'rgba(232,149,74,.55)' },
+  { id:'cosmos',       label:'Cosmos & Life',      color:'#7090f0', glow:'rgba(112,144,240,.55)' },
+  { id:'spirit',       label:'Spirituality',       color:'#e080c0', glow:'rgba(224,128,192,.55)' },
+];
+const CMAP = {}; CATEGORIES.forEach(c=>CMAP[c.id]=c);
+
+// ═══════════════════════════════════════════════════════════
+// NODES — 92 thoughts grounded in contemporary research
+// ═══════════════════════════════════════════════════════════
+const SEED_NODES = [
+// ── PHILOSOPHY ──
+{id:1, label:'Being', cat:'philosophy', r:20,
+ desc:'The bedrock of ontology — that something exists rather than nothing. Heidegger called it the forgotten question of Western thought.',
+ ref:'Heidegger, Being and Time (1927); Parfit, Reasons and Persons (1984)'},
+{id:2, label:'Truth', cat:'philosophy', r:18,
+ desc:'The correspondence, coherence, or pragmatic usefulness of a belief. Recent epistemology interrogates how social forces distort what counts as truth.',
+ ref:'James, Pragmatism (1907); Fricker, Epistemic Injustice (2007)'},
+{id:3, label:'Free Will', cat:'philosophy', r:17,
+ desc:'Whether deliberation is genuinely open or secretly determined. Compatibilists argue freedom is compatible with determinism; libertarians deny it.',
+ ref:'Kane, The Significance of Free Will (1996); Dennett, Freedom Evolves (2003)'},
+{id:4, label:'Consciousness', cat:'philosophy', r:22,
+ desc:'Chalmers\'s "hard problem" — why physical processes give rise to subjective experience at all. The central mystery of philosophy of mind.',
+ ref:'Chalmers, The Conscious Mind (1996); Nagel, What Is It Like to Be a Bat? (1974)'},
+{id:5, label:'Time', cat:'philosophy', r:19,
+ desc:'Whether time flows or is a static block universe. Physicists and philosophers remain split on whether the past and future are equally real.',
+ ref:'McTaggart, The Unreality of Time (1908); Barbour, The End of Time (1999)'},
+{id:6, label:'Causality', cat:'philosophy', r:17,
+ desc:'The structure of influence: does cause genuinely produce effect, or is it a pattern we impose on correlated events?',
+ ref:'Hume, Enquiry (1748); Pearl, The Book of Why (2018)'},
+{id:7, label:'Emergence', cat:'philosophy', r:18,
+ desc:'How high-level properties — wetness, life, mind — arise from lower-level parts without being reducible to them.',
+ ref:'Anderson, More Is Different (1972); Deacon, Incomplete Nature (2011)'},
+{id:8, label:'Phenomenology', cat:'philosophy', r:16,
+ desc:'The first-person study of how things appear to consciousness — bracketing assumptions to describe experience directly.',
+ ref:'Husserl, Ideas I (1913); Merleau-Ponty, Phenomenology of Perception (1945)'},
+{id:9, label:'Determinism', cat:'philosophy', r:15,
+ desc:'The thesis that every event, including every thought, is the inevitable result of prior causes and the laws of nature.',
+ ref:'Laplace, Philosophical Essay on Probabilities (1814)'},
+{id:10, label:'Intentionality', cat:'philosophy', r:14,
+ desc:'The "aboutness" of mental states — the fact that thoughts are always directed at something. A mark that distinguishes mind from mere matter.',
+ ref:'Brentano, Psychology from an Empirical Standpoint (1874); Searle, Intentionality (1983)'},
+{id:11, label:'Paradox', cat:'philosophy', r:15,
+ desc:'Two incompatible conclusions, each apparently valid. Paradoxes drive progress in logic, mathematics, and physics.',
+ ref:'Russell\'s Paradox (1901); Zeno\'s Paradoxes; Quine, The Ways of Paradox (1966)'},
+
+// ── EMOTION ──
+{id:12, label:'Love', cat:'emotion', r:23,
+ desc:'Neuroscientifically, love activates reward circuits, suppresses critical social judgment, and releases oxytocin — bonding us across selves.',
+ ref:'Fisher, Why We Love (2004); Zeki, The Neurobiology of Love (2007)'},
+{id:13, label:'Grief', cat:'emotion', r:17,
+ desc:'A non-linear neurobiological process: the brain\'s attempt to update a predictive model that still expects the deceased to exist.',
+ ref:'O\'Connor, Grieving (2022 Nature Reviews Neuroscience)'},
+{id:14, label:'Wonder', cat:'emotion', r:16,
+ desc:'Awe at scale or complexity. Research shows awe measurably shrinks the self-concept and expands social concern — a reset button for the ego.',
+ ref:'Keltner & Haidt, Approaching Awe (2003); Stellar et al., Self-Transcendent Emotions (2017)'},
+{id:15, label:'Fear', cat:'emotion', r:17,
+ desc:'Mediated primarily by the amygdala, fear evolved as a fast-route survival signal — bypassing cortical deliberation in milliseconds.',
+ ref:'LeDoux, The Emotional Brain (1996); Ohman, Fear and Anxiety (2000)'},
+{id:16, label:'Joy', cat:'emotion', r:19,
+ desc:'A state of elevated dopaminergic and serotonergic activity. Barbara Fredrickson\'s broaden-and-build theory: joy expands thought-action repertoires.',
+ ref:'Fredrickson, The Broaden-and-Build Theory (2001)'},
+{id:17, label:'Loneliness', cat:'emotion', r:16,
+ desc:'Chroni loneliness is now classified as a public health crisis. It activates the same neural pain circuits as physical injury — isolation literally hurts.',
+ ref:'Cacioppo & Patrick, Loneliness (2008); Holt-Lunstad et al., Social Isolation (2015)'},
+{id:18, label:'Empathy', cat:'emotion', r:17,
+ desc:'Both affective (feeling with) and cognitive (perspective-taking). Mirror neuron systems partially underpin it — but cultural learning is equally decisive.',
+ ref:'Decety & Jackson, The Functional Architecture of Empathy (2004); Singer & Klimecki (2014)'},
+{id:19, label:'Shame', cat:'emotion', r:15,
+ desc:'A global negative evaluation of the self — distinct from guilt (about acts). Chronic shame is linked to narcissism, depression, and aggression.',
+ ref:'Tangney & Dearing, Shame and Guilt (2002); Brown, I Thought It Was Just Me (2007)'},
+{id:20, label:'Awe', cat:'emotion', r:16,
+ desc:'Triggered by vastness that challenges existing mental schemas. Awe reduces inflammation markers and increases prosocial behavior.',
+ ref:'Stellar et al., Awe and Inflammation (2015, Emotion)'},
+{id:21, label:'Nostalgia', cat:'emotion', r:14,
+ desc:'A bittersweet emotion that boosts social connectedness and meaning. Neuroimaging shows it recruits autobiographical memory and reward systems together.',
+ ref:'Wildschut et al., Nostalgia: Content, Triggers, Functions (2006)'},
+
+// ── NEUROSCIENCE ──
+{id:22, label:'Predictive Processing', cat:'neuroscience', r:21,
+ desc:'The leading theory of brain function: the brain is a prediction machine, constantly generating models of the world and updating on prediction errors. Perception is controlled hallucination.',
+ ref:'Clark, Surfing Uncertainty (2016); Friston, The Free-Energy Principle (2010)'},
+{id:23, label:'Default Mode Network', cat:'neuroscience', r:18,
+ desc:'A brain network active during rest, self-referential thought, and social cognition. Dysregulation links to depression, anxiety, and rumination.',
+ ref:'Raichle, The Brain\'s Default Mode Network (2015, Annual Review)'},
+{id:24, label:'Neuroplasticity', cat:'neuroscience', r:19,
+ desc:'The brain\'s lifelong capacity to rewire synaptic connections in response to experience — overturning the once-dominant view that adult brains are fixed.',
+ ref:'Doidge, The Brain That Changes Itself (2007); Merzenich, Soft-Wired (2013)'},
+{id:25, label:'Interoception', cat:'neuroscience', r:17,
+ desc:'The brain\'s sensing of the body\'s internal state — heartbeat, gut, breath. Increasingly seen as the biological root of emotion, self, and even social awareness.',
+ ref:'Craig, How Do You Feel? (2015); Seth, Being You (2021)'},
+{id:26, label:'Mirror Neurons', cat:'neuroscience', r:16,
+ desc:'Neurons that fire both when executing an action and when observing another perform it. Proposed as a substrate for imitation, empathy, and language acquisition.',
+ ref:'Rizzolatti & Sinigaglia, Mirrors in the Brain (2008)'},
+{id:27, label:'Synaptic Pruning', cat:'neuroscience', r:14,
+ desc:'The adolescent brain eliminates unused synaptic connections — a process of neural editing that shapes personality and vulnerability to psychiatric conditions.',
+ ref:'Paus, Keshavan & Giedd, Why Do Many Psychiatric Disorders Emerge in Adolescence? (2008)'},
+{id:28, label:'Embodied Cognition', cat:'neuroscience', r:18,
+ desc:'Cognition is not computation in a brain-box but is shaped by the whole body and environment. Posture, gesture, and sensation co-constitute thought.',
+ ref:'Varela, Thompson & Rosch, The Embodied Mind (1991); Lakoff & Johnson, Philosophy in the Flesh (1999)'},
+{id:29, label:'Attention', cat:'neuroscience', r:19,
+ desc:'The selective allocation of neural resources. William James called it "the taking possession by the mind." Its voluntary control is the foundation of self-regulation.',
+ ref:'Posner, Orienting of Attention (1980); McGilchrist, The Master and His Emissary (2009)'},
+{id:30, label:'Sleep & Memory', cat:'neuroscience', r:17,
+ desc:'During sleep, the hippocampus replays waking experiences and transfers them to cortical long-term storage — memory consolidation requires unconsciousness.',
+ ref:'Walker, Why We Sleep (2017); Wilson & McNaughton (1994, Science)'},
+{id:31, label:'Emotional Regulation', cat:'neuroscience', r:16,
+ desc:'The set of strategies — reappraisal, suppression, distancing — by which the prefrontal cortex modulates amygdalar responses to emotional stimuli.',
+ ref:'Gross, The Emerging Field of Emotion Regulation (1998)'},
+{id:32, label:'Salience', cat:'neuroscience', r:15,
+ desc:'The salience network (insula + anterior cingulate) determines what reaches conscious awareness — it is the gatekeeper between internal and external worlds.',
+ ref:'Menon & Uddin, Saliency, Switching, Attention (2010)'},
+{id:33, label:'Glymphatic System', cat:'neuroscience', r:14,
+ desc:'The brain\'s waste-clearance system — active during deep sleep — flushes out amyloid and tau proteins implicated in Alzheimer\'s disease.',
+ ref:'Iliff et al. (2012, Science Translational Medicine)'},
+
+// ── PHYSICS & MATH ──
+{id:34, label:'Entropy', cat:'physics', r:18,
+ desc:'The universe\'s tendency toward disorder defines the arrow of time. Boltzmann showed entropy is a measure of the number of microscopic arrangements a system can occupy.',
+ ref:'Boltzmann (1872); Carroll, From Eternity to Here (2010)'},
+{id:35, label:'Quantum Superposition', cat:'physics', r:18,
+ desc:'A quantum system exists in multiple states simultaneously until measured. Schrödinger\'s equation governs superposed states — its interpretation remains contested.',
+ ref:'Schrödinger (1935); Everett, Relative State Formulation (1957)'},
+{id:36, label:'Infinity', cat:'physics', r:17,
+ desc:'Cantor\'s set theory revealed infinite hierarchies of infinity. In physics, infinities in equations often signal the limits of current theory.',
+ ref:'Cantor, Über unendliche Lineare Punktmannigfaltigkeiten (1883)'},
+{id:37, label:'Information Theory', cat:'physics', r:17,
+ desc:'Shannon\'s formalization of information as a measure of surprise. Modern physics increasingly treats information as fundamental — "it from bit."',
+ ref:'Shannon, A Mathematical Theory of Communication (1948); Wheeler (1990)'},
+{id:38, label:'Many-Worlds', cat:'physics', r:15,
+ desc:'Everett\'s interpretation of quantum mechanics: every quantum event branches the universe into parallel outcomes, all equally real.',
+ ref:'Everett (1957); Deutsch, The Fabric of Reality (1997)'},
+{id:39, label:'Complexity Theory', cat:'physics', r:16,
+ desc:'The science of systems with many interacting parts that produce emergent, unpredictable global behaviors — from ant colonies to economies to consciousness.',
+ ref:'Holland, Emergence: From Chaos to Order (1998); Kauffman, The Origins of Order (1993)'},
+{id:40, label:'Dark Matter', cat:'physics', r:15,
+ desc:'Unknown matter comprising 27% of the universe — inferred from gravitational effects but never directly detected. The universe is mostly invisible to us.',
+ ref:'Rubin & Ford (1970); Planck Collaboration (2018)'},
+{id:41, label:'Holographic Principle', cat:'physics', r:14,
+ desc:'All information in a volume of space can be encoded on its boundary surface — suggesting our three-dimensional universe may be a projection.',
+ ref:'\'t Hooft (1993); Susskind (1995); Maldacena, The Large-N Limit (1997)'},
+
+// ── COGNITIVE SCIENCE ──
+{id:42, label:'Metacognition', cat:'cognitive', r:18,
+ desc:'Thinking about thinking. The ability to monitor and regulate one\'s own cognitive processes — a key differentiator of expert from novice performance.',
+ ref:'Flavell, Metacognition and Cognitive Monitoring (1979); Dunning-Kruger (1999)'},
+{id:43, label:'Cognitive Bias', cat:'cognitive', r:19,
+ desc:'Systematic errors in reasoning arising from mental shortcuts (heuristics). Kahneman and Tversky catalogued over 180 — they are not bugs but evolved features.',
+ ref:'Tversky & Kahneman, Judgment Under Uncertainty (1974); Kahneman, Thinking, Fast and Slow (2011)'},
+{id:44, label:'Flow State', cat:'cognitive', r:17,
+ desc:'Csikszentmihalyi\'s optimal experience: total absorption in a skill-matched challenge, accompanied by loss of self-consciousness and distorted time perception.',
+ ref:'Csikszentmihalyi, Flow: The Psychology of Optimal Experience (1990)'},
+{id:45, label:'Theory of Mind', cat:'cognitive', r:18,
+ desc:'The capacity to attribute mental states — beliefs, desires, intentions — to others. Absent in early autism; it underlies all social complexity and storytelling.',
+ ref:'Premack & Woodruff (1978); Baron-Cohen, Leslie & Frith (1985)'},
+{id:46, label:'Working Memory', cat:'cognitive', r:16,
+ desc:'The cognitive workspace where information is held and manipulated for immediate use. Baddeley\'s model identifies a phonological loop, visuospatial sketchpad, and central executive.',
+ ref:'Baddeley & Hitch (1974); Miller, The Magical Number Seven (1956)'},
+{id:47, label:'Pattern Recognition', cat:'cognitive', r:17,
+ desc:'The brain\'s core operation — finding regularities in noisy sensory data. Both its power and its weakness: we find patterns even where none exist (apophenia).',
+ ref:'Gestalt psychology; Kahneman; Shermer, The Believing Brain (2011)'},
+{id:48, label:'Decision Making', cat:'cognitive', r:17,
+ desc:'Somatic marker hypothesis: emotion is not the enemy of reason but is necessary for rational choice. Patients with prefrontal damage can\'t decide despite intact logic.',
+ ref:'Damasio, Descartes\' Error (1994); Kahneman & Tversky, Prospect Theory (1979)'},
+{id:49, label:'Conceptual Metaphor', cat:'cognitive', r:15,
+ desc:'Lakoff & Johnson: abstract concepts are structured by embodied metaphors. We understand argument as war, time as a resource, the mind as a container.',
+ ref:'Lakoff & Johnson, Metaphors We Live By (1980)'},
+{id:50, label:'Linguistic Relativity', cat:'cognitive', r:15,
+ desc:'The hypothesis that language shapes thought — weak version widely accepted: different languages predispose different cognitive patterns (color, time, space).',
+ ref:'Whorf (1940s); Boroditsky, How Language Shapes Thought (2011)'},
+{id:51, label:'Cognitive Load', cat:'cognitive', r:14,
+ desc:'Working memory has limited capacity — when overloaded, learning and decision quality collapse. Sweller\'s theory underpins modern instructional design.',
+ ref:'Sweller, Cognitive Load During Problem Solving (1988)'},
+
+// ── ART & CREATIVITY ──
+{id:52, label:'Beauty', cat:'art', r:19,
+ desc:'Kant\'s "free play of imagination and understanding." Neurostheticians find beauty activates the medial orbito-frontal cortex — a region associated with reward.',
+ ref:'Kant, Critique of Judgment (1790); Chatterjee & Vartanian, Neuroaesthetics (2014)'},
+{id:53, label:'Story', cat:'art', r:19,
+ desc:'The mind\'s primary sense-making form. Narrative activates multiple brain regions simultaneously — motor, sensory, emotional — far more than factual statements.',
+ ref:'Bruner, Actual Minds, Possible Worlds (1986); Gottschall, The Storytelling Animal (2012)'},
+{id:54, label:'Music', cat:'art', r:18,
+ desc:'Music uniquely activates reward, motor, and emotional circuits simultaneously. Anticipation — tension before resolution — is as pleasurable as the resolution itself.',
+ ref:'Huron, Sweet Anticipation (2006); Salimpoor et al., Anatomically Distinct Dopamine Release (2011)'},
+{id:55, label:'Imagination', cat:'art', r:20,
+ desc:'Shares neural architecture with episodic memory and future simulation — the hippocampus is central to all three. To imagine is to remember a world that hasn\'t happened yet.',
+ ref:'Schacter & Addis, The Cognitive Neuroscience of Constructive Memory (2007)'},
+{id:56, label:'Play', cat:'art', r:16,
+ desc:'Cross-species behavior that is intrinsically motivated, process-focused, and preparatory. In humans, play is the laboratory of innovation, identity, and social rule learning.',
+ ref:'Sutton-Smith, The Ambiguity of Play (1997); Brown, Play (2009)'},
+{id:57, label:'Symbol', cat:'art', r:15,
+ desc:'The capacity to let one thing stand for another. Human symbolic thought — beginning with cave art ~45,000 ya — is uniquely open-ended and culturally cumulative.',
+ ref:'Deacon, The Symbolic Species (1997); Mithen, The Prehistory of the Mind (1996)'},
+{id:58, label:'Ritual', cat:'art', r:15,
+ desc:'Repeated, symbolic action that coordinates collective emotion and reinforces group identity. Cross-culturally universal — from funerals to handshakes to sport.',
+ ref:'Bell, Ritual Theory, Ritual Practice (1992); Durkheim, The Elementary Forms of Religious Life (1912)'},
+
+// ── SELF & IDENTITY ──
+{id:59, label:'Identity', cat:'self', r:19,
+ desc:'Constructed, not discovered. Narrative identity theory: the self is the story we tell about the continuity of our experiences across time.',
+ ref:'Ricoeur, Oneself as Another (1992); McAdams, The Stories We Live By (1993)'},
+{id:60, label:'Memory', cat:'self', r:18,
+ desc:'Memory is reconstructive, not reproductive — every act of recall rewrites the trace. Loftus\'s false memory research revolutionized eyewitness testimony law.',
+ ref:'Loftus, The Myth of Repressed Memory (1994); Schacter, The Seven Sins of Memory (2001)'},
+{id:61, label:'Death', cat:'self', r:20,
+ desc:'Terror Management Theory: much of human culture is an anxiety buffer against awareness of mortality. Becker won the Pulitzer arguing civilizations are denial-of-death projects.',
+ ref:'Becker, The Denial of Death (1973); Greenberg, Solomon & Pyszczynski, TMT (1986)'},
+{id:62, label:'Purpose', cat:'self', r:18,
+ desc:'Frankl showed purpose is foundational to psychological survival. Recent research links sense of purpose to reduced inflammation, longer telomeres, lower mortality.',
+ ref:'Frankl, Man\'s Search for Meaning (1946); Hill et al., Purpose in Life (2014)'},
+{id:63, label:'Ego', cat:'self', r:16,
+ desc:'The constructed sense of being a unified, continuous self — now understood to be a brain-generated inference, not a fact about the world.',
+ ref:'Metzinger, Being No One (2003); Hood, The Self Illusion (2012)'},
+{id:64, label:'Trauma', cat:'self', r:17,
+ desc:'Trauma encodes memories differently — fragmentary, sensory, easily re-triggered. Van der Kolk\'s work showed PTSD is literally stored in the body\'s physiology.',
+ ref:'Van der Kolk, The Body Keeps the Score (2014); Levine, Waking the Tiger (1997)'},
+{id:65, label:'Dream', cat:'self', r:17,
+ desc:'REM dreams emerge when the PFC is offline and the limbic system is hyperactive. Activation-synthesis theory: dreams are the brain making narrative from random firing.',
+ ref:'Hobson & McCarley, The Brain as a Dream State Generator (1977); Walker (2017)'},
+{id:66, label:'Attachment', cat:'self', r:18,
+ desc:'Bowlby\'s discovery: early caregiver bonds create internal working models that shape all subsequent relationships. Four attachment styles have been cross-culturally replicated.',
+ ref:'Bowlby, Attachment (1969); Ainsworth, Patterns of Attachment (1978)'},
+{id:67, label:'Resilience', cat:'self', r:16,
+ desc:'Not the absence of trauma but the capacity to reorganize adaptive functioning under threat. Post-traumatic growth — becoming stronger at broken places — is well-documented.',
+ ref:'Bonanno, Loss, Trauma, and Human Resilience (2004); Tedeschi & Calhoun, PTG (1996)'},
+{id:68, label:'Ego Death', cat:'self', r:15,
+ desc:'The dissolution of self-boundaries during psychedelic states or deep meditation. Correlated with decreased default mode network activity. Therapeutic potential now actively researched.',
+ ref:'Carhart-Harris et al., Neural Correlates of the Psychedelic State (2012)'},
+
+// ── SOCIETY & ETHICS ──
+{id:69, label:'Justice', cat:'society', r:18,
+ desc:'Rawls\'s veil of ignorance: principles chosen without knowing your place in society. Sen argues justice is inseparable from capabilities — what people can actually do and be.',
+ ref:'Rawls, A Theory of Justice (1971); Sen, The Idea of Justice (2009)'},
+{id:70, label:'Power', cat:'society', r:17,
+ desc:'Foucault\'s power is not possessed but exercised through discourse, institutions, and norms — it produces subjects as much as it represses them.',
+ ref:'Foucault, Discipline and Punish (1975); Lukes, Power: A Radical View (2005)'},
+{id:71, label:'Trust', cat:'society', r:17,
+ desc:'The foundation of social capital and economic exchange. High-trust societies outperform low-trust ones by virtually every metric of wellbeing.',
+ ref:'Putnam, Bowling Alone (2000); Fukuyama, Trust (1995)'},
+{id:72, label:'Tribalism', cat:'society', r:17,
+ desc:'The in-group/out-group distinction is cognitively automatic and cross-culturally universal. Social identity theory: we derive self-esteem from group membership.',
+ ref:'Tajfel & Turner, Social Identity Theory (1979); Haidt, The Righteous Mind (2012)'},
+{id:73, label:'Cooperation', cat:'society', r:17,
+ desc:'Humans cooperate with non-kin strangers at an unparalleled scale — enabled by shared fictions, institutions, and the capacity for altruistic punishment of cheaters.',
+ ref:'Axelrod, The Evolution of Cooperation (1984); Henrich, The Secret of Our Success (2015)'},
+{id:74, label:'Freedom', cat:'society', r:18,
+ desc:'Berlin\'s two concepts: negative liberty (freedom from interference) vs. positive liberty (capacity for self-realization). Both matter — and they conflict.',
+ ref:'Berlin, Two Concepts of Liberty (1958); Nozick vs. Rawls debate'},
+{id:75, label:'Reciprocity', cat:'society', r:15,
+ desc:'The universal norm of returning benefit for benefit. Strong reciprocity — rewarding cooperators and punishing defectors at personal cost — stabilizes large-scale cooperation.',
+ ref:'Fehr & Gächter, Altruistic Punishment in Humans (2002, Nature)'},
+{id:76, label:'Status', cat:'society', r:15,
+ desc:'Dominance hierarchies exist in all human societies. Relative status (not absolute wealth) is the strongest predictor of health outcomes — the social gradient of health.',
+ ref:'Marmot, The Status Syndrome (2004); Sapolsky, Behave (2017)'},
+
+// ── COSMOS & LIFE ──
+{id:77, label:'Evolution', cat:'cosmos', r:20,
+ desc:'Darwin\'s insight: random variation plus natural selection, given deep time, generates all biological complexity without foresight or design.',
+ ref:'Darwin, On the Origin of Species (1859); Dawkins, The Selfish Gene (1976)'},
+{id:78, label:'Life', cat:'cosmos', r:21,
+ desc:'Life is defined by autopoiesis — self-maintenance through metabolism — and Darwinian heredity. Its origin from chemistry remains one of science\'s deepest open questions.',
+ ref:'Maturana & Varela, Autopoiesis and Cognition (1980); Szostak, The Origin of Life (2009)'},
+{id:79, label:'Extinction', cat:'cosmos', r:16,
+ desc:'99.9% of all species that ever lived are extinct. We are likely in Earth\'s sixth mass extinction, the first driven by a single species.',
+ ref:'Kolbert, The Sixth Extinction (2014); Barnosky et al. (2011, Nature)'},
+{id:80, label:'Symbiosis', cat:'cosmos', r:15,
+ desc:'Cooperation between organisms of different species — from mitochondria (ancient endosymbiosis) to gut microbiome. The microbiome influences mood, immunity, and cognition.',
+ ref:'Margulis, Symbiosis in Cell Evolution (1981); Cryan et al., The Microbiota-Gut-Brain Axis (2019)'},
+{id:81, label:'Chaos', cat:'cosmos', r:16,
+ desc:'Deterministic systems can be unpredictable beyond short timescales due to sensitivity to initial conditions — the butterfly effect. Weather is the canonical example.',
+ ref:'Lorenz, Deterministic Nonperiodic Flow (1963); Gleick, Chaos (1987)'},
+{id:82, label:'Space', cat:'cosmos', r:19,
+ desc:'Space is not the backdrop of events but a dynamic field that bends under mass and expands at accelerating rates. We may inhabit one bubble in a multiverse.',
+ ref:'Einstein, General Relativity (1915); Guth, The Inflationary Universe (1997)'},
+{id:83, label:'Silence', cat:'cosmos', r:14,
+ desc:'In neuroscience, silence is not the absence of neural activity but an active state of the auditory cortex. Silence is as much constructed by the brain as sound.',
+ ref:'Bhikkhu, The Sounds of Silence (2010); Cage, 4\'33\" (1952)'},
+
+// ── SPIRITUALITY ──
+{id:84, label:'Transcendence', cat:'spirit', r:18,
+ desc:'The experience of going beyond ordinary self-boundaries. Self-transcendent experiences activate default mode network suppression and increase a sense of unity.',
+ ref:'Yaden et al., The Varieties of Self-Transcendent Experience (2017, Review of General Psychology)'},
+{id:85, label:'Meaning', cat:'spirit', r:21,
+ desc:'Frankl distinguished meaning from pleasure: meaning comes through suffering, work, and love. Neuroscience links meaning-making to the ventromedial prefrontal cortex.',
+ ref:'Frankl, Man\'s Search for Meaning (1946); Heintzelman & King, Life Is Pretty Meaningful (2014)'},
+{id:86, label:'Impermanence', cat:'spirit', r:16,
+ desc:'The Buddhist insight that all phenomena are transient. Modern physics agrees: particles are excitations of fields, and fields themselves are impermanent configurations of energy.',
+ ref:'Thich Nhat Hanh, The Heart of the Buddha\'s Teaching (1998)'},
+{id:87, label:'Sacred', cat:'spirit', r:15,
+ desc:'Durkheim: the sacred/profane distinction is the fundamental religious category. Something becomes sacred through collective ritual — it is a social, not divine, designation.',
+ ref:'Durkheim, The Elementary Forms of Religious Life (1912); Haidt, The Righteous Mind (2012)'},
+{id:88, label:'Compassion', cat:'spirit', r:17,
+ desc:'Distinct from empathy: compassion is the motivational response to others\' suffering. Cultivating compassion (vs. empathy alone) reduces burnout and increases helping behavior.',
+ ref:'Singer & Klimecki, Empathy versus Compassion (2014, Trends in Cognitive Sciences)'},
+{id:89, label:'Interconnection', cat:'spirit', r:17,
+ desc:'The ecological, quantum, and philosophical insight that boundaries between self and world are porous — organisms are processes embedded in larger processes.',
+ ref:'Capra, The Web of Life (1996); Thich Nhat Hanh, Interbeing (1987)'},
+];
+
+// ═══════════════════════════════════════════════════════════
+// EDGES: rich web of cross-domain connections
+// ═══════════════════════════════════════════════════════════
+const SEED_EDGES = [
+  // Philosophy core
+  [1,4],[1,5],[1,7],[1,11],[2,6],[2,3],[2,11],[3,69],[3,74],[4,9],[4,3],[5,4],
+  [5,22],[5,25],[5,63],[5,29],[5,8],[6,34],[6,5],[7,39],[7,78],[8,5],[8,28],
+  [9,6],[9,3],[10,5],[10,53],[11,36],[11,35],[11,81],
+  // Emotion web
+  [12,13],[12,16],[12,17],[12,18],[12,66],[12,85],[13,61],[13,64],[13,60],
+  [14,20],[14,82],[14,89],[15,29],[15,64],[15,15],[16,62],[16,44],[16,85],
+  [17,59],[17,23],[18,45],[18,88],[19,59],[19,63],[20,14],[20,52],[21,60],[21,59],
+  // Neuroscience connections
+  [22,5],[22,29],[22,25],[22,43],[22,47],[23,59],[23,65],[23,60],[24,60],[24,30],
+  [24,65],[24,66],[25,12],[25,15],[25,31],[25,63],[26,18],[26,28],[27,24],[27,66],
+  [28,8],[28,49],[28,53],[29,42],[29,31],[30,65],[30,60],[31,43],[31,15],[32,29],
+  [32,22],[33,30],[33,65],
+  // Physics links
+  [34,5],[34,81],[34,6],[35,5],[35,38],[35,37],[36,85],[37,22],[37,7],[38,40],
+  [39,7],[39,81],[40,82],[41,82],[41,37],
+  // Cognitive science
+  [42,29],[42,63],[43,48],[43,47],[43,72],[44,62],[44,55],[45,53],[45,18],[45,73],
+  [46,51],[46,29],[47,22],[47,53],[47,87],[48,43],[48,3],[49,54],[49,28],[50,28],
+  [50,47],[51,46],[51,48],
+  // Art & creativity
+  [52,20],[52,14],[52,57],[53,45],[53,59],[53,57],[54,12],[54,20],[54,56],[55,65],
+  [55,60],[55,5],[56,58],[56,73],[57,87],[57,49],[58,87],[58,73],
+  // Self & identity
+  [59,60],[59,63],[59,66],[60,30],[60,65],[60,55],[61,84],[61,62],[61,85],[62,85],
+  [62,89],[63,22],[63,68],[63,19],[64,15],[64,25],[64,31],[65,30],[65,55],[65,22],
+  [66,12],[66,71],[67,64],[67,62],[68,84],[68,63],[68,86],
+  // Society
+  [69,2],[69,3],[69,74],[70,71],[70,76],[71,73],[71,75],[72,73],[72,15],[72,87],
+  [73,75],[73,77],[74,3],[74,4],[75,76],[76,70],[76,72],
+  // Cosmos & life
+  [77,7],[77,78],[77,14],[77,79],[78,7],[78,80],[79,77],[79,61],[80,78],[80,89],
+  [81,39],[81,6],[82,36],[82,83],[83,54],[83,32],
+  // Spirituality
+  [84,5],[84,89],[84,85],[85,62],[85,89],[85,16],[86,5],[86,6],[86,89],[87,58],
+  [87,84],[88,18],[88,89],[88,62],[89,80],[89,7],[89,85],
+  // Cross-domain surprising links
+  [22,55],[34,86],[35,84],[37,53],[28,55],[8,25],[43,19],[44,55],[47,87],[39,5],
+  [37,62],[40,11],[73,77],[18,52],[53,59],[31,67],[65,68],[25,8],[42,59],[36,35],
+];
+
+// ═══════════════════════════════════════════════════════════
+// CANVAS & STATE
+// ═══════════════════════════════════════════════════════════
+let nodes=[], edges=[], nextId=200;
+let cam={x:0,y:0,z:0.85};
+let drag=null, hovered=null, selected=null;
+let connectMode=false, connectFrom=null;
+let searchTerm='', filterCat=null;
+let paused=false, settled=false, simAge=0;
+let W, H;
+
+const bgC=document.getElementById('bg');
+const bgX=bgC.getContext('2d');
+const gc=document.getElementById('graph');
+const ctx=gc.getContext('2d');
+const mm=document.getElementById('minimap');
+const mmx=mm.getContext('2d');
+
+function resize(){
+  W=gc.width=bgC.width=window.innerWidth;
+  H=gc.height=bgC.height=window.innerHeight;
+  drawStars();
+}
+window.addEventListener('resize',resize);
+
+// ── STARS ──
+function pr(n){const x=Math.sin(n+1)*43758.5453;return x-Math.floor(x);}
+function drawStars(){
+  bgX.clearRect(0,0,W,H);
+  // Nebulae
+  [[W*.3,H*.35,W*.55,'rgba(60,30,120,0.09)'],[W*.72,H*.6,W*.45,'rgba(30,60,110,0.08)'],[W*.5,H*.8,W*.3,'rgba(100,30,80,0.06)']].forEach(([cx,cy,rad,col])=>{
+    const g=bgX.createRadialGradient(cx,cy,0,cx,cy,rad);
+    g.addColorStop(0,col);g.addColorStop(1,'rgba(0,0,0,0)');
+    bgX.fillStyle=g;bgX.fillRect(0,0,W,H);
+  });
+  for(let i=0;i<500;i++){
+    const x=pr(i*3+7)*W,y=pr(i*3+8)*H,r=pr(i*3+9)*1.6,a=0.1+pr(i+7)*.7;
+    bgX.beginPath();bgX.arc(x,y,r,0,Math.PI*2);
+    bgX.fillStyle=`rgba(${175+Math.floor(pr(i*7)*70)},${175+Math.floor(pr(i*7+1)*70)},${215+Math.floor(pr(i*7+2)*35)},${a})`;
+    bgX.fill();
+  }
+}
+
+// ── INIT ──
+function initGraph(){
+  const cp={};
+  CATEGORIES.forEach((c,i)=>{
+    const a=(i/CATEGORIES.length)*Math.PI*2-Math.PI/2, d=260;
+    cp[c.id]={x:Math.cos(a)*d,y:Math.sin(a)*d};
+  });
+  nodes=SEED_NODES.map(n=>{
+    const p=cp[n.cat];
+    const a=pr(n.id*17)*Math.PI*2, d=50+pr(n.id*31)*130;
+    return{...n,x:p.x+Math.cos(a)*d,y:p.y+Math.sin(a)*d,vx:(pr(n.id)-0.5)*3,vy:(pr(n.id*2)-0.5)*3,pinned:false,alpha:1,visible:true};
+  });
+  edges=SEED_EDGES.map(([a,b])=>({a,b}));
+  updateCounter();
+}
+function nodeById(id){return nodes.find(n=>n.id===id);}
+function updateCounter(){document.getElementById('node-count').textContent=nodes.length;}
+
+// ── SIMULATION ──
+function tick(){
+  if(paused) return;
+  simAge++;
+  // Cool down after 300 ticks
+  const cooling=Math.max(0.3, 1-simAge/400);
+  const REPEL=3200*cooling+800, SPRING=0.015, DAMP=0.80, GRAVITY=0.005;
+
+  nodes.forEach(n=>{
+    if(n.pinned)return;
+    n.vx-=n.x*GRAVITY;n.vy-=n.y*GRAVITY;
+    nodes.forEach(m=>{
+      if(m===n)return;
+      const dx=n.x-m.x,dy=n.y-m.y,d2=dx*dx+dy*dy+4,f=REPEL/d2;
+      n.vx+=dx*f;n.vy+=dy*f;
+    });
+    n.vx*=DAMP;n.vy*=DAMP;
+    n.x+=n.vx;n.y+=n.vy;
+  });
+  edges.forEach(e=>{
+    const a=nodeById(e.a),b=nodeById(e.b);if(!a||!b)return;
+    const dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+    const tgt=90+a.r+b.r,f=(d-tgt)*SPRING;
+    const fx=dx/d*f,fy=dy/d*f;
+    if(!a.pinned){a.vx+=fx;a.vy+=fy;}
+    if(!b.pinned){b.vx-=fx;b.vy-=fy;}
+  });
+
+  // Compute visibility
+  nodes.forEach(n=>{
+    const matchSearch=!searchTerm||(n.label.toLowerCase().includes(searchTerm)||n.desc.toLowerCase().includes(searchTerm));
+    const matchCat=!filterCat||n.cat===filterCat;
+    n.visible=matchSearch&&matchCat;
+    n.alpha=n.visible?1:0.07;
+  });
+
+  // Status
+  if(simAge>350&&!settled){settled=true;}
+  document.getElementById('sim-status').textContent=settled?'':'settling…';
+}
+
+// ── DRAW MAIN ──
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  ctx.translate(W/2+cam.x,H/2+cam.y);
+  ctx.scale(cam.z,cam.z);
+
+  // Edges
+  edges.forEach(e=>{
+    const a=nodeById(e.a),b=nodeById(e.b);if(!a||!b)return;
+    const al=Math.min(a.alpha,b.alpha);
+    const isSel=selected&&(selected.id===a.id||selected.id===b.id);
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+    if(isSel){ctx.strokeStyle=`rgba(240,192,96,${0.55*al})`;ctx.lineWidth=1.4;}
+    else{ctx.strokeStyle=`rgba(140,155,195,${0.1*al})`;ctx.lineWidth=0.7;}
+    ctx.stroke();
+  });
+
+  // Nodes
+  nodes.forEach(n=>{
+    const cat=CMAP[n.cat]||CMAP.philosophy;
+    const isH=hovered===n,isS=selected===n;
+    const a=n.alpha;
+
+    if(isH||isS){
+      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*4);
+      g.addColorStop(0,cat.glow.replace('.55',`.${Math.round(45*a)}`));
+      g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r*4,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    }
+    if(connectMode&&connectFrom===n){
+      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*5);
+      g.addColorStop(0,'rgba(240,192,96,0.35)');g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r*5,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    }
+
+    const gr=ctx.createRadialGradient(n.x-n.r*.35,n.y-n.r*.35,0,n.x,n.y,n.r);
+    gr.addColorStop(0,cat.color+'f0');
+    gr.addColorStop(0.55,cat.color+(Math.round(0xaa*a).toString(16).padStart(2,'0')));
+    gr.addColorStop(1,cat.color+(Math.round(0x33*a).toString(16).padStart(2,'0')));
+    ctx.globalAlpha=a;
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=gr;ctx.fill();
+    ctx.globalAlpha=1;
+
+    if(isS){ctx.beginPath();ctx.arc(n.x,n.y,n.r+5,0,Math.PI*2);ctx.strokeStyle=`rgba(240,192,96,${0.75*a})`;ctx.lineWidth=1.5;ctx.stroke();}
+    else if(isH){ctx.beginPath();ctx.arc(n.x,n.y,n.r+3,0,Math.PI*2);ctx.strokeStyle=`rgba(255,255,255,${0.28*a})`;ctx.lineWidth=1;ctx.stroke();}
+
+    // Label — always show if zoomed in enough or selected/hovered
+    const showLabel=cam.z>0.5||isH||isS;
+    if(showLabel){
+      const labelAlpha=Math.max(0,Math.min(1,(cam.z-0.35)*2.5))*a;
+      ctx.globalAlpha=labelAlpha;
+      ctx.fillStyle='rgba(235,230,215,1)';
+      ctx.font=`${Math.round(9.5/cam.z)}px Josefin Sans`;
+      ctx.textAlign='center';ctx.textBaseline='top';
+      ctx.fillText(n.label,n.x,n.y+n.r+5/cam.z);
+      ctx.globalAlpha=1;
+    }
+  });
+
+  ctx.restore();
+}
+
+// ── MINIMAP ──
+function drawMinimap(){
+  const MW=mm.width=160,MH=mm.height=110;
+  mmx.clearRect(0,0,MW,MH);
+  mmx.fillStyle='rgba(3,3,12,0.5)';mmx.fillRect(0,0,MW,MH);
+
+  if(!nodes.length)return;
+  let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity;
+  nodes.forEach(n=>{mnX=Math.min(mnX,n.x);mxX=Math.max(mxX,n.x);mnY=Math.min(mnY,n.y);mxY=Math.max(mxY,n.y);});
+  const pad=30,scx=(MW-pad*2)/(mxX-mnX||1),scy=(MH-pad*2)/(mxY-mnY||1),sc=Math.min(scx,scy);
+  const ox=MW/2-(mnX+mxX)/2*sc,oy=MH/2-(mnY+mxY)/2*sc;
+
+  // Edges
+  edges.forEach(e=>{
+    const a=nodeById(e.a),b=nodeById(e.b);if(!a||!b)return;
+    mmx.beginPath();mmx.moveTo(a.x*sc+ox,a.y*sc+oy);mmx.lineTo(b.x*sc+ox,b.y*sc+oy);
+    mmx.strokeStyle='rgba(140,155,195,0.18)';mmx.lineWidth=0.5;mmx.stroke();
+  });
+
+  // Nodes
+  nodes.forEach(n=>{
+    const cat=CMAP[n.cat]||CMAP.philosophy;
+    mmx.beginPath();mmx.arc(n.x*sc+ox,n.y*sc+oy,Math.max(1.5,n.r*sc),0,Math.PI*2);
+    mmx.fillStyle=cat.color+(n.visible?'cc':'33');mmx.fill();
+  });
+
+  // Viewport rect
+  const vl=(-W/2-cam.x)/cam.z,vt=(-H/2-cam.y)/cam.z;
+  const vr=vl+W/cam.z,vb=vt+H/cam.z;
+  mmx.strokeStyle='rgba(240,192,96,0.5)';mmx.lineWidth=1;
+  mmx.strokeRect(vl*sc+ox,vt*sc+oy,(vr-vl)*sc,(vb-vt)*sc);
+}
+
+// ── FIT ALL ──
+function fitAll(){
+  if(!nodes.length)return;
+  let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity;
+  nodes.forEach(n=>{
+    mnX=Math.min(mnX,n.x-n.r);mxX=Math.max(mxX,n.x+n.r);
+    mnY=Math.min(mnY,n.y-n.r);mxY=Math.max(mxY,n.y+n.r);
+  });
+  const pad=70;
+  const zx=(W-pad*2)/(mxX-mnX||1),zy=(H-pad*2)/(mxY-mnY||1);
+  cam.z=Math.min(zx,zy,1.8);
+  cam.x=-((mnX+mxX)/2)*cam.z;
+  cam.y=-((mnY+mxY)/2)*cam.z;
+}
+
+// ── INTERACTION ──
+function worldPos(e){
+  const r=gc.getBoundingClientRect();
+  return{x:(e.clientX-r.left-W/2-cam.x)/cam.z,y:(e.clientY-r.top-H/2-cam.y)/cam.z};
+}
+function nodeAt(wp){return nodes.find(n=>Math.hypot(n.x-wp.x,n.y-wp.y)<=n.r+7)||null;}
+
+function getConns(n){
+  const c=[];
+  edges.forEach(e=>{
+    if(e.a===n.id){const m=nodeById(e.b);if(m)c.push(m);}
+    if(e.b===n.id){const m=nodeById(e.a);if(m)c.push(m);}
+  });
+  return c;
+}
+
+function showPanel(n){
+  selected=n;
+  document.getElementById('dp-name').textContent=n.label;
+  document.getElementById('dp-cat').textContent=CMAP[n.cat]?.label||n.cat;
+  document.getElementById('dp-desc').textContent=n.desc||'';
+  document.getElementById('dp-ref').textContent=n.ref?'Reference: '+n.ref:'';
+  document.getElementById('dp-ref').style.display=n.ref?'block':'none';
+  const cl=document.getElementById('dp-conns');cl.innerHTML='';
+  getConns(n).forEach(c=>{
+    const t=document.createElement('div');t.className='dp-conn-tag';
+    t.textContent=c.label;t.onclick=()=>showPanel(c);
+    cl.appendChild(t);
+  });
+  document.getElementById('detail-panel').classList.add('show');
+}
+
+gc.style.cursor='grab';
+
+gc.addEventListener('mousemove',e=>{
+  const wp=worldPos(e);
+  hovered=nodeAt(wp);
+  gc.style.cursor=hovered?'pointer':(drag?'grabbing':'grab');
+  if(drag){
+    if(drag.node){drag.node.x=wp.x;drag.node.y=wp.y;drag.node.pinned=true;}
+    else{cam.x+=e.clientX-drag.lx;cam.y+=e.clientY-drag.ly;drag.lx=e.clientX;drag.ly=e.clientY;}
+  }
+  const tt=document.getElementById('tooltip');
+  if(hovered){
+    tt.classList.add('show');
+    document.getElementById('tt-name').textContent=hovered.label;
+    document.getElementById('tt-desc').textContent=hovered.desc?.slice(0,110)+(hovered.desc?.length>110?'…':'')||'';
+    document.getElementById('tt-cat').textContent=CMAP[hovered.cat]?.label||'';
+    let tx=e.clientX+16,ty=e.clientY-8;
+    if(tx+250>W)tx=e.clientX-260;if(ty+120>H)ty=e.clientY-120;
+    tt.style.left=tx+'px';tt.style.top=ty+'px';
+  }else{tt.classList.remove('show');}
+});
+
+let lastClick=0;
+gc.addEventListener('mousedown',e=>{
+  if(e.button!==0)return;
+  const wp=worldPos(e);const n=nodeAt(wp);
+  if(n){
+    if(connectMode){
+      if(!connectFrom){connectFrom=n;}
+      else if(connectFrom!==n){
+        const ex=edges.find(ed=>(ed.a===connectFrom.id&&ed.b===n.id)||(ed.b===connectFrom.id&&ed.a===n.id));
+        if(!ex)edges.push({a:connectFrom.id,b:n.id});
+        connectFrom=null;
+      }
+    }else{
+      drag={node:n};n.pinned=true;
+      const now=Date.now();
+      if(now-lastClick<340){showPanel(n);}else{selected=n;}
+      lastClick=now;
+    }
+  }else{
+    drag={lx:e.clientX,ly:e.clientY};
+    selected=null;
+    document.getElementById('detail-panel').classList.remove('show');
+  }
+});
+gc.addEventListener('mouseup',()=>{if(drag?.node)setTimeout(()=>{if(drag)drag.node.pinned=false;},800);drag=null;});
+gc.addEventListener('mouseleave',()=>{drag=null;});
+gc.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const prev=cam.z,f=e.deltaY<0?1.1:0.91;
+  cam.z=Math.max(0.12,Math.min(4,cam.z*f));
+  // Zoom toward mouse
+  const r=gc.getBoundingClientRect();
+  const mx=e.clientX-r.left-W/2,my=e.clientY-r.top-H/2;
+  cam.x=mx-(mx-cam.x)*(cam.z/prev);
+  cam.y=my-(my-cam.y)*(cam.z/prev);
+},{passive:false});
+
+// Minimap click: pan to that region
+mm.addEventListener('click',e=>{
+  const r=mm.getBoundingClientRect();
+  const mx=e.clientX-r.left,my=e.clientY-r.top;
+  let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity;
+  nodes.forEach(n=>{mnX=Math.min(mnX,n.x);mxX=Math.max(mxX,n.x);mnY=Math.min(mnY,n.y);mxY=Math.max(mxY,n.y);});
+  const pad=30,MW=160,MH=110;
+  const sc=Math.min((MW-pad*2)/(mxX-mnX||1),(MH-pad*2)/(mxY-mnY||1));
+  const ox=MW/2-(mnX+mxX)/2*sc,oy=MH/2-(mnY+mxY)/2*sc;
+  const worldX=(mx-ox)/sc,worldY=(my-oy)/sc;
+  cam.x=-worldX*cam.z;cam.y=-worldY*cam.z;
+});
+
+// Touch
+let touchStart=null;
+gc.addEventListener('touchstart',e=>{e.preventDefault();
+  const t=e.touches[0];const wp=worldPos(t);const n=nodeAt(wp);
+  if(n){drag={node:n};n.pinned=true;selected=n;}
+  else{drag={lx:t.clientX,ly:t.clientY};}
+},{passive:false});
+gc.addEventListener('touchmove',e=>{e.preventDefault();
+  const t=e.touches[0];const wp=worldPos(t);
+  if(drag?.node){drag.node.x=wp.x;drag.node.y=wp.y;}
+  else if(drag){cam.x+=t.clientX-drag.lx;cam.y+=t.clientY-drag.ly;drag.lx=t.clientX;drag.ly=t.clientY;}
+},{passive:false});
+gc.addEventListener('touchend',()=>{if(drag?.node)setTimeout(()=>{if(drag)drag.node.pinned=false;},800);drag=null;});
+
+// ── CONTROLS ──
+document.getElementById('zc-in').onclick=()=>{cam.z=Math.min(4,cam.z*1.2);};
+document.getElementById('zc-out').onclick=()=>{cam.z=Math.max(0.12,cam.z/1.2);};
+document.getElementById('zc-fit').onclick=fitAll;
+document.getElementById('zc-home').onclick=()=>{cam={x:0,y:0,z:0.85};};
+
+document.getElementById('pause-btn').onclick=function(){
+  paused=!paused;
+  this.textContent=paused?'Resume':'Pause';
+  this.classList.toggle('active',paused);
+};
+document.getElementById('layout-btn').onclick=()=>{
+  settled=false;simAge=0;
+  nodes.forEach(n=>{n.x=(Math.random()-.5)*700;n.y=(Math.random()-.5)*700;n.vx=(Math.random()-.5)*8;n.vy=(Math.random()-.5)*8;});
+};
+document.getElementById('connect-btn').onclick=function(){
+  connectMode=!connectMode;connectFrom=null;
+  this.classList.toggle('active',connectMode);
+  this.textContent=connectMode?'✕ Exit Connect':'Connect Mode';
+};
+document.getElementById('dp-close').onclick=()=>{
+  document.getElementById('detail-panel').classList.remove('show');selected=null;
+};
+
+// Search
+document.getElementById('search').addEventListener('input',e=>{
+  searchTerm=e.target.value.toLowerCase().trim();
+});
+
+// Domain filters
+const filterBar=document.getElementById('filters');
+const allChip=document.createElement('div');
+allChip.className='filter-chip active';allChip.textContent='All';
+allChip.style.setProperty('--chip-color','rgba(240,192,96,0.6)');
+allChip.style.setProperty('--chip-glow','rgba(240,192,96,0.2)');
+allChip.onclick=()=>{filterCat=null;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));allChip.classList.add('active');};
+filterBar.appendChild(allChip);
+CATEGORIES.forEach(c=>{
+  const chip=document.createElement('div');
+  chip.className='filter-chip';chip.textContent=c.label;
+  chip.style.setProperty('--chip-color',c.color);
+  chip.style.setProperty('--chip-glow',c.glow);
+  chip.onclick=()=>{
+    if(filterCat===c.id){filterCat=null;chip.classList.remove('active');allChip.classList.add('active');}
+    else{filterCat=c.id;document.querySelectorAll('.filter-chip').forEach(x=>x.classList.remove('active'));chip.classList.add('active');}
+  };
+  filterBar.appendChild(chip);
+});
+
+// Legend
+const leg=document.getElementById('legend');
+CATEGORIES.forEach(c=>{
+  const d=document.createElement('div');d.className='leg-item';
+  d.innerHTML=`<div class="leg-dot" style="background:${c.color};box-shadow:0 0 5px ${c.color}88"></div><span class="leg-lbl">${c.label}</span>`;
+  leg.appendChild(d);
+});
+
+// Add modal
+const catSel=document.getElementById('m-cat');
+CATEGORIES.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.label;catSel.appendChild(o);});
+document.getElementById('add-btn').onclick=()=>document.getElementById('modal-bg').classList.add('open');
+document.getElementById('modal-cancel').onclick=()=>document.getElementById('modal-bg').classList.remove('open');
+document.getElementById('modal-bg').onclick=e=>{if(e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');};
+document.getElementById('modal-confirm').onclick=()=>{
+  const label=document.getElementById('m-name').value.trim();if(!label)return;
+  const desc=document.getElementById('m-desc').value.trim();
+  const ref=document.getElementById('m-ref').value.trim();
+  const catId=document.getElementById('m-cat').value;
+  const connectTo=document.getElementById('m-connect').value.trim().toLowerCase();
+  const a=Math.random()*Math.PI*2,d=100+Math.random()*200;
+  const nn={id:++nextId,label,desc,ref,cat:catId,x:Math.cos(a)*d,y:Math.sin(a)*d,vx:0,vy:0,r:14,pinned:false,alpha:1,visible:true};
+  nodes.push(nn);
+  if(connectTo){const t=nodes.find(n=>n.label.toLowerCase()===connectTo);if(t)edges.push({a:nn.id,b:t.id});}
+  updateCounter();
+  ['m-name','m-desc','m-ref','m-connect'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('modal-bg').classList.remove('open');
+  toast(`"${label}" added to the map`);
+};
+
+// Export
+document.getElementById('export-btn').onclick=()=>{
+  const data={
+    meta:{title:'Cartography of the Mind',exported:new Date().toISOString(),nodes:nodes.length,edges:edges.length},
+    categories:CATEGORIES,
+    nodes:nodes.map(n=>({id:n.id,label:n.label,cat:n.cat,desc:n.desc,ref:n.ref||'',x:Math.round(n.x),y:Math.round(n.y),r:n.r})),
+    edges:edges.map(e=>({from:e.a,to:e.b,fromLabel:nodeById(e.a)?.label,toLabel:nodeById(e.b)?.label}))
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`mind-map-${new Date().toISOString().slice(0,10)}.json`;a.click();
+  toast(`Exported ${nodes.length} thoughts · ${edges.length} connections`);
+};
+
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ── LOOP ──
+function loop(){
+  tick();draw();drawMinimap();
+  requestAnimationFrame(loop);
+}
+
+resize();
+initGraph();
+// Auto fit after a short settle
+setTimeout(fitAll,1200);
+loop();
+</script>
+</body>
+</html>
