@@ -276,7 +276,7 @@ kbd { font-family:inherit; font-size:0.52rem; padding:2px 6px; border-radius:6px
       <div class="metric"><div class="value" id="metric-domains">0</div><div class="label">Domains</div></div>
     </div>
     <div class="hud-section">
-      <h3>How to use this map</h3>
+      <h3></h3>
       <ul class="hud-list">
         <li>Nodes represent concepts grounded in the underlying research dataset.</li>
         <li>Connections reveal conceptual relationships across domains and neighboring ideas.</li>
@@ -296,8 +296,8 @@ kbd { font-family:inherit; font-size:0.52rem; padding:2px 6px; border-radius:6px
     <div class="hud-section">
       <h3>Shortcuts</h3>
       <ul class="hud-list">
-        <li><kbd>F</kbd> fit map · <kbd>H</kbd> home · <kbd>/</kbd> search</li>
-        <li><kbd>V</kbd> cycle views · <kbd>Esc</kbd> close panels / modes</li>
+        <li><kbd>F</kbd> fit map <kbd>H</kbd> home <kbd>/</kbd> search</li>
+        <li><kbd>V</kbd> cycle views <kbd>Esc</kbd> close panels</li>
       </ul>
     </div>
   </div>
@@ -359,18 +359,18 @@ kbd { font-family:inherit; font-size:0.52rem; padding:2px 6px; border-radius:6px
   <button class="ctrl-btn green" id="export-btn">Export Map</button>
 </div>
 
-<div id="hint">Drag to pan · Scroll to zoom · Click a node to inspect · Double-click for detail</div>
+<div id="hint">Drag to pan - Scroll to zoom - Click a node to inspect - Double-click for detail</div>
 <div id="sim-status"></div>
 <div id="toast"></div>
 
 <div id="modal-bg">
   <div id="modal">
     <h2>Chart a New Thought</h2>
-    <div class="field"><label>Concept / Thought</label>
+    <div class="field"><label>Concept</label>
       <input type="text" id="m-name" placeholder="e.g. Embodied Cognition, Dark Energy…"></div>
     <div class="field"><label>Description</label>
       <textarea id="m-desc" placeholder="What does this concept encompass?"></textarea></div>
-    <div class="field"><label>Scientific Reference / Source</label>
+    <div class="field"><label>Scientific Reference</label>
       <input type="text" id="m-ref" placeholder="e.g. Clark & Chalmers, 1998"></div>
     <div class="field"><label>Domain</label><select id="m-cat"></select></div>
     <div class="field"><label>Evidence Class</label>
@@ -378,7 +378,7 @@ kbd { font-family:inherit; font-size:0.52rem; padding:2px 6px; border-radius:6px
         <option value="research-grounded">Research-grounded</option>
         <option value="theoretical">Theoretical</option>
         <option value="interpretive">Interpretive synthesis</option>
-        <option value="speculative">Speculative / exploratory</option>
+        <option value="speculative">Speculative</option>
       </select></div>
     <div class="field"><label>Consensus / confidence</label>
       <select id="m-consensus">
