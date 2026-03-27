@@ -37,7 +37,7 @@ This build is intentionally minimal.
 ├── index.html                  # main single-file application
 ├── README.md                   # technical documentation
 ├── LICENSE                     # copyright and license terms
-└── THIRD_PARTY_NOTICES.md      # external services, fonts, and ownership notes
+└── THIRD PARTY NOTICES.md      # external services, fonts, and ownership notes
 ```
 
 In the delivered bundle, the main application may also appear as `index%20%285%29.html` until you rename it to `index.html` for publishing.
@@ -45,20 +45,6 @@ In the delivered bundle, the main application may also appear as `index%20%285%2
 ---
 
 ## 3. Runtime architecture
-
-Project Stars uses a **zero-build, client-side architecture**:
-
-1. **HTML** defines the application shell and interface controls.
-2. **CSS** defines the visual language, panel system, typography, and responsive behavior.
-3. **JavaScript** manages:
-   - graph state,
-   - force layout,
-   - layered edge logic,
-   - candidate-link scoring,
-   - canvas rendering,
-   - detail-panel population,
-   - search and filter state,
-   - JSON export.
 
 ### 3.1 Rendering surfaces
 
