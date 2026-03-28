@@ -204,6 +204,18 @@ canvas#minimap { position:fixed; bottom:88px; left:18px; z-index:12;
   line-height: 1.45;
 }
 
+#brand-card .brand-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.mini-hud-btn{background:rgba(132,145,214,0.10);border:1px solid rgba(132,145,214,0.26);color:var(--glow-gold);border-radius:999px;padding:6px 10px;font-size:0.42rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.mini-hud-btn:hover{background:rgba(132,145,214,0.18);border-color:rgba(132,145,214,0.42);}
+#math-panel{position:fixed;top:18px;left:50%;transform:translateX(-50%);width:min(680px,calc(100vw - 32px));padding:14px 16px;z-index:16;display:none;pointer-events:auto;}
+#math-panel.show{display:block;}
+.math-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
+.math-section{padding:10px 12px;border-radius:14px;border:1px solid rgba(132,145,214,0.14);background:rgba(8,12,30,0.14);margin-top:8px;}
+.math-label{font-size:0.42rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+#math-panel pre{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.58rem;line-height:1.6;color:var(--text-soft);}
+#tooltip.edge-tip h3{color:#cfd6e0;}
+#tooltip .tt-math{display:block;margin-top:6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.52rem;line-height:1.55;color:var(--text-soft);white-space:pre-wrap;}
+
 #research-corner {
   right: 18px;
   top: 18px;
@@ -364,6 +376,7 @@ kbd { font-family:inherit; font-size:0.52rem; padding:2px 6px; border-radius:6px
 }
 
 @media (max-width: 700px) {
+  #math-panel{top:74px;width:calc(100vw - 20px);}
   #brand-card { left:12px; top:12px; width:calc(100vw - 24px); }
   #research-corner { left:12px; right:12px; top:86px; width:auto; }
   #metrics-corner { left:12px; right:12px; width:auto; bottom:206px; }
@@ -684,8 +697,13 @@ canvas#minimap{left:12px!important;bottom:12px!important;width:104px!important;h
 
 
 <div id="brand-card" class="ui-corner">
-  <div class="brand-title">Project Stars</div>
-  <div class="brand-sub">Research-grounded atlas of meaning</div>
+  <div class="brand-title-row">
+    <div>
+      <div class="brand-title">Project Stars</div>
+      <div class="brand-sub">Research-grounded atlas of meaning</div>
+    </div>
+    <button class="mini-hud-btn" id="math-toggle">Math</button>
+  </div>
 </div>
 
 <div id="research-corner" class="ui-corner">
@@ -745,6 +763,30 @@ canvas#minimap{left:12px!important;bottom:12px!important;width:104px!important;h
     <div class="legend-row"><span class="legend-sample-dot candidate"></span><span>Gray labels = candidate or sub-related labels</span></div>
     <div class="legend-row"><span class="legend-sample-wave"></span><span>Wave / glow = activation field</span></div>
     <div class="legend-row"><span class="legend-sample-stars"></span><span>Stars = ambient field only</span></div>
+  </div>
+</div>
+
+<div id="math-panel" class="ui-corner">
+  <div class="math-panel-head">
+    <div class="legend-title">Mathematical model</div>
+    <button class="mini-hud-btn" id="math-close">✕</button>
+  </div>
+  <div class="math-section">
+    <div class="math-label">Candidate scoring functional</div>
+    <pre id="math-score">S(a,b)=0.24·sem + 0.20·cit + 0.16·topic + 0.14·nbr + 0.11·ont + 0.05·rec + 0.06·author + 0.02·entity + 0.02·source
+Candidate iff S(a,b) &gt; τ,  τ = 0.46</pre>
+  </div>
+  <div class="math-section">
+    <div class="math-label">Layout dynamics</div>
+    <pre id="math-force">Repulsion: F_rep ∝ (3200·cooling + 800) / r²
+Confirmed-only springs: F_spring = 0.015·(d - d_target)
+Damping = 0.80, gravity = 0.005
+Axiom: only confirmed edges contribute spring forces.</pre>
+  </div>
+  <div class="math-section">
+    <div class="math-label">Field source term</div>
+    <pre id="math-wave">A(x,t)=Σ_i s_i exp(-||x-x_i||² / σ_i²) · (0.55 + 0.45 sin(ωt + φ_i))
+Selected nodes act as stronger sources; confirmed and candidate neighbors respond with different gains.</pre>
   </div>
 </div>
 
@@ -832,7 +874,7 @@ canvas#minimap{left:12px!important;bottom:12px!important;width:104px!important;h
   <button class="ctrl-btn" id="pause-btn">Pause</button>
   <button class="ctrl-btn" id="layout-btn">Rearrange</button>
   <button class="ctrl-btn" id="research-btn">Research Sync</button>
-  <button class="ctrl-btn green" id="export-btn">Export Map</button>
+  <button class="ctrl-btn green" id="export-btn">Export JSON + Matrices</button>
 </div>
 
 <div id="hint">Drag to pan - Scroll to zoom - Click a node to inspect - Double-click for detail</div>
@@ -1267,7 +1309,7 @@ const RESEARCH_TIMEOUT_MS=9000;
 let nodes=[], edges=[], nextId=200;
 const researchState={lastSyncAt:null,lastSyncTarget:'none',pending:false,pendingCount:0,lastError:'',sources:{openalex:{state:'idle',hits:0,last:null},crossref:{state:'idle',hits:0,last:null},semanticscholar:{state:'idle',hits:0,last:null},wikidata:{state:'idle',hits:0,last:null}}};
 let cam={x:0,y:0,z:0.85};
-let drag=null, hovered=null, selected=null, selectedEdge=null;
+let drag=null, hovered=null, hoveredEdge=null, selected=null, selectedEdge=null;
 let connectMode=false, connectFrom=null;
 let searchTerm='', filterCat=null;
 let paused=false, settled=false, simAge=0;
@@ -1368,6 +1410,27 @@ function scoreCandidate(a,b,neighborMap){
   if(sourceQuality>0.25) basis.push(`source quality ${sourceQuality.toFixed(2)}`);
   if(!basis.length) basis.push('multi-signal weak match');
   return {score, components:{semanticSimilarity:semantic,citationOverlap:citation,sharedTopics,sharedNeighbors,ontologyMatch:ontology,recencyWeight:recency,sharedAuthors,entityMatch:sharedEntities,sourceQuality}, basis};
+}
+
+function scoreBreakdownLines(edge){
+  const c=edge?.scoreComponents||{};
+  const parts=[
+    ['sem',0.24,c.semanticSimilarity],
+    ['cit',0.20,c.citationOverlap],
+    ['topic',0.16,c.sharedTopics],
+    ['nbr',0.14,c.sharedNeighbors],
+    ['ont',0.11,c.ontologyMatch],
+    ['rec',0.05,c.recencyWeight],
+    ['author',0.06,c.sharedAuthors],
+    ['entity',0.02,c.entityMatch],
+    ['source',0.02,c.sourceQuality]
+  ];
+  return parts.filter(([, ,v])=>typeof v==='number').map(([k,w,v])=>`${k}: ${w.toFixed(2)} × ${v.toFixed(2)} = ${(w*v).toFixed(3)}`);
+}
+function edgeHoverSummary(edge){
+  const total=(edge?.confidence||0).toFixed(3);
+  const cmp=edge && edge.confidence>=CANDIDATE_THRESHOLD ? '>' : '≤';
+  return [...scoreBreakdownLines(edge).slice(0,6),`total = ${total} ${cmp} ${CANDIDATE_THRESHOLD.toFixed(2)} → ${edge?.confidence>=CANDIDATE_THRESHOLD?'candidate':'below threshold'}`].join('\n');
 }
 
 function reviewStateLabel(state=''){
@@ -2061,17 +2124,34 @@ function showPanel(n){
 
 gc.style.cursor='grab';
 gc.addEventListener('mousemove',e=>{
-  const wp=worldPos(e); hovered=nodeAt(wp); gc.style.cursor=hovered?'pointer':(drag?'grabbing':'grab');
+  const wp=worldPos(e);
+  hovered=nodeAt(wp);
+  hoveredEdge=hovered?null:edgeAt(wp);
+  gc.style.cursor=hovered?'pointer':((hoveredEdge&&hoveredEdge.status==='possible')?'help':(drag?'grabbing':'grab'));
   if(drag){ if(drag.node){drag.node.x=wp.x;drag.node.y=wp.y;drag.node.pinned=true;} else{cam.x+=e.clientX-drag.lx;cam.y+=e.clientY-drag.ly;drag.lx=e.clientX;drag.ly=e.clientY;} }
   const tt=document.getElementById('tooltip');
+  const ttName=document.getElementById('tt-name');
+  const ttDesc=document.getElementById('tt-desc');
+  const ttCat=document.getElementById('tt-cat');
+  tt.classList.remove('edge-tip');
   if(hovered){
     tt.classList.add('show');
-    document.getElementById('tt-name').textContent=hovered.label;
-    document.getElementById('tt-desc').textContent=hovered.desc?.slice(0,110)+(hovered.desc?.length>110?'…':'')||'';
+    ttName.textContent=hovered.label;
+    ttDesc.textContent=hovered.desc?.slice(0,110)+(hovered.desc?.length>110?'…':'')||'';
     const possibleCount=getConns(hovered,'possible').length;
-    document.getElementById('tt-cat').textContent=`${CMAP[hovered.cat]?.label||''}${possibleCount?` · ${possibleCount} candidate`:''}`;
-    let tx=e.clientX+16,ty=e.clientY-8; if(tx+250>W)tx=e.clientX-260;if(ty+120>H)ty=e.clientY-120; tt.style.left=tx+'px';tt.style.top=ty+'px';
-  } else { tt.classList.remove('show'); }
+    ttCat.textContent=`${CMAP[hovered.cat]?.label||''}${possibleCount?` · ${possibleCount} candidate`:''}`;
+  } else if(hoveredEdge && hoveredEdge.status==='possible'){
+    const source=nodeById(hoveredEdge.a), target=nodeById(hoveredEdge.b);
+    tt.classList.add('show','edge-tip');
+    ttName.textContent=`Candidate relation`;
+    ttDesc.innerHTML=`${source?.label||'Source'} ↔ ${target?.label||'Target'}<span class="tt-math">${edgeHoverSummary(hoveredEdge)}</span>`;
+    ttCat.textContent=`${epistemicStateForEdge(hoveredEdge)} · τ = ${CANDIDATE_THRESHOLD.toFixed(2)}`;
+  } else {
+    tt.classList.remove('show');
+  }
+  if(tt.classList.contains('show')){
+    let tx=e.clientX+16,ty=e.clientY-8; if(tx+290>W)tx=e.clientX-300;if(ty+160>H)ty=e.clientY-170; tt.style.left=tx+'px';tt.style.top=ty+'px';
+  }
 });
 let lastClick=0;
 gc.addEventListener('mousedown',e=>{
@@ -2170,27 +2250,62 @@ document.getElementById('modal-confirm').onclick=async ()=>{
   await enrichNodeFromSources(nn);
 };
 
-document.getElementById('export-btn').onclick=()=>{
-  const data={
-    meta:{title:'Project Stars', exported:new Date().toISOString(), nodes:nodes.length, edges:edges.length, domains:CATEGORIES.length, schemaVersion:'research-graph-v4', note:'Confirmed and candidate relationships are stored separately. Candidate links are inferred from grounded signals only and never auto-promoted.'},
-    integration:{ externalSources:EXTERNAL_SOURCES, runtimeResearchState:researchState, candidateScoring:{ threshold:CANDIDATE_THRESHOLD, features:['semantic similarity','citation overlap','shared topics','shared neighbors','ontology match','recency weight','shared authors','entity match','source quality'] } },
-    ontology:{ categories:CATEGORIES.map(c=>({id:c.id,label:c.label,color:c.color})), relationshipLayers:['confirmed','possible'], evidenceClasses:['research-grounded','theoretical','interpretive','speculative','candidate-inference'], relationshipTypes:['related','extends','contrasts-with','supports','informs','shares-literature','topic-adjacent','candidate-bridge'] },
-    uiState:{ currentView, selectedNodeId:selected?.id||null, candidateLabelRule:'show labels only for possible related thoughts, not confirmed ones', waveField:{enabled:true, selectedNodeDisturbance:true} },
-    categories:CATEGORIES,
-    nodes:nodes.map(n=>({id:n.id,label:n.label,cat:n.cat,desc:n.desc,ref:n.ref||'',evidence:n.evidence||'',consensus:n.consensus||'',sourceType:n.sourceType||'',reviewState:n.reviewState||'',provenance:n.provenance||'',research:n.research||null,x:Math.round(n.x),y:Math.round(n.y),r:n.r})),
-    edges:edges.map(e=>({from:e.a,to:e.b,fromLabel:nodeById(e.a)?.label,toLabel:nodeById(e.b)?.label,relation:e.relation,status:e.status,confidence:e.confidence,basis:e.basis,notes:e.notes,rationale:e.rationale,citations:e.citations,evidenceClass:e.evidenceClass,consensus:e.consensus,provenance:e.provenance,review:e.review,scoreComponents:e.scoreComponents}))
+function triggerDownload(filename, content, type='application/json'){
+  const blob=new Blob([content],{type});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 600);
+}
+function buildConfirmedAdjacencyCsv(){
+  const ordered=[...nodes].sort((a,b)=>a.id-b.id);
+  const header=['id:label', ...ordered.map(n=>`"${n.id}:${n.label.replace(/"/g,'""')}"`)];
+  const rows=[header.join(',')];
+  ordered.forEach(a=>{
+    const vals=ordered.map(b=> getEdgeBetween(a.id,b.id,'confirmed') ? 1 : 0);
+    rows.push([`"${a.id}:${a.label.replace(/"/g,'""')}"`, ...vals].join(','));
+  });
+  return rows.join('\n');
+}
+function exportMathematicalObject(){
+  const stamp=new Date().toISOString().slice(0,10);
+  const nodesPayload=nodes.map(n=>{
+    const sig=n._signals||computeNodeSignals(n);
+    return {
+      id:n.id,label:n.label,category:n.cat,position:{x:Number(n.x.toFixed(2)),y:Number(n.y.toFixed(2))},radius:n.r,
+      e_theta:{
+        tokenSet:[...sig.tokenSet],refSet:[...sig.refSet],topicSet:[...sig.topicSet],authorSet:[...sig.authorSet],entitySet:[...sig.entitySet],yearAvg:sig.yearAvg,externalScore:sig.externalScore
+      },
+      evidence:n.evidence||'',consensus:n.consensus||'',reviewState:n.reviewState||'',research:n.research||null
+    };
+  });
+  const forceParams={
+    threshold:CANDIDATE_THRESHOLD,
+    candidate_weights:{semantic:0.24,citation:0.20,topic:0.16,shared_neighbors:0.14,ontology:0.11,recency:0.05,shared_authors:0.06,entity_match:0.02,source_quality:0.02},
+    layout:{repulsion:'3200*cooling+800',spring:0.015,damping:0.80,gravity:0.005,target_distance:'90 + r_a + r_b',confirmed_only_springs:true},
+    field:{source_term:'A(x,t)=Σ_i s_i exp(-||x-x_i||^2 / σ_i^2) * (0.55 + 0.45 sin(ωt + φ_i))',selected_gain:'stronger',confirmed_neighbor_response:'structural glow + stronger pull cue',candidate_neighbor_response:'score-weighted brightening'},
+    views:VIEW_MODES
   };
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`mind-map-${new Date().toISOString().slice(0,10)}.json`; a.click();
-  toast(`Exported ${nodes.length} thoughts · ${edges.filter(e=>e.status==='confirmed').length} confirmed · ${edges.filter(e=>e.status==='possible').length} candidate`);
-};
+  triggerDownload(`nodes-${stamp}.json`, JSON.stringify(nodesPayload,null,2));
+  setTimeout(()=>triggerDownload(`confirmed_adj-${stamp}.csv`, buildConfirmedAdjacencyCsv(), 'text/csv;charset=utf-8'), 180);
+  setTimeout(()=>triggerDownload(`force_params-${stamp}.json`, JSON.stringify(forceParams,null,2)), 360);
+  toast('Exported mathematical object · nodes, R_c adjacency, and force parameters');
+}
+document.getElementById('export-btn').onclick=exportMathematicalObject;
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+const mathPanel=document.getElementById('math-panel');
+document.getElementById('math-toggle').onclick=()=>mathPanel.classList.toggle('show');
+document.getElementById('math-close').onclick=()=>mathPanel.classList.remove('show');
+
 document.addEventListener('keydown',e=>{
   if(e.key==='/'){ e.preventDefault(); document.getElementById('search').focus(); }
   if(e.key==='Escape'){ connectMode=false; connectFrom=null; document.getElementById('connect-btn').classList.remove('active'); document.getElementById('connect-btn').textContent='Connect Mode'; document.getElementById('detail-panel').classList.remove('show'); document.getElementById('modal-bg').classList.remove('open'); selected=null; }
   if(e.key.toLowerCase()==='f') fitAll();
   if(e.key.toLowerCase()==='h') cam={x:0,y:0,z:0.85};
   if(e.key.toLowerCase()==='v'){ const idx=(VIEW_MODES.indexOf(currentView)+1)%VIEW_MODES.length; applyViewMode(VIEW_MODES[idx]); }
+  if(e.key.toLowerCase()==='m'){ mathPanel.classList.toggle('show'); }
 });
 document.getElementById('search').addEventListener('focus',()=>document.getElementById('search').select());
 // ── LOOP ──
