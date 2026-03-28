@@ -12,10 +12,6 @@ It is designed as a research-facing interface for studying how conceptual struct
 - elements in a dynamic layout,
 - and local sources in a continuous activation field.
 
-Project Stars is not just a mind map or visual toy. It is a knowledge system with explicit epistemic boundaries:
-
-> The system may infer candidate relationships, but only reviewed relationships count as confirmed structure.
-
 ---
 
 ## 1. Abstract
