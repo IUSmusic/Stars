@@ -1,6 +1,6 @@
 # Project Stars
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-0a0a0a)]
+![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-0a0a0a)]
 ![Status](https://img.shields.io/badge/Status-Experimental-8A2BE2)
 ![Type](https://img.shields.io/badge/Type-Research%20Atlas-1f6feb)
 ![Model](https://img.shields.io/badge/Model-Dynamical%20Hypothesis-f5a623)
