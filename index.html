@@ -685,6 +685,13 @@ canvas#minimap{left:12px!important;bottom:12px!important;width:104px!important;h
 .receiver-sub { margin-top:6px; font-size:0.4rem; line-height:1.45; color:var(--muted); }
 .receiver-presets { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-top:8px; }
 .receiver-presets .mini-hud-btn { padding:6px 8px; font-size:0.32rem; }
+.intent-stack { display:grid; gap:10px; margin-top:10px; }
+.intent-control { display:grid; gap:5px; }
+.intent-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.intent-label { font-size:0.36rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); }
+.intent-value { font-family:'Cormorant Garamond',serif; font-size:0.88rem; color:var(--glow-gold); line-height:1; }
+.intent-slider { width:100%; accent-color:#f5d97a; }
+.intent-sub { font-size:0.36rem; line-height:1.45; color:var(--muted); }
 #experiment-card { padding:10px 12px; }
 .experiment-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; margin-top:8px; }
 .experiment-tile { padding:7px 8px; border-radius:12px; border:1px solid rgba(132,145,214,0.16); background:rgba(8,12,30,0.16); }
@@ -768,6 +775,23 @@ canvas#minimap{left:12px!important;bottom:12px!important;width:104px!important;h
     <button class="mini-hud-btn" data-rq="0.70">Mid Q</button>
     <button class="mini-hud-btn" data-rq="1.00">High Q</button>
   </div>
+  <div class="intent-stack">
+    <div class="intent-control">
+      <div class="intent-row"><div class="intent-label">Intention strength</div><div class="intent-value" id="intention-value">0.50</div></div>
+      <input class="intent-slider" type="range" id="intention-slider" min="0" max="1" value="0.50" step="0.01">
+      <div class="intent-sub">Scales how strongly thought resolves into coordinated action.</div>
+    </div>
+    <div class="intent-control">
+      <div class="intent-row"><div class="intent-label">Moral polarity</div><div class="intent-value" id="polarity-value">0.00</div></div>
+      <input class="intent-slider" type="range" id="polarity-slider" min="-1" max="1" value="0.00" step="0.01">
+      <div class="intent-sub">Negative values bias toward crime-like pathways; positive values bias toward kindness-like pathways.</div>
+    </div>
+    <div class="intent-control">
+      <div class="intent-row"><div class="intent-label">Empathy field</div><div class="intent-value" id="empathy-value">0.50</div></div>
+      <input class="intent-slider" type="range" id="empathy-slider" min="0" max="1" value="0.50" step="0.01">
+      <div class="intent-sub">Raises the odds that intention flips from harm to repair and prosocial cooperation.</div>
+    </div>
+  </div>
 </div>
 
 <div id="experiment-card" class="ui-corner">
@@ -777,8 +801,10 @@ canvas#minimap{left:12px!important;bottom:12px!important;width:104px!important;h
     <div class="experiment-tile"><div class="k">Coherence</div><div class="v" id="metric-coherence">0.000</div></div>
     <div class="experiment-tile"><div class="k">Convergence</div><div class="v" id="metric-convergence">0%</div></div>
     <div class="experiment-tile"><div class="k">Receiver state</div><div class="v" id="metric-rq">High</div></div>
+    <div class="experiment-tile"><div class="k">Moral valence</div><div class="v" id="metric-moral">0.000</div></div>
+    <div class="experiment-tile"><div class="k">Collective pull</div><div class="v" id="metric-collective">0.000</div></div>
   </div>
-  <div class="experiment-note" id="experiment-note">Formal hypothesis: semantic precision emerges from structural constraints plus receiver-state tuning.</div>
+  <div class="experiment-note" id="experiment-note">Formal hypothesis: semantic precision emerges from structural constraints, receiver-state tuning, and an intention field that can flip from harm to care.</div>
 </div>
 
 <div id="view-switcher">
@@ -837,10 +863,12 @@ Axiom: only confirmed edges contribute spring forces.</pre>
   <div class="math-section">
     <div class="math-label">Field source term</div>
     <pre id="math-wave">A(x,t)=Σ_i s_i exp(-||x-x_i||² / σ_i²) · (0.55 + 0.45 sin(ωt + φ_i))
-Selected nodes act as stronger sources; confirmed and candidate neighbors respond with different gains.</pre>
+Int_i'(t)=α·A(x_i,t)·Q·MoralValence_i - β·|Int_i|
+MoralValence_i = tanh(γ·(EmpathyField - Threshold)) + user polarity bias
+Positive intention strengthens collective attractors; negative valence strengthens crime-like pathways.</pre>
     <div class="math-section">
     <div class="math-label">Formal hypothesis</div>
-    <div class="formal-note">This atlas is framed as a computational <strong>formalization</strong>, not a theorem-proof. Thoughts, feelings, and goals are modeled as state transitions in a partially free dynamical field. Precision is operationalized as a measured function of low layout energy, activation coherence, and receiver quality.</div>
+    <div class="formal-note">This atlas is framed as a computational <strong>formalization</strong>, not a theorem-proof. Thoughts, feelings, goals, and intentions are modeled as state transitions in a partially free dynamical field. Precision is operationalized as a measured function of low layout energy, activation coherence, receiver quality, and an intention field whose moral valence can flip under empathy tuning.</div>
   </div>
   <div class="math-section">
     <div class="math-label">Science links</div>
@@ -848,6 +876,8 @@ Selected nodes act as stronger sources; confirmed and candidate neighbors respon
       <div class="science-item"><strong>Free Energy Principle</strong>Layout settling plays the role of prediction-error reduction under structural constraints.</div>
       <div class="science-item"><strong>Predictive Processing</strong>Candidate relations behave like update proposals; confirmed structure behaves like stabilized priors.</div>
       <div class="science-item"><strong>Dynamical Systems Neuroscience</strong>Receiver quality acts like a metastability / gain parameter controlling whether the field resolves cleanly.</div>
+      <div class="science-item"><strong>Theory of Planned Behavior</strong>Intention is modeled as the bridge from cognition to action, consistent with Ajzen's attitude-norm-control framework.</div>
+      <div class="science-item"><strong>Moral Psychology & Social Identity</strong>Empathy and collective identity tune whether the same structural field resolves toward crime-like or kindness-like attractors.</div>
     </div>
   </div>
 </div>
@@ -1020,8 +1050,14 @@ const CATEGORIES = [
 ];
 const CMAP = {}; CATEGORIES.forEach(c=>CMAP[c.id]=c);
 const RECEIVER_DEFAULT = 1.0;
+const INTENTION_DEFAULT = 0.50;
+const MORAL_DEFAULT = 0.00;
+const EMPATHY_DEFAULT = 0.50;
 let receiverQuality = RECEIVER_DEFAULT;
-let experimentMetrics = {precision:0, coherence:0, convergence:0, receiverState:'High'};
+let intentionStrength = INTENTION_DEFAULT;
+let moralPolarity = MORAL_DEFAULT;
+let empathyField = EMPATHY_DEFAULT;
+let experimentMetrics = {precision:0, coherence:0, convergence:0, receiverState:'High', moralValence:0, collectivePull:0};
 
 // ═══════════════════════════════════════════════════════════
 // NODES — 92 thoughts grounded in contemporary research
@@ -1313,6 +1349,32 @@ const SEED_NODES = [
 {id:89, label:'Interconnection', cat:'spirit', r:17,
  desc:'The ecological, quantum, and philosophical insight that boundaries between self and world are porous — organisms are processes embedded in larger processes.',
  ref:'Capra, The Web of Life (1996); Thich Nhat Hanh, Interbeing (1987)'},
+
+// ── INTENTION, MORAL VALENCE & COLLECTIVE SCALING ──
+{id:90, label:'Intention', cat:'self', r:17,
+ desc:'The bridge from thought to action. In behavioral science, intention is the proximal commitment that converts beliefs, norms, and perceived control into behavior.',
+ ref:'Ajzen, The Theory of Planned Behavior (1991); Bratman, Intention, Plans, and Practical Reason (1987)'},
+{id:91, label:'Collective Intention', cat:'society', r:18,
+ desc:'Shared purposive orientation across many agents. Individual commitments become coordinated action when norms, identity, and common goals stabilize together.',
+ ref:'Searle, The Construction of Social Reality (1995); Tomasello, A Natural History of Human Thinking (2014)'},
+{id:92, label:'Action', cat:'neuroscience', r:16,
+ desc:'The behavioral output of intention. Motor preparation, action selection, and inhibition link internal goals to observable conduct.',
+ ref:'Cisek & Kalaska, Neural Mechanisms for Interacting with a World Full of Action Choices (2010); Grafton, The Cognitive Neuroscience of Prehension (2010)'},
+{id:93, label:'Moral Valence', cat:'society', r:16,
+ desc:'The polarity of an intention or act within a social-moral field. It captures whether a pathway is currently tuned toward harm, restraint, repair, or prosocial benefit.',
+ ref:'Greene, Moral Tribes (2013); Haidt, The Righteous Mind (2012)'},
+{id:94, label:'Crime', cat:'society', r:17,
+ desc:'A harmful or norm-violating social outcome. Moral disengagement, low trust, status threat, and weak regulation can push intention toward antisocial action.',
+ ref:'Bandura, Moral Disengagement (2016); Agnew, General Strain Theory (1992)'},
+{id:95, label:'Kindness', cat:'emotion', r:17,
+ desc:'Prosocial action directed toward others\' wellbeing. Kindness emerges when empathy, regulation, and cooperative norms align into low-cost helping behavior.',
+ ref:'Curry et al., Is It Good to Be Good? (2018); Lyubomirsky et al., The Benefits of Frequent Positive Affect (2005)'},
+{id:96, label:'Collective Identity', cat:'society', r:18,
+ desc:'The nation-scale or group-scale attractor in which shared symbols, norms, and intentions stabilize into durable identity, policy, and culture.',
+ ref:'Tajfel, Human Groups and Social Categories (1981); Anderson, Imagined Communities (1983)'},
+{id:97, label:'Empathy / Compassion', cat:'emotion', r:18,
+ desc:'The affective and motivational tuner that can redirect intention away from harm and toward helping, repair, and cooperative concern.',
+ ref:'Singer & Klimecki, Empathy versus Compassion (2014); Decety & Cowell, The Complex Relation Between Morality and Empathy (2014)'},
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -1358,6 +1420,15 @@ const SEED_EDGES = [
   // Cross-domain surprising links
   [22,55],[34,86],[35,84],[37,53],[28,55],[8,25],[43,19],[44,55],[47,87],[39,5],
   [37,62],[40,11],[73,77],[18,52],[53,59],[31,67],[65,68],[25,8],[42,59],[36,35],
+  // Intention / moral valence / collective scaling
+  [90,92],[90,93],[90,59],[90,60],[90,47],[90,48],[90,91],[90,97],
+  [91,96],[91,73],[91,71],[91,72],[91,87],[91,92],
+  [92,30],[92,31],[92,73],[92,94],[92,95],
+  [93,94],[93,95],[93,69],[93,71],[93,97],
+  [94,70],[94,72],[94,76],[94,64],
+  [95,12],[95,16],[95,71],[95,73],[95,88],
+  [96,71],[96,72],[96,74],[96,87],
+  [97,12],[97,16],[97,88],[97,71],[97,95],
 ];
 
 // GRAPH STATE, LAYERS, SCORING, AND RENDERING
@@ -1605,6 +1676,22 @@ function computeClusterDiagnostics(){
   clusterDiagnostics=clusters.sort((a,b)=>b.cohesion-a.cohesion);
 }
 function clusterForNode(id){ return clusterDiagnostics.find(c=>c.ids.includes(id)) || null; }
+function computeMoralValence(){
+  const gamma=4.0, threshold=0.5;
+  const empathyDriven=Math.tanh(gamma*(empathyField-threshold));
+  return clamp((0.65*moralPolarity)+(0.35*empathyDriven), -1, 1);
+}
+function labelKey(n){ return String(n?.label||'').toLowerCase(); }
+function nodeIntentGain(n){
+  const label=labelKey(n);
+  const valence=computeMoralValence();
+  if(label.includes('crime')) return 0.85 - Math.max(0,valence)*0.35;
+  if(label.includes('kindness')) return 1.0 + Math.max(0,valence)*0.55;
+  if(label.includes('empathy') || label.includes('compassion')) return 1.0 + Math.max(0,valence)*0.45;
+  if(label.includes('collective') || label.includes('nation')) return 1.0 + intentionStrength*0.45;
+  if(label.includes('intention') || label.includes('action') || label.includes('moral valence')) return 1.0 + intentionStrength*0.60;
+  return 1.0;
+}
 function updateExperimentPanel(){
   const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
   set('receiver-value', receiverQuality.toFixed(2));
@@ -1612,10 +1699,17 @@ function updateExperimentPanel(){
   set('metric-coherence', experimentMetrics.coherence.toFixed(3));
   set('metric-convergence', `${Math.round(experimentMetrics.convergence*100)}%`);
   set('metric-rq', experimentMetrics.receiverState);
+  set('metric-moral', experimentMetrics.moralValence.toFixed(3));
+  set('metric-collective', experimentMetrics.collectivePull.toFixed(3));
+  set('intention-value', intentionStrength.toFixed(2));
+  set('polarity-value', moralPolarity.toFixed(2));
+  set('empathy-value', empathyField.toFixed(2));
   const note=document.getElementById('experiment-note');
-  if(note) note.textContent = experimentMetrics.precision>0.62
-    ? 'Receiver-state tuning is currently supporting a crisp, low-energy interpretation.'
-    : 'Receiver-state tuning is currently limiting semantic precision and field resolution.';
+  if(note) note.textContent = experimentMetrics.moralValence >= 0.2
+    ? 'The field is currently resolving toward cooperative and kindness-weighted attractors.'
+    : (experimentMetrics.moralValence <= -0.2
+      ? 'The field is currently biased toward antisocial and crime-like pathways unless empathy rises.'
+      : 'The field is near moral equilibrium; receiver tuning and empathy can still flip the attractor state.');
 }
 function updateEnergyReadout(){
   const confirmedCount=edges.filter(e=>e.status==='confirmed').length || 1;
@@ -1633,19 +1727,23 @@ function updateEnergyReadout(){
   const convergence = clamp(1 - (velocityMass / Math.max(nodes.length*3.4,1)), 0, 1);
   const localConfirmed = selected ? getConns(selected,'confirmed').length : 0;
   const localPossible = selected ? getConns(selected,'possible').length : 0;
-  const coherence = clamp((localConfirmed*0.12 + receiverQuality*0.58 + convergence*0.30) - Math.min(localPossible*0.03,0.22), 0, 1);
-  const precision = clamp((receiverQuality * 0.45) + (convergence * 0.30) + ((1 - Math.min(1, energy/240)) * 0.25), 0, 1);
+  const moralValence = computeMoralValence();
+  const collectivePull = clamp(intentionStrength * receiverQuality * Math.max(0, moralValence), 0, 1);
+  const coherence = clamp((localConfirmed*0.10 + receiverQuality*0.44 + convergence*0.22 + collectivePull*0.16 + Math.max(0,moralValence)*0.10) - Math.min(localPossible*0.03,0.22), 0, 1);
+  const precision = clamp((receiverQuality * 0.35) + (convergence * 0.22) + ((1 - Math.min(1, energy/240)) * 0.18) + (intentionStrength*0.12) + (Math.max(0,moralValence)*0.13), 0, 1);
   experimentMetrics={
     precision,
     coherence,
     convergence,
-    receiverState: receiverQuality >= 0.85 ? 'High' : (receiverQuality >= 0.55 ? 'Medium' : 'Low')
+    receiverState: receiverQuality >= 0.85 ? 'High' : (receiverQuality >= 0.55 ? 'Medium' : 'Low'),
+    moralValence,
+    collectivePull
   };
-  layoutDiagnostics={energy, structuralPull, hypothesisTension, settling:settled?'stable':'settling', velocityMass, precision, coherence, convergence};
+  layoutDiagnostics={energy, structuralPull, hypothesisTension, settling:settled?'stable':'settling', velocityMass, precision, coherence, convergence, moralValence, collectivePull};
   const summary=document.getElementById('energy-summary');
   const detail=document.getElementById('energy-detail');
-  if(summary) summary.innerHTML=`<strong>${settled?'Layout stable':'Layout settling'}</strong> · pull ${structuralPull.toFixed(1)} · Q ${receiverQuality.toFixed(2)}`;
-  if(detail) detail.textContent=`Hypothesis tension ${hypothesisTension.toFixed(2)} · coherence ${coherence.toFixed(2)} · precision ${precision.toFixed(2)}`;
+  if(summary) summary.innerHTML=`<strong>${settled?'Layout stable':'Layout settling'}</strong> · pull ${structuralPull.toFixed(1)} · Q ${receiverQuality.toFixed(2)} · Int ${intentionStrength.toFixed(2)}`;
+  if(detail) detail.textContent=`Hypothesis tension ${hypothesisTension.toFixed(2)} · coherence ${coherence.toFixed(2)} · moral ${moralValence.toFixed(2)} · collective ${collectivePull.toFixed(2)}`;
   updateExperimentPanel();
 }
 
@@ -1932,10 +2030,13 @@ function tick(){
   if(paused) return;
   simAge++; waveTime += 0.012 + receiverQuality*0.009;
   const cooling=Math.max(0.3, 1-simAge/400);
-  const REPEL=(3200*cooling+800)*(0.82 + receiverQuality*0.36);
-  const SPRING=0.009 + receiverQuality*0.008;
-  const DAMP=clamp(0.70 + receiverQuality*0.18, 0.70, 0.88);
-  const GRAVITY=0.009 - receiverQuality*0.004;
+  const effectiveIntention=intentionStrength*receiverQuality;
+  const moralValence=computeMoralValence();
+  const collectivePull=clamp(effectiveIntention*Math.max(0,moralValence),0,1);
+  const REPEL=(3200*cooling+800)*(0.82 + receiverQuality*0.36 - collectivePull*0.06);
+  const SPRING=0.009 + receiverQuality*0.008 + effectiveIntention*0.004;
+  const DAMP=clamp(0.70 + receiverQuality*0.18 + Math.max(0,moralValence)*0.03, 0.70, 0.90);
+  const GRAVITY=0.009 - receiverQuality*0.004 + Math.max(0,moralValence)*0.0008;
   nodes.forEach(n=>{
     if(n.pinned)return;
     n.vx-=n.x*GRAVITY;n.vy-=n.y*GRAVITY;
@@ -1945,17 +2046,35 @@ function tick(){
   edges.filter(e=>e.status==='confirmed').forEach(e=>{
     const a=nodeById(e.a),b=nodeById(e.b);if(!a||!b)return;
     const dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1;
-    const tgt=90+a.r+b.r,f=(d-tgt)*SPRING;
+    const localGain=((nodeIntentGain(a)+nodeIntentGain(b))*0.5) * (1 + effectiveIntention*0.55 + Math.max(0,moralValence)*0.20);
+    const moralShift=(labelKey(a).includes('crime')||labelKey(b).includes('crime')) ? (1 - Math.max(0,moralValence)*0.25) : 1;
+    const tgt=90+a.r+b.r,f=(d-tgt)*SPRING*localGain*moralShift;
     const fx=dx/d*f,fy=dy/d*f;
     if(!a.pinned){a.vx+=fx;a.vy+=fy;} if(!b.pinned){b.vx-=fx;b.vy-=fy;}
   });
+  const collectiveNodes=nodes.filter(n=>{ const l=labelKey(n); return l.includes('collective') || l.includes('cooperation') || l.includes('trust'); });
+  const collectiveCentroid=collectiveNodes.length ? {
+    x: collectiveNodes.reduce((s,n)=>s+n.x,0)/collectiveNodes.length,
+    y: collectiveNodes.reduce((s,n)=>s+n.y,0)/collectiveNodes.length
+  } : {x:0,y:0};
   nodes.forEach(n=>{
+    if(!n.pinned){
+      const label=labelKey(n);
+      if(label.includes('crime')){
+        n.vx += (n.x-collectiveCentroid.x)*0.0008*Math.max(0,moralValence);
+        n.vy += (n.y-collectiveCentroid.y)*0.0008*Math.max(0,moralValence);
+      }
+      if(label.includes('kindness') || label.includes('empathy') || label.includes('compassion') || label.includes('collective') || label.includes('cooperation')){
+        n.vx += (collectiveCentroid.x-n.x)*(0.0012*collectivePull + 0.0006*Math.max(0,moralValence));
+        n.vy += (collectiveCentroid.y-n.y)*(0.0012*collectivePull + 0.0006*Math.max(0,moralValence));
+      }
+    }
     const matchSearch=!searchTerm||(n.label.toLowerCase().includes(searchTerm)||n.desc.toLowerCase().includes(searchTerm));
     const matchCat=!filterCat||n.cat===filterCat;
     n.visible=matchSearch&&matchCat; n.alpha=n.visible?1:0.07;
   });
   if(simAge>350&&!settled){settled=true;}
-  document.getElementById('sim-status').textContent=settled ? `layout stable · tension ${layoutDiagnostics.hypothesisTension.toFixed(2)} · Q ${receiverQuality.toFixed(2)}` : `layout settling · pull ${layoutDiagnostics.structuralPull.toFixed(1)} · Q ${receiverQuality.toFixed(2)}`;
+  document.getElementById('sim-status').textContent=settled ? `layout stable · tension ${layoutDiagnostics.hypothesisTension.toFixed(2)} · Q ${receiverQuality.toFixed(2)} · M ${layoutDiagnostics.moralValence.toFixed(2)}` : `layout settling · pull ${layoutDiagnostics.structuralPull.toFixed(1)} · Q ${receiverQuality.toFixed(2)} · Int ${intentionStrength.toFixed(2)}`;
   updateEnergyReadout();
 }
 function getEdgeBetween(a,b,status=null){
@@ -2385,6 +2504,7 @@ function exportMathematicalObject(){
     field:{source_term:'A(x,t)=Σ_i s_i exp(-||x-x_i||^2 / σ_i^2) * (0.55 + 0.45 sin(ωt + φ_i))',selected_gain:'stronger',confirmed_neighbor_response:'structural glow + stronger pull cue',candidate_neighbor_response:'score-weighted brightening'},
     views:VIEW_MODES,
     receiver:{default:RECEIVER_DEFAULT,current:receiverQuality,interpretation:'Operational receiver-state tuning parameter for precision, convergence, and activation gain.'},
+    intention:{default:INTENTION_DEFAULT,current:intentionStrength,empathy:empathyField,moralPolarity:moralPolarity,moralValence:computeMoralValence(),interpretation:'Bridge from thought to action and collective attractor formation.'},
     experimentMetrics:layoutDiagnostics
   };
   triggerDownload(`nodes-${stamp}.json`, JSON.stringify(nodesPayload,null,2));
@@ -2398,8 +2518,15 @@ const mathPanel=document.getElementById('math-panel');
 document.getElementById('math-toggle').onclick=()=>mathPanel.classList.toggle('show');
 document.getElementById('math-close').onclick=()=>mathPanel.classList.remove('show');
 const receiverSlider=document.getElementById('receiver-slider');
-if(receiverSlider){ receiverSlider.addEventListener('input', e=>{ receiverQuality=parseFloat(e.target.value||RECEIVER_DEFAULT); settled=false; simAge=0; updateEnergyReadout(); }); }
-document.querySelectorAll('[data-rq]').forEach(btn=>btn.onclick=()=>{ receiverQuality=parseFloat(btn.dataset.rq||RECEIVER_DEFAULT); if(receiverSlider) receiverSlider.value=receiverQuality.toFixed(2); settled=false; simAge=0; updateEnergyReadout(); });
+const intentionSlider=document.getElementById('intention-slider');
+const polaritySlider=document.getElementById('polarity-slider');
+const empathySlider=document.getElementById('empathy-slider');
+function resetFieldDynamics(){ settled=false; simAge=0; updateEnergyReadout(); }
+if(receiverSlider){ receiverSlider.addEventListener('input', e=>{ receiverQuality=parseFloat(e.target.value||RECEIVER_DEFAULT); resetFieldDynamics(); }); }
+if(intentionSlider){ intentionSlider.addEventListener('input', e=>{ intentionStrength=parseFloat(e.target.value||INTENTION_DEFAULT); resetFieldDynamics(); }); }
+if(polaritySlider){ polaritySlider.addEventListener('input', e=>{ moralPolarity=parseFloat(e.target.value||MORAL_DEFAULT); resetFieldDynamics(); }); }
+if(empathySlider){ empathySlider.addEventListener('input', e=>{ empathyField=parseFloat(e.target.value||EMPATHY_DEFAULT); resetFieldDynamics(); }); }
+document.querySelectorAll('[data-rq]').forEach(btn=>btn.onclick=()=>{ receiverQuality=parseFloat(btn.dataset.rq||RECEIVER_DEFAULT); if(receiverSlider) receiverSlider.value=receiverQuality.toFixed(2); resetFieldDynamics(); });
 
 document.addEventListener('keydown',e=>{
   if(e.key==='/'){ e.preventDefault(); document.getElementById('search').focus(); }
