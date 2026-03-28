@@ -12,8 +12,6 @@ It is designed as a research-facing interface for studying how conceptual struct
 - elements in a dynamic layout,
 - and local sources in a continuous activation field.
 
----
-
 ## 1. Abstract
 
 Project Stars formalizes thoughts as attributed objects embedded in a semantic space and linked through two distinct relation layers:
@@ -34,8 +32,6 @@ This produces a research graph in which:
 - candidate links come from explicit signals rather than randomness,
 - and visualization is treated as a dynamic embedding of the graph rather than the graph itself.
 
----
-
 ## 2. Research framing
 
 Project Stars studies a central question:
@@ -49,8 +45,6 @@ The system takes the view that a thought is not just a label or note. A thought 
 - evidence and provenance,
 - graph relationships,
 - and visual or dynamical behavior.
-
----
 
 ## 3. Formal model
 
@@ -76,8 +70,6 @@ This is intentionally a hybrid model. It is not only a graph, not only a metric 
 - an epistemic model of review status,
 - a dynamic layout process,
 - and a field-based activation layer.
-
----
 
 ## 4. Thought objects
 
@@ -120,7 +112,6 @@ In implementation terms, the current node model already approximates this throug
 - `x`, `y`, `vx`, `vy`
 - `pinned`, `alpha`, `visible`
 
----
 
 ## 5. Geometry of thought
 
@@ -146,8 +137,6 @@ The component distances may include:
 - graph-structural distance.
 
 This matters because Project Stars does not infer relations from one notion of similarity alone.
-
----
 
 ## 6. Relation layers
 
@@ -207,8 +196,6 @@ A relation object can be written as:
 `r_ij = (theta_i, theta_j, type, status, basis, provenance)`
 
 This matters because the graph stores relationship meaning and justification, not just connectivity.
-
----
 
 ## 8. Candidate-link inference
 
@@ -271,8 +258,6 @@ So more precisely, a candidate relation exists only if:
 - the basis of inference is not empty.
 
 This captures the current design: candidate links are deterministic, thresholded, and preserve why they were created.
-
----
 
 ## 9. Modeling principles
 
@@ -351,8 +336,6 @@ The layout can also be understood as approximately minimizing an energy function
 
 That gives the visualization a more rigorous basis than just “animated nodes.”
 
----
-
 ## 11. Visual encoding as epistemic encoding
 
 The interface uses visual hierarchy to distinguish certainty levels:
@@ -404,8 +387,6 @@ In practical terms:
 
 This supports the conceptual reading that ideas are not isolated points but sources of local influence in a surrounding system.
 
----
-
 ## 13. Inspector as research interface
 
 The detail inspector is the main explanatory surface of the application.
@@ -430,8 +411,6 @@ Scientifically, the inspector is where the graph becomes interpretable. It trans
 - candidate inference into inspectable evidence,
 - node metadata into explicit epistemic context.
 
----
-
 ## 14. Add-thought workflow as curation mechanism
 
 The add-thought workflow allows new node creation and optional confirmed-edge creation with rationale, citations, provenance, and review metadata. Candidate edges are recomputed after addition.
@@ -445,8 +424,6 @@ Each addition extends the current graph by:
 - recomputing the candidate layer.
 
 This makes Project Stars a dynamic research object rather than a static diagram.
-
----
 
 ## 15. Multi-view navigation
 
@@ -472,8 +449,6 @@ These are not just view presets. They are different ways of projecting the same 
 - domain grouping,
 - local neighborhood analysis.
 
----
-
 ## 16. Export semantics
 
 The export layer preserves:
@@ -495,8 +470,6 @@ It also preserves:
 - score components.
 
 This is scientifically important. A graph export that discards uncertainty or provenance is weak as a research artifact.
-
----
 
 ## 17. External research-source layer
 
@@ -520,8 +493,6 @@ This staged design is methodologically sound:
 1. define the internal semantics
 2. define the scoring and review model
 3. connect live data once the evidence structure is stable
-
----
 
 ## 18. Research foundations
 
@@ -560,8 +531,6 @@ Category and entity alignment help distinguish true conceptual relation from lex
 
 Human review defines the hard boundary between surfaced hypotheses and accepted structure.
 
----
-
 ## 19. Scientific contribution
 
 The main contribution of Project Stars is the coupling of several ideas into one interpretable system:
@@ -586,8 +555,6 @@ The main contribution of Project Stars is the coupling of several ideas into one
 
 This makes Project Stars interpretable as a research system for thought relations rather than merely a browser visualization.
 
----
-
 ## 20. Limitations
 
 The current build has important limits:
@@ -607,8 +574,6 @@ Additional limitations include:
 - there is no persistent collaborative review backend,
 - large-scale graph behavior is not yet the main target.
 
----
-
 ## 21. Future extensions
 
 Natural next steps include:
@@ -625,8 +590,6 @@ A deeper theoretical extension would reinterpret confirmed relations as morphism
 `r : theta_i -> theta_j`
 
 Another would treat the semantic space as curved rather than flat, so conceptual distance depends on local structure.
-
----
 
 ## 22. Implementation mapping
 
