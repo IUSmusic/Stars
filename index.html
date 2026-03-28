@@ -758,33 +758,30 @@ window.addEventListener('load',()=>{
 </script>
 
 
-<style id="mobile-zoom-friendly-patch">
-/* Keep the full UI available on small screens and let the user zoom out instead of hiding parts of the model. */
+<style id="hud-controls-mobile-patch">
+#zoom-controls{display:none!important;}
+#app-controls-card{padding:10px 12px;}
+#app-controls-card #search-wrap,
+#app-controls-card #filters,
+#app-controls-card #controls{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;width:100%!important;max-width:none!important;margin:0!important;}
+#app-controls-card #search-wrap{margin-top:8px!important;}
+#app-controls-card #search{width:100%!important;}
+#app-controls-card #filters{display:flex!important;flex-wrap:wrap!important;justify-content:flex-start!important;gap:5px!important;margin-top:8px!important;overflow:visible!important;white-space:normal!important;padding-bottom:0!important;}
+#app-controls-card #controls{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;margin-top:8px!important;}
+#app-controls-card .ctrl-btn{width:100%!important;}
+#app-controls-card .controls-note{margin-top:8px;font-size:.38rem;line-height:1.45;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;}
+#search-wrap,#filters,#controls{display:none;}
 @media (max-width: 860px){
-  #left-dock{left:8px!important;top:8px!important;width:176px!important;max-height:calc(100vh - 16px)!important;overflow:auto!important;}
-  #right-dock{right:8px!important;top:8px!important;width:184px!important;max-height:calc(100vh - 16px)!important;overflow:auto!important;}
-  #search-wrap{top:12px!important;bottom:auto!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(300px,calc(100vw - 400px))!important;}
-  #filters{top:50px!important;bottom:auto!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(340px,calc(100vw - 400px))!important;max-width:min(340px,calc(100vw - 400px))!important;justify-content:flex-start!important;overflow:auto hidden!important;white-space:nowrap!important;}
-  #controls{left:50%!important;right:auto!important;bottom:8px!important;transform:translateX(-50%)!important;width:min(460px,calc(100vw - 400px))!important;max-width:min(460px,calc(100vw - 400px))!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;}
-  #detail-panel{left:194px!important;right:auto!important;top:102px!important;bottom:94px!important;width:min(280px,calc(100vw - 390px))!important;max-height:none!important;}
-  canvas#minimap{display:block!important;left:194px!important;bottom:12px!important;width:92px!important;height:66px!important;visibility:visible!important;opacity:1!important;}
-  #zoom-controls{display:flex!important;right:194px!important;bottom:12px!important;visibility:visible!important;opacity:1!important;}
-  #sim-status{display:block!important;right:194px!important;bottom:88px!important;visibility:visible!important;opacity:1!important;max-width:160px!important;}
-  #hint{display:block!important;bottom:84px!important;visibility:visible!important;opacity:1!important;}
+  #right-dock{max-height:calc(100vh - 16px)!important;overflow:auto!important;}
+  #app-controls-card #controls{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  #detail-panel{bottom:24px!important;}
 }
 @media (max-width: 640px){
-  #left-dock{width:164px!important;}
-  #right-dock{width:168px!important;}
-  #search-wrap{width:min(250px,calc(100vw - 350px))!important;}
-  #filters{width:min(260px,calc(100vw - 350px))!important;max-width:min(260px,calc(100vw - 350px))!important;}
-  #controls{width:min(360px,calc(100vw - 350px))!important;max-width:min(360px,calc(100vw - 350px))!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-  #detail-panel{left:180px!important;width:min(240px,calc(100vw - 340px))!important;top:96px!important;bottom:90px!important;}
-  canvas#minimap{left:180px!important;bottom:10px!important;width:84px!important;height:60px!important;}
-  #zoom-controls{right:180px!important;bottom:10px!important;}
-  #sim-status{right:180px!important;bottom:78px!important;max-width:120px!important;}
+  #left-dock,#right-dock{max-height:none!important;}
+  #right-dock{top:10px!important;}
+  #app-controls-card #controls{grid-template-columns:1fr 1fr!important;}
 }
 </style>
-
 </head>
 <body>
 
@@ -967,13 +964,6 @@ Positive intention strengthens collective attractors; negative valence strengthe
 <div id="filters"></div>
 <div id="legend"></div>
 
-<div id="zoom-controls">
-  <div class="zc-btn" id="zc-in" title="Zoom In">+</div>
-  <div class="zc-btn" id="zc-out" title="Zoom Out">−</div>
-  <div class="zc-divider"></div>
-  <div class="zc-btn fit" id="zc-fit" title="Fit All">FIT</div>
-  <div class="zc-btn" id="zc-home" title="Reset">⌂</div>
-</div>
 
 <div id="detail-panel">
   <button id="dp-close">✕</button>
@@ -1047,7 +1037,7 @@ Positive intention strengthens collective attractors; negative valence strengthe
   <button class="ctrl-btn green" id="export-btn">Export JSON + Matrices</button>
 </div>
 
-<div id="hint">Drag to pan - Scroll to zoom - Click a node to inspect - Double-click for detail</div>
+<div id="hint">Drag to pan - Pinch to zoom - Click a node to inspect - Double-click for detail</div>
 <div id="sim-status"></div>
 <div id="toast"></div>
 
@@ -2468,14 +2458,55 @@ gc.addEventListener('mouseup',()=>{ if(drag?.node)setTimeout(()=>{if(drag)drag.n
 gc.addEventListener('mouseleave',()=>{ drag=null; });
 gc.addEventListener('wheel',e=>{ e.preventDefault(); const prev=cam.z,f=e.deltaY<0?1.1:0.91; cam.z=Math.max(0.12,Math.min(4,cam.z*f)); const r=gc.getBoundingClientRect(); const mx=e.clientX-r.left-W/2,my=e.clientY-r.top-H/2; cam.x=mx-(mx-cam.x)*(cam.z/prev); cam.y=my-(my-cam.y)*(cam.z/prev); },{passive:false});
 mm.addEventListener('click',e=>{ const r=mm.getBoundingClientRect(); const mx=e.clientX-r.left,my=e.clientY-r.top; let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity; nodes.forEach(n=>{mnX=Math.min(mnX,n.x);mxX=Math.max(mxX,n.x);mnY=Math.min(mnY,n.y);mxY=Math.max(mxY,n.y);}); const pad=14,MW=r.width,MH=r.height; const sc=Math.min((MW-pad*2)/(mxX-mnX||1),(MH-pad*2)/(mxY-mnY||1)); const ox=MW/2-(mnX+mxX)/2*sc,oy=MH/2-(mnY+mxY)/2*sc; const worldX=(mx-ox)/sc,worldY=(my-oy)/sc; cam.x=-worldX*cam.z;cam.y=-worldY*cam.z; });
-gc.addEventListener('touchstart',e=>{e.preventDefault(); const t=e.touches[0], wp=worldPos(t), n=nodeAt(wp); if(n){drag={node:n};n.pinned=true;selected=n;} else {drag={lx:t.clientX,ly:t.clientY};}},{passive:false});
-gc.addEventListener('touchmove',e=>{e.preventDefault(); const t=e.touches[0], wp=worldPos(t); if(drag?.node){drag.node.x=wp.x;drag.node.y=wp.y;} else if(drag){cam.x+=t.clientX-drag.lx;cam.y+=t.clientY-drag.ly;drag.lx=t.clientX;drag.ly=t.clientY;}},{passive:false});
-gc.addEventListener('touchend',()=>{ if(drag?.node)setTimeout(()=>{if(drag)drag.node.pinned=false;},800); drag=null; });
-
-document.getElementById('zc-in').onclick=()=>{cam.z=Math.min(4,cam.z*1.2);};
-document.getElementById('zc-out').onclick=()=>{cam.z=Math.max(0.12,cam.z/1.2);};
-document.getElementById('zc-fit').onclick=fitAll;
-document.getElementById('zc-home').onclick=()=>{cam={x:0,y:0,z:0.85};};
+let pinchState=null;
+gc.addEventListener('touchstart',e=>{
+  if(e.touches.length===2){
+    e.preventDefault();
+    const [a,b]=e.touches;
+    const dx=b.clientX-a.clientX, dy=b.clientY-a.clientY;
+    pinchState={
+      dist:Math.hypot(dx,dy)||1,
+      camZ:cam.z,
+      camX:cam.x,
+      camY:cam.y,
+      midX:(a.clientX+b.clientX)/2,
+      midY:(a.clientY+b.clientY)/2
+    };
+    drag=null;
+    return;
+  }
+  if(e.touches.length!==1) return;
+  e.preventDefault();
+  const t=e.touches[0], wp=worldPos(t), n=nodeAt(wp);
+  if(n){drag={node:n};n.pinned=true;selected=n;}
+  else {drag={lx:t.clientX,ly:t.clientY};}
+},{passive:false});
+gc.addEventListener('touchmove',e=>{
+  if(e.touches.length===2 && pinchState){
+    e.preventDefault();
+    const [a,b]=e.touches;
+    const dx=b.clientX-a.clientX, dy=b.clientY-a.clientY;
+    const dist=Math.hypot(dx,dy)||1;
+    const scale=dist/pinchState.dist;
+    const newZ=Math.max(0.08,Math.min(4,pinchState.camZ*scale));
+    const midX=(a.clientX+b.clientX)/2, midY=(a.clientY+b.clientY)/2;
+    const wx=(pinchState.midX-W/2-pinchState.camX)/(pinchState.camZ||1);
+    const wy=(pinchState.midY-H/2-pinchState.camY)/(pinchState.camZ||1);
+    cam.z=newZ;
+    cam.x=midX-W/2-wx*cam.z;
+    cam.y=midY-H/2-wy*cam.z;
+    return;
+  }
+  if(e.touches.length!==1) return;
+  e.preventDefault();
+  const t=e.touches[0], wp=worldPos(t);
+  if(drag?.node){drag.node.x=wp.x;drag.node.y=wp.y;}
+  else if(drag){cam.x+=t.clientX-drag.lx;cam.y+=t.clientY-drag.ly;drag.lx=t.clientX;drag.ly=t.clientY;}
+},{passive:false});
+gc.addEventListener('touchend',e=>{
+  if(e.touches.length<2) pinchState=null;
+  if(e.touches.length===0){ if(drag?.node)setTimeout(()=>{if(drag)drag.node.pinned=false;},800); drag=null; }
+});
 document.getElementById('pause-btn').onclick=function(){ paused=!paused; this.textContent=paused?'Resume':'Pause'; this.classList.toggle('active',paused); };
 document.getElementById('layout-btn').onclick=()=>{ settled=false;simAge=0; nodes.forEach(n=>{n.x=(Math.random()-.5)*700;n.y=(Math.random()-.5)*700;n.vx=(Math.random()-.5)*8;n.vy=(Math.random()-.5)*8;}); };
 document.getElementById('connect-btn').onclick=function(){ connectMode=!connectMode;connectFrom=null; this.classList.toggle('active',connectMode); this.textContent=connectMode?'✕ Exit Connect':'Connect Mode'; };
@@ -2644,6 +2675,34 @@ loop();
   document.body.appendChild(rightDock);
   leftIds.forEach(id => { const el = document.getElementById(id); if (el) leftDock.appendChild(el); });
   rightIds.forEach(id => { const el = document.getElementById(id); if (el) rightDock.appendChild(el); });
+
+  const appControls = document.createElement('div');
+  appControls.id = 'app-controls-card';
+  appControls.className = 'ui-corner';
+  const title = document.createElement('div');
+  title.className = 'corner-title';
+  title.textContent = 'Search & Controls';
+  const note = document.createElement('div');
+  note.className = 'controls-note';
+  note.textContent = 'Pinch to zoom the map. Search, filters, and controls stay in the HUD.';
+  appControls.appendChild(title);
+  const searchWrap = document.getElementById('search-wrap');
+  const filters = document.getElementById('filters');
+  const controls = document.getElementById('controls');
+  if (searchWrap) { searchWrap.style.display='block'; appControls.appendChild(searchWrap); }
+  if (filters) { filters.style.display='flex'; appControls.appendChild(filters); }
+  if (controls) { controls.style.display='grid'; appControls.appendChild(controls); }
+  appControls.appendChild(note);
+  rightDock.appendChild(appControls);
+
+  const refreshViewport = ()=>{
+    if(typeof fitAll==='function'){
+      setTimeout(()=>fitAll(), 60);
+      setTimeout(()=>fitAll(), 420);
+    }
+  };
+  window.addEventListener('resize', refreshViewport);
+  refreshViewport();
 })();
 </script>
 </body>
