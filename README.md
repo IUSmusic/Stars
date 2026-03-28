@@ -2,7 +2,7 @@
 
 https://iusmusic.github.io/stars/
 
-**Project Stars** is a browser-native research graph for modeling thoughts, concepts, and references as a hybrid geometric, relational, and dynamical system.
+This is a based demo modeling thoughts, concepts, and references
 
 It is designed as a research-facing interface for studying how conceptual structures can be represented at the same time as:
 
@@ -12,12 +12,6 @@ It is designed as a research-facing interface for studying how conceptual struct
 - elements in a dynamic layout,
 - and local sources in a continuous activation field.
 
-
-Added
-
-- Math overlay toggle added.
-- Candidate edge inspector on hover 
-- Export as mathematical object
 
 ## 1. Abstract
 
