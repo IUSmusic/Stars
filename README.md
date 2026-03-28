@@ -1,5 +1,17 @@
 # Project Stars
 
+
+# Project Stars
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-0a0a0a)](https://iusmusic.github.io/stars/)
+![Status](https://img.shields.io/badge/Status-Experimental-8A2BE2)
+![Type](https://img.shields.io/badge/Type-Research%20Atlas-1f6feb)
+![Model](https://img.shields.io/badge/Model-Dynamical%20Hypothesis-f5a623)
+![Built with](https://img.shields.io/badge/Built%20with-HTML5%20Canvas-e34f26)
+![Language](https://img.shields.io/badge/Language-JavaScript-f7df1e)
+![Platform](https://img.shields.io/badge/Platform-Browser-2ea44f)
+
+
 https://iusmusic.github.io/stars/
 
 This is a based demo modeling thoughts, concepts, and references
