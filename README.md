@@ -8,7 +8,6 @@
 ![Language](https://img.shields.io/badge/Language-JavaScript-f7df1e)
 ![Platform](https://img.shields.io/badge/Platform-Browser-2ea44f)
 
-# Project Stars
 
 Official live demo: https://iusmusic.github.io/stars/
 
