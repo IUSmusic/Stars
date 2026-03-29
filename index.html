@@ -919,6 +919,7 @@ window.addEventListener('load',()=>{
   <div class="legend-list">
     <div class="legend-row"><span class="legend-sample-line"></span><span>Gold = confirmed structure</span></div>
     <div class="legend-row"><span class="legend-sample-line candidate"></span><span>Gray dashed = candidate relation</span></div>
+    <div class="legend-row"><span class="legend-sample-line"></span><span>Brighter lines = currently active pathways</span></div>
     <div class="legend-row"><span class="legend-sample-dot"></span><span>Gold labels = confirmed connected labels</span></div>
     <div class="legend-row"><span class="legend-sample-dot candidate"></span><span>Gray labels = candidate or sub-related labels</span></div>
     <div class="legend-row"><span class="legend-sample-wave"></span><span>Wave / glow = activation field</span></div>
@@ -939,10 +940,10 @@ Candidate iff S(a,b) &gt; τ,  τ = 0.46</pre>
   <div class="math-section">
     <div class="math-label">Layout dynamics</div>
     <pre id="math-force">Repulsion: F_rep ∝ (3200·cooling + 800) / r²
-Weighted springs: F_spring = w_e·0.015·(d - d_target)
+Weighted springs: F_spring = w_e·g_e(t)·0.015·(d - d_target)
 where w_e = 1.00 for confirmed, 0.25 for strong candidates, 0 otherwise
-Damping = 0.80, gravity = 0.005
-Axiom: confirmed structure dominates, but strong candidates can weakly shape geometry.</pre>
+and g_e(t) is the effective pathway gain induced by receiver state, empathy, polarity, institutions, and pressure
+Axiom: the evidence graph stays stable, but operative pathways brighten, weaken, and reshape emphasis over time.</pre>
   </div>
   <div class="math-section">
     <div class="math-label">Field source term</div>
@@ -1819,6 +1820,52 @@ function edgeSpringWeight(e){
   if(e.status==='confirmed') return 1.0;
   return (e.confidence||0) >= 0.72 ? 0.25 : 0.0;
 }
+function nodeSignalProfile(n){
+  const label=labelKey(n);
+  const hit=(terms)=>terms.some(t=>label.includes(t)) ? 1 : 0;
+  return {
+    prosocial: hit(['kindness','empathy','compassion','cooperation','trust','repair','legitimacy','education','law','justice','care']),
+    antisocial: hit(['crime','harm','coercion','exploitation','cruelty','dehumanization','fear','distrust','retaliation','fragmentation','propaganda','threat']),
+    institutional: hit(['law','education','institution','media','leadership','governance','enforcement','legitimacy','social norms','punishment']),
+    pressure: hit(['scarcity','threat','fear','distrust','historical memory','propaganda','inequality','fragmentation']),
+    mediator: hit(['intention','action tendency','action','opportunity','constraint','risk','visibility','incentive','cost','resources','enforcement','social norms','media']),
+    collective: hit(['collective','identity','cooperation','polarization','nation','society','trust networks'])
+  };
+}
+function edgeEffectiveStrength(e){
+  const a=nodeById(e.a), b=nodeById(e.b);
+  if(!a || !b) return e.status==='confirmed' ? 0.35 : 0.0;
+  const pa=nodeSignalProfile(a), pb=nodeSignalProfile(b);
+  const avg=(k)=>(pa[k]+pb[k])*0.5;
+  const localQ=(localReceiverQ(a)+localReceiverQ(b))*0.5;
+  const moral=computeMoralValence();
+  const positiveDrive=Math.max(0,moral) * (0.55 + empathyField*0.45) * intentionStrength;
+  const negativeDrive=Math.max(0,-moral) * (0.60 + (1-empathyField)*0.40) * intentionStrength;
+  const stabilityDrive=receiverQuality * (0.45 + localQ*0.55);
+  const pressureDrive=(1-receiverQuality) * 0.55 + negativeDrive*0.45;
+  const base=e.status==='confirmed' ? 0.32 : Math.max(0.04, (e.confidence||0)*0.22);
+  let strength = base;
+  strength += avg('prosocial') * (0.30*positiveDrive + 0.18*stabilityDrive);
+  strength += avg('antisocial') * (0.34*negativeDrive + 0.12*pressureDrive - 0.08*stabilityDrive);
+  strength += avg('institutional') * (0.20*stabilityDrive + 0.08*positiveDrive - 0.05*negativeDrive);
+  strength += avg('pressure') * (0.18*pressureDrive + 0.10*negativeDrive - 0.08*positiveDrive);
+  strength += avg('mediator') * (0.14*intentionStrength + 0.10*stabilityDrive);
+  strength += avg('collective') * (0.12*positiveDrive + 0.08*stabilityDrive - 0.04*negativeDrive);
+  if(e.status==='possible'){
+    strength *= (0.40 + 0.60*(e.confidence||0));
+    strength -= 0.08;
+  }
+  return clamp(strength, e.status==='confirmed' ? 0.08 : 0.0, 1.0);
+}
+function recomputeEffectivePathways(){
+  edges.forEach(e=>{
+    e.activeStrength = edgeEffectiveStrength(e);
+    e.pathState = e.activeStrength >= (e.status==='confirmed' ? 0.58 : 0.38) ? 'active' : (e.activeStrength >= (e.status==='confirmed' ? 0.26 : 0.18) ? 'latent' : 'quiet');
+  });
+}
+function activePathwayCount(){
+  return edges.filter(e=>(e.activeStrength||0) >= (e.status==='confirmed' ? 0.58 : 0.38)).length;
+}
 function nodeIntentGain(n){
   const label=labelKey(n);
   const valence=computeMoralValence();
@@ -1838,7 +1885,7 @@ function updateExperimentPanel(){
   set('metric-convergence', `${Math.round(experimentMetrics.convergence*100)}%`);
   set('metric-rq', experimentMetrics.receiverState);
   set('metric-moral', experimentMetrics.moralValence.toFixed(3));
-  set('metric-collective', experimentMetrics.collectivePull.toFixed(3));
+  set('metric-collective', `${experimentMetrics.collectivePull.toFixed(3)} · ${experimentMetrics.activePathways||0} active`);
   set('intention-value', intentionStrength.toFixed(2));
   set('polarity-value', moralPolarity.toFixed(2));
   set('empathy-value', empathyField.toFixed(2));
@@ -1850,8 +1897,10 @@ function updateExperimentPanel(){
       : 'The field is near moral equilibrium; receiver tuning and empathy can still flip the attractor state.');
 }
 function updateEnergyReadout(){
+  recomputeEffectivePathways();
   const confirmedCount=edges.filter(e=>e.status==='confirmed').length || 1;
   const candidateCount=edges.filter(e=>e.status==='possible').length;
+  const activeCount=activePathwayCount();
   const hypothesisTension=Math.min(1, candidateCount/Math.max(confirmedCount,1));
   let structuralPull=0;
   let velocityMass=0;
@@ -1875,13 +1924,14 @@ function updateEnergyReadout(){
     convergence,
     receiverState: receiverQuality >= 0.85 ? 'High' : (receiverQuality >= 0.55 ? 'Medium' : 'Low'),
     moralValence,
-    collectivePull
+    collectivePull,
+    activePathways: activeCount
   };
-  layoutDiagnostics={energy, structuralPull, hypothesisTension, settling:settled?'stable':'settling', velocityMass, precision, coherence, convergence, moralValence, collectivePull};
+  layoutDiagnostics={energy, structuralPull, hypothesisTension, settling:settled?'stable':'settling', velocityMass, precision, coherence, convergence, moralValence, collectivePull, activePathways: activeCount};
   const summary=document.getElementById('energy-summary');
   const detail=document.getElementById('energy-detail');
-  if(summary) summary.innerHTML=`<strong>${settled?'Layout stable':'Layout settling'}</strong> · pull ${structuralPull.toFixed(1)} · Q ${receiverQuality.toFixed(2)} · Int ${intentionStrength.toFixed(2)}`;
-  if(detail) detail.textContent=`Hypothesis tension ${hypothesisTension.toFixed(2)} · coherence ${coherence.toFixed(2)} · moral ${moralValence.toFixed(2)} · collective ${collectivePull.toFixed(2)}`;
+  if(summary) summary.innerHTML=`<strong>${settled?'Layout stable':'Layout settling'}</strong> · pull ${structuralPull.toFixed(1)} · active ${activeCount} · Q ${receiverQuality.toFixed(2)}`;
+  if(detail) detail.textContent=`Hypothesis tension ${hypothesisTension.toFixed(2)} · coherence ${coherence.toFixed(2)} · moral ${moralValence.toFixed(2)} · collective ${collectivePull.toFixed(2)} · active pathways ${activeCount}`;
   updateExperimentPanel();
 }
 
@@ -2143,6 +2193,7 @@ function initGraph(){
   });
   edges=SEED_EDGES.map(([a,b])=>createEdge(a,b,{status:'confirmed', relation:'related', notes:'Seeded confirmed relation', citations:['seed-curation'], provenance:{source:'seed-curation'}, review:{state:'confirmed', reviewedAt:'2026-03-27', reviewedBy:'curator'}}));
   recomputeCandidateEdges();
+  recomputeEffectivePathways();
   updateCounter();
 }
 function recomputeCandidateEdges(){
@@ -2161,6 +2212,7 @@ function recomputeCandidateEdges(){
     }
   }
   edges.push(...candidates.sort((x,y)=>y.confidence-x.confidence));
+  recomputeEffectivePathways();
   computeClusterDiagnostics();
 }
 function centerOnNode(n, zoom=Math.max(cam.z, 1.2)){ cam.z=Math.min(zoom, 2.5); cam.x=-n.x*cam.z; cam.y=-n.y*cam.z; }
@@ -2212,6 +2264,7 @@ function tick(){
     nodes.forEach(m=>{ if(m===n)return; const dx=n.x-m.x,dy=n.y-m.y,d2=dx*dx+dy*dy+4,f=REPEL/d2; n.vx+=dx*f;n.vy+=dy*f; });
     n.vx*=DAMP;n.vy*=DAMP; n.x+=n.vx;n.y+=n.vy;
   });
+  recomputeEffectivePathways();
   edges.forEach(e=>{
     const weight=edgeSpringWeight(e);
     if(weight<=0) return;
@@ -2220,7 +2273,8 @@ function tick(){
     const localGain=((nodeIntentGain(a)+nodeIntentGain(b))*0.5) * (1 + effectiveIntention*0.55 + Math.max(0,moralValence)*0.20);
     const antisocial=(labelKey(a).includes('crime')||labelKey(b).includes('crime')||labelKey(a).includes('harm')||labelKey(b).includes('harm')||labelKey(a).includes('coercion')||labelKey(b).includes('coercion'));
     const moralShift=antisocial ? (1 - Math.max(0,moralValence)*0.25) : 1;
-    const tgt=90+a.r+b.r,f=(d-tgt)*SPRING*localGain*moralShift*weight;
+    const pathwayGain=0.35 + 0.95*(e.activeStrength||0);
+    const tgt=90+a.r+b.r,f=(d-tgt)*SPRING*localGain*moralShift*weight*pathwayGain;
     const fx=dx/d*f,fy=dy/d*f;
     if(!a.pinned){a.vx+=fx;a.vy+=fy;} if(!b.pinned){b.vx-=fx;b.vy-=fy;}
   });
@@ -2250,7 +2304,7 @@ function tick(){
     n.visible=matchSearch&&matchCat; n.alpha=n.visible?1:0.07;
   });
   if(simAge>350&&!settled){settled=true;}
-  document.getElementById('sim-status').textContent=settled ? `layout stable · tension ${layoutDiagnostics.hypothesisTension.toFixed(2)} · Q ${receiverQuality.toFixed(2)} · M ${layoutDiagnostics.moralValence.toFixed(2)}` : `layout settling · pull ${layoutDiagnostics.structuralPull.toFixed(1)} · Q ${receiverQuality.toFixed(2)} · Int ${intentionStrength.toFixed(2)}`;
+  document.getElementById('sim-status').textContent=settled ? `layout stable · active ${layoutDiagnostics.activePathways||0} · Q ${receiverQuality.toFixed(2)} · M ${layoutDiagnostics.moralValence.toFixed(2)}` : `layout settling · pull ${layoutDiagnostics.structuralPull.toFixed(1)} · active ${layoutDiagnostics.activePathways||0} · Q ${receiverQuality.toFixed(2)}`;
   updateEnergyReadout();
 }
 function getEdgeBetween(a,b,status=null){
@@ -2307,18 +2361,25 @@ function draw(){
   edges.forEach(e=>{
     const a=nodeById(e.a),b=nodeById(e.b);if(!a||!b)return;
     const al=Math.min(a.alpha,b.alpha), isSel=selected&&(selected.id===a.id||selected.id===b.id);
+    const active=e.activeStrength ?? edgeEffectiveStrength(e);
+    const isActive=e.pathState==='active';
+    const isLatent=e.pathState==='latent';
     ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
     const highlight = selected && (selected.id===e.a||selected.id===e.b || (modeHighlightSet.has(e.a)&&modeHighlightSet.has(e.b)));
     if(e.status==='possible'){
-      ctx.setLineDash([7,7]);
-      const baseAlpha = currentView==='structure' ? 0.04 : currentView==='field' ? 0.12 : currentView==='hypothesis' ? 0.24 : 0.14;
-      ctx.strokeStyle=`rgba(168,174,184,${(highlight?0.52:(isSel?0.42:baseAlpha))*al})`;
-      ctx.lineWidth=highlight?1.25:(isSel?1.1:0.82);
+      if(!highlight && !isSel && active < 0.08) return;
+      ctx.setLineDash(isActive ? [11,5] : [7,7]);
+      const baseAlpha = currentView==='structure' ? 0.03 : currentView==='field' ? 0.10 : currentView==='hypothesis' ? 0.18 : 0.10;
+      const alpha=(highlight?0.58:(isSel?0.52:(baseAlpha + active*0.72)))*al;
+      ctx.strokeStyle=`rgba(176,184,196,${alpha.toFixed(3)})`;
+      ctx.lineWidth=(highlight?1.35:(isSel?1.18:(0.70 + active*1.45)));
     } else {
-      ctx.setLineDash([]);
-      const goldAlpha = currentView==='hypothesis' ? 0.46 : currentView==='field' ? 0.32 : currentView==='structure' ? 0.72 : 0.58;
-      ctx.strokeStyle=`rgba(245,217,122,${(highlight?0.92:(isSel?0.82:goldAlpha))*al})`;
-      ctx.lineWidth=highlight?1.95:(isSel?1.75:1.35);
+      ctx.setLineDash(isActive ? [] : [2,5]);
+      const goldAlpha = currentView==='hypothesis' ? 0.38 : currentView==='field' ? 0.24 : currentView==='structure' ? 0.50 : 0.40;
+      const alpha=(highlight?0.95:(isSel?0.86:(goldAlpha + active*0.48)))*al;
+      const color=isActive ? '245,217,122' : (isLatent ? '214,203,155' : '168,160,140');
+      ctx.strokeStyle=`rgba(${color},${alpha.toFixed(3)})`;
+      ctx.lineWidth=(highlight?2.05:(isSel?1.80:(0.95 + active*1.55)));
     }
     ctx.stroke(); ctx.setLineDash([]);
   });
@@ -2379,7 +2440,7 @@ function drawMinimap(){
   let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity;
   nodes.forEach(n=>{mnX=Math.min(mnX,n.x);mxX=Math.max(mxX,n.x);mnY=Math.min(mnY,n.y);mxY=Math.max(mxY,n.y);});
   const pad=30,scx=(MW-pad*2)/(mxX-mnX||1),scy=(MH-pad*2)/(mxY-mnY||1),sc=Math.min(scx,scy),ox=MW/2-(mnX+mxX)/2*sc,oy=MH/2-(mnY+mxY)/2*sc;
-  edges.forEach(e=>{ const a=nodeById(e.a),b=nodeById(e.b);if(!a||!b)return; mmx.beginPath();mmx.moveTo(a.x*sc+ox,a.y*sc+oy);mmx.lineTo(b.x*sc+ox,b.y*sc+oy); mmx.strokeStyle=e.status==='possible'?'rgba(168,174,184,0.18)':'rgba(245,217,122,0.30)'; mmx.lineWidth=0.5; mmx.stroke(); });
+  edges.forEach(e=>{ const a=nodeById(e.a),b=nodeById(e.b);if(!a||!b)return; const active=e.activeStrength ?? edgeEffectiveStrength(e); if(e.status==='possible' && active<0.08) return; mmx.beginPath();mmx.moveTo(a.x*sc+ox,a.y*sc+oy);mmx.lineTo(b.x*sc+ox,b.y*sc+oy); mmx.strokeStyle=e.status==='possible'?`rgba(168,174,184,${(0.08+active*0.34).toFixed(3)})`:`rgba(245,217,122,${(0.12+active*0.34).toFixed(3)})`; mmx.lineWidth=0.4 + active*0.55; mmx.stroke(); });
   nodes.forEach(n=>{ const cat=CMAP[n.cat]||CMAP.philosophy; mmx.beginPath();mmx.arc(n.x*sc+ox,n.y*sc+oy,Math.max(1.5,n.r*sc),0,Math.PI*2); mmx.fillStyle=cat.color+(n.visible?'cc':'33'); mmx.fill(); });
   const vl=(-W/2-cam.x)/cam.z,vt=(-H/2-cam.y)/cam.z,vr=vl+W/cam.z,vb=vt+H/cam.z;
   mmx.strokeStyle='rgba(240,192,96,0.5)';mmx.lineWidth=1; mmx.strokeRect(vl*sc+ox,vt*sc+oy,(vr-vl)*sc,(vb-vt)*sc);
