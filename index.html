@@ -782,6 +782,14 @@ window.addEventListener('load',()=>{
   #app-controls-card #controls{grid-template-columns:1fr 1fr!important;}
 }
 </style>
+
+<style id="research-final-patch">
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;}
+.scenario-btn{width:100%;padding:7px 8px;font-size:0.34rem;letter-spacing:0.14em;text-transform:uppercase;}
+.scenario-note,.framing-note{margin-top:8px;font-size:0.42rem;line-height:1.55;color:var(--text-soft);}
+.framing-note strong{color:var(--glow-gold);font-weight:400;}
+@media (max-width:860px){.scenario-grid{grid-template-columns:1fr 1fr;}}
+</style>
 </head>
 <body>
 
@@ -931,9 +939,10 @@ Candidate iff S(a,b) &gt; τ,  τ = 0.46</pre>
   <div class="math-section">
     <div class="math-label">Layout dynamics</div>
     <pre id="math-force">Repulsion: F_rep ∝ (3200·cooling + 800) / r²
-Confirmed-only springs: F_spring = 0.015·(d - d_target)
+Weighted springs: F_spring = w_e·0.015·(d - d_target)
+where w_e = 1.00 for confirmed, 0.25 for strong candidates, 0 otherwise
 Damping = 0.80, gravity = 0.005
-Axiom: only confirmed edges contribute spring forces.</pre>
+Axiom: confirmed structure dominates, but strong candidates can weakly shape geometry.</pre>
   </div>
   <div class="math-section">
     <div class="math-label">Field source term</div>
@@ -1443,6 +1452,40 @@ const SEED_NODES = [
 {id:97, label:'Empathy / Compassion', cat:'emotion', r:18,
  desc:'The affective and motivational tuner that can redirect intention away from harm and toward helping, repair, and cooperative concern.',
  ref:'Singer & Klimecki, Empathy versus Compassion (2014); Decety & Cowell, The Complex Relation Between Morality and Empathy (2014)'},
+
+{id:98, label:'Harm', cat:'society', r:17,
+ desc:'Damage, injury, or imposed suffering at the outcome layer. Harm is modeled as an externalized result shaped by intention, opportunity, norms, and restraint.',
+ ref:'World Health Organization violence frameworks; Galtung, Violence, Peace, and Peace Research (1969)'},
+{id:99, label:'Distrust', cat:'society', r:16,
+ desc:'A breakdown in expected reciprocity and reliability. Distrust propagates across groups when fear, past conflict, and institutional weakness accumulate.',
+ ref:'Hardin, Trust and Trustworthiness (2002); Fukuyama, Trust (1995)'},
+{id:100, label:'Fear Contagion', cat:'emotion', r:16,
+ desc:'The spread of threat perception through groups, media, and imitation. Fear contagion amplifies defensive coordination and can harden aggression.',
+ ref:'Hatfield, Cacioppo & Rapson, Emotional Contagion (1993); LeDoux, The Emotional Brain (1996)'},
+{id:101, label:'Dehumanization', cat:'society', r:16,
+ desc:'The reduction of persons to less-than-human status, lowering moral restraint and widening tolerance for cruelty, exclusion, and coercion.',
+ ref:'Haslam, Dehumanization (2006); Bandura, Moral Disengagement (1999)'},
+{id:102, label:'Fragmentation', cat:'society', r:16,
+ desc:'The splintering of a shared civic field into antagonistic blocs. Fragmentation weakens trust, coordination, and collective problem-solving.',
+ ref:'Putnam, Bowling Alone (2000); Sunstein, #Republic (2017)'},
+{id:103, label:'Coercion', cat:'society', r:16,
+ desc:'The use of force, pressure, or threat to secure compliance. In the model, coercion rises when legitimacy falls and institutions rely on compulsion over consent.',
+ ref:'Weber, Politics as a Vocation (1919); Tyler, Why People Obey the Law (1990)'},
+{id:104, label:'Exploitation', cat:'society', r:16,
+ desc:'One-sided extraction of value under asymmetry of power, knowledge, or vulnerability. Exploitation converts weak norms into unequal outcomes.',
+ ref:'Young, Responsibility for Justice (2011); Sen, Development as Freedom (1999)'},
+{id:105, label:'Law', cat:'society', r:16,
+ desc:'Codified rules that translate collective norms into formal standards, sanctions, and rights. Law mediates between intention, institutions, and social outcomes.',
+ ref:'Hart, The Concept of Law (1961); Fuller, The Morality of Law (1964)'},
+{id:106, label:'Education', cat:'society', r:16,
+ desc:'Structured transmission of knowledge, norms, and interpretive skill. Education shapes receiver quality, empathy thresholds, and civic cooperation.',
+ ref:'Dewey, Democracy and Education (1916); OECD social learning research'},
+{id:107, label:'Incentive', cat:'society', r:15,
+ desc:'The reward or penalty structure that channels action tendencies toward cooperation, compliance, or extraction. Incentives filter intention into behavior.',
+ ref:'Kahneman & Tversky, Prospect Theory (1979); Ostrom, Governing the Commons (1990)'},
+{id:108, label:'Historical Memory', cat:'society', r:16,
+ desc:'The stored residue of prior conflict, repair, victory, trauma, and institution-building. Historical memory conditions present trust and threat interpretation.',
+ ref:'Halbwachs, On Collective Memory (1950); Assmann, Cultural Memory (2011)'},
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -1497,6 +1540,20 @@ const SEED_EDGES = [
   [95,12],[95,16],[95,71],[95,73],[95,88],
   [96,71],[96,72],[96,74],[96,87],
   [97,12],[97,16],[97,88],[97,71],[97,95],
+
+  // Balanced antisocial and environment branch
+  [90,98],[92,98],[93,98],[98,99],[98,103],[98,104],
+  [97,99],[71,99],[73,99],[99,102],[99,108],
+  [15,100],[72,100],[100,99],[100,103],[100,101],
+  [18,97],[97,95],[97,71],[97,73],
+  [18,101],[97,101],[101,103],[101,104],[101,102],
+  [96,102],[72,102],[71,102],[102,103],
+  [69,103],[74,103],[105,103],[105,69],[105,74],[105,71],
+  [70,104],[72,104],[74,104],[107,104],[107,70],
+  [31,105],[29,106],[18,106],[71,106],[106,97],
+  [90,107],[92,107],[107,71],[107,74],
+  [60,108],[64,108],[84,108],[108,99],[108,71],[108,96],
+  [91,96],[95,71],[95,73],
 ];
 
 // GRAPH STATE, LAYERS, SCORING, AND RENDERING
@@ -1750,15 +1807,28 @@ function computeMoralValence(){
   return clamp((0.65*moralPolarity)+(0.35*empathyDriven), -1, 1);
 }
 function labelKey(n){ return String(n?.label||'').toLowerCase(); }
+function localReceiverQ(n){
+  const label=labelKey(n);
+  let q=receiverQuality;
+  if(label.includes('education') || label.includes('law') || label.includes('truth')) q += 0.06;
+  if(label.includes('fear') || label.includes('trauma') || label.includes('dehumanization')) q -= 0.12;
+  if(label.includes('historical memory') || label.includes('scarcity')) q -= 0.06;
+  return clamp(q,0.20,1.00);
+}
+function edgeSpringWeight(e){
+  if(e.status==='confirmed') return 1.0;
+  return (e.confidence||0) >= 0.72 ? 0.25 : 0.0;
+}
 function nodeIntentGain(n){
   const label=labelKey(n);
   const valence=computeMoralValence();
-  if(label.includes('crime')) return 0.85 - Math.max(0,valence)*0.35;
-  if(label.includes('kindness')) return 1.0 + Math.max(0,valence)*0.55;
-  if(label.includes('empathy') || label.includes('compassion')) return 1.0 + Math.max(0,valence)*0.45;
-  if(label.includes('collective') || label.includes('nation')) return 1.0 + intentionStrength*0.45;
-  if(label.includes('intention') || label.includes('action') || label.includes('moral valence')) return 1.0 + intentionStrength*0.60;
-  return 1.0;
+  const localQ=localReceiverQ(n);
+  if(label.includes('crime') || label.includes('harm') || label.includes('coercion') || label.includes('exploitation')) return (0.82 - Math.max(0,valence)*0.28) * (0.92 + (1-localQ)*0.16);
+  if(label.includes('kindness') || label.includes('repair')) return (1.0 + Math.max(0,valence)*0.55) * (0.94 + localQ*0.12);
+  if(label.includes('empathy') || label.includes('compassion')) return (1.0 + Math.max(0,valence)*0.45) * (0.94 + localQ*0.12);
+  if(label.includes('collective') || label.includes('nation') || label.includes('identity')) return 1.0 + intentionStrength*0.45;
+  if(label.includes('intention') || label.includes('action') || label.includes('moral valence') || label.includes('incentive') || label.includes('law')) return 1.0 + intentionStrength*0.60;
+  return 0.96 + localQ*0.08;
 }
 function updateExperimentPanel(){
   const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
@@ -2027,6 +2097,37 @@ function drawWaveField(){
   bgX.restore();
 }
 
+
+const SCENARIO_PRESETS = {
+  balanced:{label:'Balanced Test', rq:0.74, intention:0.55, polarity:0.00, empathy:0.56, note:'Symmetry check: balanced moral geometry with moderate receiver quality.'},
+  world:{label:'World Mode', rq:0.62, intention:0.58, polarity:-0.06, empathy:0.42, note:'Realism check: institutions, scarcity, and memory create uneven pressure.'},
+  crisis:{label:'Crisis Shock', rq:0.40, intention:0.72, polarity:-0.42, empathy:0.22, note:'Stress test: low receiver quality and threat amplification destabilize cooperation.'},
+  repair:{label:'Repair Cycle', rq:0.82, intention:0.64, polarity:0.24, empathy:0.84, note:'Recovery check: empathy, legitimacy, and coordination pull the graph back together.'}
+};
+function syncExperimentSliders(){
+  const rs=document.getElementById('receiver-slider'), ins=document.getElementById('intention-slider'), ps=document.getElementById('polarity-slider'), es=document.getElementById('empathy-slider');
+  if(rs) rs.value=receiverQuality.toFixed(2);
+  if(ins) ins.value=intentionStrength.toFixed(2);
+  if(ps) ps.value=moralPolarity.toFixed(2);
+  if(es) es.value=empathyField.toFixed(2);
+  updateExperimentPanel();
+}
+function nudgeScenario(kind){
+  const push=(match, fx, fy)=>nodes.forEach(n=>{ if(labelKey(n).includes(match) && !n.pinned){ n.vx += fx; n.vy += fy; }});
+  if(kind==='crisis'){
+    push('fear', 0.8, -0.2); push('crime', 1.1, 0.2); push('harm', 0.9, 0.3); push('trust', -0.6, 0.0); push('cooperation', -0.5, 0.0);
+  }
+  if(kind==='repair'){
+    push('empathy', -0.5, -0.2); push('kindness', -0.6, -0.1); push('trust', -0.5, -0.1); push('law', -0.35, -0.05); push('harm', 0.45, 0.1);
+  }
+}
+function applyScenarioPreset(name){
+  const p=SCENARIO_PRESETS[name]; if(!p) return;
+  receiverQuality=p.rq; intentionStrength=p.intention; moralPolarity=p.polarity; empathyField=p.empathy;
+  settled=false; simAge=Math.max(0, simAge-40); syncExperimentSliders(); resetFieldDynamics(); nudgeScenario(name);
+  const note=document.getElementById('scenario-note'); if(note) note.textContent=p.note;
+  const exp=document.getElementById('experiment-note'); if(exp) exp.textContent=p.note;
+}
 function initGraph(){
   const cp={};
   CATEGORIES.forEach((c,i)=>{
@@ -2111,12 +2212,15 @@ function tick(){
     nodes.forEach(m=>{ if(m===n)return; const dx=n.x-m.x,dy=n.y-m.y,d2=dx*dx+dy*dy+4,f=REPEL/d2; n.vx+=dx*f;n.vy+=dy*f; });
     n.vx*=DAMP;n.vy*=DAMP; n.x+=n.vx;n.y+=n.vy;
   });
-  edges.filter(e=>e.status==='confirmed').forEach(e=>{
+  edges.forEach(e=>{
+    const weight=edgeSpringWeight(e);
+    if(weight<=0) return;
     const a=nodeById(e.a),b=nodeById(e.b);if(!a||!b)return;
     const dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1;
     const localGain=((nodeIntentGain(a)+nodeIntentGain(b))*0.5) * (1 + effectiveIntention*0.55 + Math.max(0,moralValence)*0.20);
-    const moralShift=(labelKey(a).includes('crime')||labelKey(b).includes('crime')) ? (1 - Math.max(0,moralValence)*0.25) : 1;
-    const tgt=90+a.r+b.r,f=(d-tgt)*SPRING*localGain*moralShift;
+    const antisocial=(labelKey(a).includes('crime')||labelKey(b).includes('crime')||labelKey(a).includes('harm')||labelKey(b).includes('harm')||labelKey(a).includes('coercion')||labelKey(b).includes('coercion'));
+    const moralShift=antisocial ? (1 - Math.max(0,moralValence)*0.25) : 1;
+    const tgt=90+a.r+b.r,f=(d-tgt)*SPRING*localGain*moralShift*weight;
     const fx=dx/d*f,fy=dy/d*f;
     if(!a.pinned){a.vx+=fx;a.vy+=fy;} if(!b.pinned){b.vx-=fx;b.vy-=fy;}
   });
@@ -2128,14 +2232,18 @@ function tick(){
   nodes.forEach(n=>{
     if(!n.pinned){
       const label=labelKey(n);
-      if(label.includes('crime')){
+      if(label.includes('crime') || label.includes('harm') || label.includes('coercion') || label.includes('exploitation')){
         n.vx += (n.x-collectiveCentroid.x)*0.0008*Math.max(0,moralValence);
         n.vy += (n.y-collectiveCentroid.y)*0.0008*Math.max(0,moralValence);
       }
-      if(label.includes('kindness') || label.includes('empathy') || label.includes('compassion') || label.includes('collective') || label.includes('cooperation')){
+      if(label.includes('kindness') || label.includes('empathy') || label.includes('compassion') || label.includes('collective') || label.includes('cooperation') || label.includes('law') || label.includes('education')){
         n.vx += (collectiveCentroid.x-n.x)*(0.0012*collectivePull + 0.0006*Math.max(0,moralValence));
         n.vy += (collectiveCentroid.y-n.y)*(0.0012*collectivePull + 0.0006*Math.max(0,moralValence));
       }
+      let layerY=null;
+      if(['emotion','self','cognitive','neuroscience'].includes(n.cat)) layerY=-120;
+      else if(['society'].includes(n.cat)) layerY=70;
+      if(layerY!==null){ n.vy += (layerY - n.y) * 0.00035; }
     }
     const matchSearch=!searchTerm||(n.label.toLowerCase().includes(searchTerm)||n.desc.toLowerCase().includes(searchTerm));
     const matchCat=!filterCat||n.cat===filterCat;
@@ -2695,6 +2803,20 @@ loop();
   appControls.appendChild(note);
   rightDock.appendChild(appControls);
 
+  const scenarioCard=document.createElement('div');
+  scenarioCard.id='scenario-card';
+  scenarioCard.className='ui-corner';
+  scenarioCard.innerHTML=`<div class="corner-title">Scenario Presets</div><div class="scenario-grid"><button class="ctrl-btn scenario-btn" data-scenario="balanced">Balanced Test</button><button class="ctrl-btn scenario-btn" data-scenario="world">World Mode</button><button class="ctrl-btn scenario-btn" data-scenario="crisis">Crisis Shock</button><button class="ctrl-btn scenario-btn" data-scenario="repair">Repair Cycle</button></div><div class="scenario-note" id="scenario-note">Use these presets to compare fairness testing, world asymmetry, crisis disturbance, and repair.</div>`;
+  rightDock.appendChild(scenarioCard);
+
+  const framingCard=document.createElement('div');
+  framingCard.id='final-framing-card';
+  framingCard.className='ui-corner';
+  framingCard.innerHTML=`<div class="corner-title">Experimental Demo</div><div class="framing-note"><strong>Confirmed</strong> edges anchor the stable ontology. <strong>Strong candidates</strong> now weakly influence geometry. Use <strong>Balanced Test</strong> for fairness checking and <strong>World Mode</strong> for social realism under uneven institutions, memory, and pressure.</div>`;
+  rightDock.appendChild(framingCard);
+
+  scenarioCard.querySelectorAll('[data-scenario]').forEach(btn=>btn.addEventListener('click',()=>applyScenarioPreset(btn.dataset.scenario)));
+
   const refreshViewport = ()=>{
     if(typeof fitAll==='function'){
       setTimeout(()=>fitAll(), 60);
@@ -2703,6 +2825,7 @@ loop();
   };
   window.addEventListener('resize', refreshViewport);
   refreshViewport();
+  syncExperimentSliders();
 })();
 </script>
 </body>
