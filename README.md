@@ -19,6 +19,7 @@ The project combines:
 - a semantic and geometric model of conceptual distance,
 - a dynamical layout that distinguishes stable structure from hypothesis,
 - a continuous activation field for local propagation and disturbance,
+- an operative pathway layer that changes under experimental conditions,
 - and an experimental interface for studying how receiver-state, environment, and historical pressure alter conceptual outcomes.
 
 ---
@@ -31,7 +32,7 @@ The project combines:
 4. [Thought Objects](#4-thought-objects)
 5. [Layered World Model](#5-layered-world-model)
 6. [Balanced and Real-World Graphs](#6-balanced-and-real-world-graphs)
-7. [Relation Layers](#7-relation-layers)
+7. [Relation and Pathway Layers](#7-relation-and-pathway-layers)
 8. [Candidate-Link Inference](#8-candidate-link-inference)
 9. [Modeling Principles](#9-modeling-principles)
 10. [Layout Dynamics](#10-layout-dynamics)
@@ -59,15 +60,17 @@ The atlas distinguishes between:
 
 1. a **confirmed relation layer** of reviewed structure,
 2. a **candidate relation layer** of interpretable but unconfirmed hypotheses,
-3. a **balanced moral geometry** for fair structural testing,
-4. and a **real-world environment layer** that introduces institutions, scarcity, enforcement, leadership, memory, and conflicting pressures.
+3. an **effective pathway layer** that expresses which routes are currently operative under a given condition,
+4. a **balanced moral geometry** for fair structural testing,
+5. and a **real-world environment layer** that introduces institutions, scarcity, enforcement, leadership, memory, and conflicting pressures.
 
 The resulting system supports a research program in which:
 
 - concepts are modeled as evidence-bearing entities,
 - relations preserve provenance and review state,
 - candidate links are surfaced through explicit signals,
-- moral and social outcomes are mediated rather than directly assumed,
+- social and moral outcomes are mediated rather than directly assumed,
+- operative pathways vary with receiver-state and environmental pressure,
 - and conceptual dynamics can be examined under both symmetrical test conditions and realistic asymmetric conditions.
 
 ## 2. Research Framing
@@ -88,7 +91,8 @@ The atlas treats a thought not as a simple label, but as a structured object wit
 A central research distinction in the current project is the separation between:
 
 - **fairness of structure**, tested through balanced graph conditions,
-- and **realism of world dynamics**, tested through asymmetry, institutions, scarcity, conflict, and memory.
+- **stability of evidence**, represented through confirmed and candidate relations,
+- and **variability of operative pathways**, tested through receiver-state, scenario, and environmental pressure.
 
 ## 3. Formal Model
 
@@ -96,11 +100,11 @@ A central research distinction in the current project is the separation between:
 
 Project Stars is best understood as a **formal computational hypothesis**.
 
-> Semantic precision and social outcome formation are modeled as emergent properties of a layered conceptual system shaped jointly by structure, activation, receiver-state tuning, environmental mediation, and historical pressure.
+> Semantic precision and social outcome formation are modeled as emergent properties of a layered conceptual system shaped jointly by structure, activation, receiver-state tuning, environmental mediation, historical pressure, and conditionally active pathways.
 
 The full system can be written schematically as:
 
-`M = (Theta, A, d, Rc, Rp, S, p(t), phi, Q, E, H, Xi)`
+`M = (Theta, A, d, Rc, Rp, Reff, S, p(t), phi, Q, E, H, Xi)`
 
 Where:
 
@@ -109,6 +113,7 @@ Where:
 - `d` = multi-part similarity or distance structure,
 - `Rc` = confirmed relations,
 - `Rp` = candidate relations,
+- `Reff` = effective pathways under current conditions,
 - `S` = deterministic candidate-link score,
 - `p(t)` = time-dependent visual embedding,
 - `phi` = continuous activation field over the display plane,
@@ -125,6 +130,7 @@ This is intentionally hybrid: Project Stars is not only a graph, not only a sema
 - a dynamic layout,
 - a field-like activation layer,
 - an environmental mediation layer,
+- an operative pathway layer,
 - and an experimental receiver-state interface.
 
 ## 4. Thought Objects
@@ -247,9 +253,9 @@ The real-world graph introduces asymmetry deliberately. It includes:
 
 In this mode, the goal is to study how morally or conceptually similar inputs may lead to different outcomes under different environmental conditions.
 
-## 7. Relation Layers
+## 7. Relation and Pathway Layers
 
-Project Stars maintains two distinct relation layers.
+Project Stars maintains distinct structural and operative layers.
 
 ### 7.1 Confirmed relations
 
@@ -273,7 +279,23 @@ Candidate relations are:
 - visually subordinate,
 - and distinct from accepted structure.
 
-In the current framing, strong candidate relations may exert weak geometric influence during layout while remaining epistemically separate from confirmed structure.
+Strong candidate relations may exert weak geometric influence during layout while remaining epistemically separate from confirmed structure.
+
+### 7.3 Effective pathways
+
+The operative pathway layer is condition-dependent:
+
+`Reff = f(Rc, Rp, Q, E, H, sigma)`
+
+Where `sigma` denotes the current scenario or experimental condition.
+
+Effective pathways represent the routes that are currently most active or salient under a given receiver-state, environmental pressure profile, and scenario. They do not replace the evidence graph. Instead, they modulate visible and dynamical emphasis across the existing structure.
+
+This allows the atlas to keep:
+
+- **stable evidence relations** as reviewed structure,
+- **reviewable hypotheses** as candidate relations,
+- and **dynamic operative routes** as condition-sensitive pathways.
 
 ## 8. Candidate-Link Inference
 
@@ -341,11 +363,15 @@ Accepted structure and hypothetical relation should not be conflated.
 
 Intention does not map directly to social outcome. Outcomes are filtered through environment, institutions, norms, opportunity, and constraint.
 
-### 9.6 Balanced testing and realistic simulation are different tasks
+### 9.6 Evidence and operation are not identical
+
+A pathway may be structurally present without being equally operative under every condition.
+
+### 9.7 Balanced testing and realistic simulation are different tasks
 
 Symmetry is used for fairness of theory testing. Asymmetry is introduced for realism.
 
-### 9.7 Visualization is an embedding, not the ontology itself
+### 9.8 Visualization is an embedding, not the ontology itself
 
 The visible 2D map is a projection of the underlying system, not the full conceptual structure.
 
@@ -365,6 +391,7 @@ The force-layout system can be written schematically as:
 - `sum of pairwise repulsion forces`
 - `+ sum of spring forces over confirmed edges`
 - `+ weak spring contribution from selected strong candidate edges`
+- `+ activity-sensitive modulation from effective pathways`
 - `+ weak centering force`
 - `- damping`
 
@@ -373,6 +400,7 @@ This means that:
 - repulsion prevents collapse,
 - confirmed edges preserve reviewed structure,
 - strong candidate hypotheses can weakly influence geometry,
+- active pathways change visible emphasis and local pull,
 - centering keeps the system bounded,
 - damping stabilizes motion.
 
@@ -381,7 +409,8 @@ The layout can also be interpreted through an energy lens as approximately minim
 - spring energy,
 - repulsion,
 - weak centering,
-- and hypothesis-sensitive tension.
+- hypothesis-sensitive tension,
+- and condition-sensitive pathway activation.
 
 ## 11. Environment, Mediation, and Outcome Formation
 
@@ -464,7 +493,8 @@ The observability bundle `Xi` may include:
 - convergence,
 - receiver state,
 - moral valence,
-- collective pull.
+- collective pull,
+- pathway activation.
 
 These metrics support comparison across experimental conditions.
 
@@ -488,7 +518,7 @@ Used to test the stability of formation under disturbance, such as misinformatio
 
 Used to study the recovery of trust, legitimacy, and cooperation after breakdown.
 
-These scenario conditions distinguish theory testing from world simulation and make the atlas more experimentally legible.
+Across these scenarios, the evidence graph remains stable while operative pathways shift in salience and influence.
 
 ## 15. Inspector and Research Interface
 
@@ -506,12 +536,14 @@ For a selected node it may show:
 - references,
 - confirmed connections,
 - possible related thoughts,
-- relation notes.
+- relation notes,
+- and conditionally active pathways where represented.
 
 Scientifically, the inspector is where the graph becomes interpretable. It translates:
 
 - topology into readable relation lists,
 - candidate inference into inspectable evidence,
+- pathway emphasis into condition-sensitive interpretation,
 - and metadata into epistemic context.
 
 ## 16. Navigation and View Modes
@@ -551,6 +583,7 @@ The export layer preserves:
 - rationale,
 - score components,
 - receiver-state metrics,
+- pathway-relevant activity fields,
 - and scenario-relevant fields where available.
 
 This is essential to treating the atlas as a research artifact rather than a transient visualization.
@@ -596,7 +629,10 @@ The main contribution of Project Stars is the coupling of several ideas into a s
 7. **Receiver-state experimentation**  
    Precision and coherence depend not only on structure, but also on tuning and interpretation.
 
-8. **Research-preserving export**  
+8. **Condition-sensitive operative pathways**  
+   The same evidence graph can yield different active routes under different receiver and world conditions.
+
+9. **Research-preserving export**  
    The artifact retains rationale, provenance, uncertainty, and experiment-relevant metadata.
 
 ## 20. Limitations
@@ -609,7 +645,8 @@ The current atlas has important limits:
 4. candidate quality depends on the quality of source text and references,
 5. the ontology remains curated rather than exhaustive,
 6. the field layer remains partly metaphorical,
-7. large-scale collaborative review is not yet implemented.
+7. effective pathways are condition-sensitive visual and dynamical abstractions rather than empirical causal proof,
+8. large-scale collaborative review is not yet implemented.
 
 The project prioritizes interpretability and explicit structure over automation.
 
@@ -624,6 +661,7 @@ Natural next steps include:
 - direct memory terms such as trust history and conflict residue,
 - richer shock models,
 - longitudinal scenario comparison,
+- direct pathway logging and replay,
 - and stronger export-to-analysis workflows.
 
 ## 22. Implementation Mapping
@@ -633,6 +671,7 @@ A practical mapping from theory to implementation is:
 - `Theta` -> node collection,
 - `A` -> node fields such as label, description, evidence, review, provenance, and layer,
 - `Rc` and `Rp` -> confirmed and candidate edge collections,
+- `Reff` -> condition-sensitive pathway activation over the existing graph,
 - `S` -> candidate-edge recomputation and stored score components,
 - `p(t)` -> node positions, velocities, and animation ticks,
 - `phi` -> background field and disturbance rendering,
