@@ -9,6 +9,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Browser-2ea44f)
 
 Official live demo: https://iusmusic.github.io/stars/
+![Preview](/image.png)
 
 Project Stars is a browser-based research atlas for representing thoughts, concepts, values, institutions, and social pressures as structured objects within an interpretable conceptual system.
 
