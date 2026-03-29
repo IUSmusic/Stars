@@ -1,25 +1,24 @@
 # Project Stars
 
 ![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-0a0a0a)
-![Status](https://img.shields.io/badge/Status-Experimental-8A2BE2)
-![Type](https://img.shields.io/badge/Type-Research%20Atlas-1f6feb)
-![Model](https://img.shields.io/badge/Model-Dynamical%20Hypothesis-f5a623)
+![Status](https://img.shields.io/badge/Status-Research%20Prototype-8A2BE2)
+![Type](https://img.shields.io/badge/Type-Conceptual%20Atlas-1f6feb)
+![Model](https://img.shields.io/badge/Model-Layered%20Dynamical%20Framework-f5a623)
 ![Built with](https://img.shields.io/badge/Built%20with-HTML5%20Canvas-e34f26)
 ![Language](https://img.shields.io/badge/Language-JavaScript-f7df1e)
 ![Platform](https://img.shields.io/badge/Platform-Browser-2ea44f)
 
-
 Official live demo: https://iusmusic.github.io/stars/
 
-Project Stars is a browser-based research atlas for modeling thoughts, concepts, and references as structured objects within a reviewable conceptual framework.
+Project Stars is a browser-based research atlas for representing thoughts, concepts, values, institutions, and social pressures as structured objects within an interpretable conceptual system.
 
-It is designed as a research interface for examining how conceptual structures may be represented simultaneously as:
+The project combines:
 
-- structured objects with attributes and provenance,
-- nodes in a reviewed and reviewable graph,
-- points in a semantic space,
-- elements in a dynamic layout,
-- and local sources in a continuous activation field.
+- an evidence-aware graph of reviewed and reviewable relations,
+- a semantic and geometric model of conceptual distance,
+- a dynamical layout that distinguishes stable structure from hypothesis,
+- a continuous activation field for local propagation and disturbance,
+- and an experimental interface for studying how receiver-state, environment, and historical pressure alter conceptual outcomes.
 
 ---
 
@@ -29,108 +28,107 @@ It is designed as a research interface for examining how conceptual structures m
 2. [Research Framing](#2-research-framing)
 3. [Formal Model](#3-formal-model)
 4. [Thought Objects](#4-thought-objects)
-5. [Geometry of Thought](#5-geometry-of-thought)
-6. [Relation Layers](#6-relation-layers)
-7. [Edge Objects as Evidence-Bearing Entities](#7-edge-objects-as-evidence-bearing-entities)
+5. [Layered World Model](#5-layered-world-model)
+6. [Balanced and Real-World Graphs](#6-balanced-and-real-world-graphs)
+7. [Relation Layers](#7-relation-layers)
 8. [Candidate-Link Inference](#8-candidate-link-inference)
 9. [Modeling Principles](#9-modeling-principles)
 10. [Layout Dynamics](#10-layout-dynamics)
-11. [Visual Encoding as Epistemic Encoding](#11-visual-encoding-as-epistemic-encoding)
-12. [Wave Field and Activation](#12-wave-field-and-activation)
-13. [Receiver Quality and Experimental Metrics](#13-receiver-quality-and-experimental-metrics)
-14. [Inspector as Research Interface](#14-inspector-as-research-interface)
-15. [Add-Thought Workflow as Curation Mechanism](#15-add-thought-workflow-as-curation-mechanism)
-16. [Multi-View Navigation](#16-multi-view-navigation)
+11. [Environment, Mediation, and Outcome Formation](#11-environment-mediation-and-outcome-formation)
+12. [Activation Field and Disturbance](#12-activation-field-and-disturbance)
+13. [Receiver Quality and Heterogeneous Interpretation](#13-receiver-quality-and-heterogeneous-interpretation)
+14. [Scenarios and Experimental Conditions](#14-scenarios-and-experimental-conditions)
+15. [Inspector and Research Interface](#15-inspector-and-research-interface)
+16. [Navigation and View Modes](#16-navigation-and-view-modes)
 17. [Export Semantics](#17-export-semantics)
-18. [External Research-Source Layer](#18-external-research-source-layer)
-19. [Research Foundations and Scientific Framing](#19-research-foundations-and-scientific-framing)
-20. [Scientific Contribution](#20-scientific-contribution)
-21. [Limitations](#21-limitations)
-22. [Future Extensions](#22-future-extensions)
-23. [Implementation Mapping](#23-implementation-mapping)
-24. [Updates — 28/03/2026](#24-updates--28032026)
-25. [Copyright](#25-copyright)
+18. [Research Foundations](#18-research-foundations)
+19. [Scientific Contribution](#19-scientific-contribution)
+20. [Limitations](#20-limitations)
+21. [Future Directions](#21-future-directions)
+22. [Implementation Mapping](#22-implementation-mapping)
+23. [Copyright](#23-copyright)
 
 ---
 
 ## 1. Abstract
 
-Project Stars formalizes thoughts as attributed objects embedded in a semantic space and linked through two distinct relation layers:
+Project Stars formalizes thoughts and social concepts as attributed objects embedded in a layered conceptual environment.
 
-1. a **confirmed layer** of reviewed structural relations,
-2. a **candidate layer** of explainable but unconfirmed hypotheses.
+The atlas distinguishes between:
 
-The system couples these layers to:
+1. a **confirmed relation layer** of reviewed structure,
+2. a **candidate relation layer** of interpretable but unconfirmed hypotheses,
+3. a **balanced moral geometry** for fair structural testing,
+4. and a **real-world environment layer** that introduces institutions, scarcity, enforcement, leadership, memory, and conflicting pressures.
 
-- a deterministic candidate-link scoring function,
-- a force-driven visual embedding defined by confirmed structure,
-- and a field-like background representation of activation and propagation.
+The resulting system supports a research program in which:
 
-This produces a research graph in which:
-
-- nodes are evidence-bearing thought objects,
-- edges are typed, provenance-aware relation objects,
-- candidate links arise from explicit signals rather than randomness,
-- and visualization is treated as a dynamic embedding of the graph rather than the graph itself.
+- concepts are modeled as evidence-bearing entities,
+- relations preserve provenance and review state,
+- candidate links are surfaced through explicit signals,
+- moral and social outcomes are mediated rather than directly assumed,
+- and conceptual dynamics can be examined under both symmetrical test conditions and realistic asymmetric conditions.
 
 ## 2. Research Framing
 
 Project Stars studies a central question:
 
-> How can thoughts be represented as mathematically structured objects inside a research graph that preserves provenance, uncertainty, review state, and interpretable inference?
+> How can thoughts and social concepts be represented as mathematically structured objects inside a research atlas that preserves provenance, uncertainty, mediation, and interpretable dynamics?
 
-The system takes the view that a thought is not merely a label or note. A thought is a structured object with:
+The atlas treats a thought not as a simple label, but as a structured object with:
 
 - semantic content,
 - ontology placement,
-- evidence and provenance,
-- graph relationships,
-- and visual or dynamical behavior.
+- evidential and provenance metadata,
+- graph relations,
+- local dynamical behavior,
+- and context-sensitive interaction with social and institutional environment.
+
+A central research distinction in the current project is the separation between:
+
+- **fairness of structure**, tested through balanced graph conditions,
+- and **realism of world dynamics**, tested through asymmetry, institutions, scarcity, conflict, and memory.
 
 ## 3. Formal Model
 
 ### 3.1 Formal hypothesis
 
-The current Project Stars framing is best understood as a **formal hypothesis** rather than a strict theorem-proof claim.
+Project Stars is best understood as a **formal computational hypothesis**.
 
-> Semantic precision is modeled as an emergent property of a dynamical conceptual system, and depends jointly on structural constraints, local activation, and receiver-state tuning.
+> Semantic precision and social outcome formation are modeled as emergent properties of a layered conceptual system shaped jointly by structure, activation, receiver-state tuning, environmental mediation, and historical pressure.
 
-In this framing:
+The full system can be written schematically as:
 
-- **thoughts** are structured attributed objects,
-- **feelings** correspond to local activation, amplification, and propagation behavior,
-- **goals** correspond to attractor-like low-energy configurations or stabilized trajectories,
-- and **precision** increases when receiver state is sufficiently tuned to the structure being activated.
-
-The full system can be described as:
-
-`M = (Theta, A, d, Rc, Rp, S, p(t), phi, Q, Xi)`
+`M = (Theta, A, d, Rc, Rp, S, p(t), phi, Q, E, H, Xi)`
 
 Where:
 
-- `Theta` = the set of thoughts,
-- `A` = the attribute structure carried by each thought,
-- `d` = a multi-part similarity or distance structure,
-- `Rc` = the set of confirmed relations,
-- `Rp` = the set of candidate relations,
-- `S` = the candidate-link scoring function,
-- `p(t)` = the time-dependent visual embedding into the display plane,
-- `phi` = a continuous activation or wave field over the visual space,
-- `Q` = receiver quality, a scalar tuning parameter in `[0,1]`,
-- `Xi` = experiment and observability metrics such as precision, coherence, convergence, and receiver state.
+- `Theta` = set of thoughts or concepts,
+- `A` = attribute structure on each thought,
+- `d` = multi-part similarity or distance structure,
+- `Rc` = confirmed relations,
+- `Rp` = candidate relations,
+- `S` = deterministic candidate-link score,
+- `p(t)` = time-dependent visual embedding,
+- `phi` = continuous activation field over the display plane,
+- `Q` = receiver-state tuning,
+- `E` = environmental and institutional mediators,
+- `H` = historical and memory terms,
+- `Xi` = observability and experimental metrics.
 
-This is intentionally a hybrid model. It is not only a graph, not only a metric space, and not only a simulation. It combines:
+This is intentionally hybrid: Project Stars is not only a graph, not only a semantic space, and not only a simulation. It combines:
 
-- an attributed object space,
+- an attributed object model,
 - a layered graph,
-- an epistemic model of review status,
-- a dynamic layout process,
-- a field-based activation layer,
-- and an explicit receiver-state variable that can be experimentally manipulated.
+- an epistemic review model,
+- a dynamic layout,
+- a field-like activation layer,
+- an environmental mediation layer,
+- and an experimental receiver-state interface.
 
 ## 4. Thought Objects
 
-Let `Theta` be the set of all thoughts or concepts in the system.
+Let `Theta` be the set of all thoughts or concepts.
 
 Each thought `theta` is modeled as:
 
@@ -140,11 +138,11 @@ Where:
 
 - `L(theta)` = label,
 - `D(theta)` = description,
-- `e(theta)` = semantic embedding vector,
+- `e(theta)` = semantic embedding or feature representation,
 - `C(theta)` = category or ontology class,
 - `M(theta)` = metadata bundle.
 
-The metadata bundle includes fields already present in the node schema, such as:
+The metadata bundle may include:
 
 - references,
 - provenance,
@@ -152,104 +150,129 @@ The metadata bundle includes fields already present in the node schema, such as:
 - consensus,
 - review state,
 - source type,
+- layer membership,
 - and layout state.
 
-In implementation terms, the current node model already approximates this through fields such as:
+## 5. Layered World Model
 
-- `id`
-- `label`
-- `cat`
-- `desc`
-- `ref`
-- `evidence`
-- `consensus`
-- `sourceType`
-- `reviewState`
-- `provenance`
-- `x`, `y`, `vx`, `vy`
-- `pinned`, `alpha`, `visible`
+The atlas separates multiple levels of organization so that internal states, social relations, institutions, and collective effects are not conflated.
 
-## 5. Geometry of Thought
+### 5.1 Individual layer
 
-The model treats thoughts as points in a semantic feature space through the embedding map:
+Examples include:
 
-`e : Theta -> R^d`
+- Intention
+- Fear
+- Empathy / Compassion
+- Shame
+- Impulse
+- Restraint
+- Self-control
+- Trauma
 
-A simple semantic dissimilarity can be defined as:
+### 5.2 Interpersonal layer
 
-`d_sem(theta_i, theta_j) = 1 - cosine_similarity(e(theta_i), e(theta_j))`
+Examples include:
 
-More generally, the system is better understood as a **multi-metric space**:
+- Trust
+- Cooperation
+- Conflict
+- Reputation
+- Influence
+- Reciprocity
+- Distrust
+- Repair
 
-`d(theta_i, theta_j) = sum over k of lambda_k * d_k(theta_i, theta_j)`
+### 5.3 Institutional layer
 
-The component distances may include:
+Examples include:
 
-- semantic distance,
-- citation or reference distance,
-- topic distance,
-- ontology distance,
-- temporal distance,
-- graph-structural distance.
+- Law
+- Enforcement
+- Media
+- Education
+- Governance
+- Incentives
+- Punishment
+- Legitimacy
 
-This matters because Project Stars does not infer relations from one notion of similarity alone.
+### 5.4 Collective layer
 
-## 6. Relation Layers
+Examples include:
+
+- Collective Intention
+- Collective Identity
+- Norms
+- Polarization
+- Fragmentation
+- Nation / State
+- Historical Memory
+
+This layered design allows edges to run both within and across levels, producing a more realistic account of how internal states become social outcomes.
+
+## 6. Balanced and Real-World Graphs
+
+A key methodological feature of Project Stars is the distinction between two modes of interpretation.
+
+### 6.1 Balanced test graph
+
+The balanced graph is used to test whether the model itself is structurally biased.
+
+It introduces mirrored moral branches with comparable depth and connectivity, including paired or opposing concepts such as:
+
+- Kindness ↔ Cruelty
+- Trust ↔ Distrust
+- Cooperation ↔ Exploitation
+- Empathy ↔ Dehumanization
+- Repair ↔ Retaliation
+- Collective Identity ↔ Fragmentation
+
+In this mode, the goal is not realism but fairness of structural testing.
+
+### 6.2 Real-world environment graph
+
+The real-world graph introduces asymmetry deliberately. It includes:
+
+- institutions,
+- scarcity,
+- law,
+- enforcement,
+- media amplification,
+- leadership,
+- incentives,
+- punishment,
+- historical memory,
+- and uneven social pressure.
+
+In this mode, the goal is to study how morally or conceptually similar inputs may lead to different outcomes under different environmental conditions.
+
+## 7. Relation Layers
 
 Project Stars maintains two distinct relation layers.
 
-### 6.1 Confirmed relations
+### 7.1 Confirmed relations
 
 The confirmed relation layer is:
 
 `Rc subset of Theta x Theta x RelationTypes`
 
-A confirmed relation represents a reviewed or accepted relationship. These are the only relations treated as structurally binding in the layout system.
+A confirmed relation represents reviewed or accepted structure.
 
-### 6.2 Candidate relations
+### 7.2 Candidate relations
 
 The candidate relation layer is:
 
 `Rp subset of Theta x Theta x RelationTypes x [0,1] x Evidence`
 
-Where:
+Candidate relations are:
 
-- the value in `[0,1]` is a confidence or composite score,
-- `Evidence` is the bundle describing the basis of inference.
+- deterministic,
+- explainable,
+- reviewable,
+- visually subordinate,
+- and distinct from accepted structure.
 
-Candidate relations are hypotheses:
-
-- they are generated deterministically,
-- they are reviewable,
-- they are visually subordinate,
-- they are never auto-promoted to confirmed.
-
-This makes the graph not only structural, but also epistemic.
-
-## 7. Edge Objects as Evidence-Bearing Entities
-
-Edges are not anonymous line segments. They are structured relation objects.
-
-The current implementation already stores rich edge-level information through fields such as:
-
-- `relation`
-- `status`
-- `confidence`
-- `basis`
-- `notes`
-- `rationale`
-- `citations`
-- `evidenceClass`
-- `consensus`
-- `provenance`
-- `review`
-- `scoreComponents`
-
-A relation object can be written as:
-
-`r_ij = (theta_i, theta_j, type, status, basis, provenance)`
-
-This matters because the graph stores relationship meaning and justification, not just connectivity.
+In the current framing, strong candidate relations may exert weak geometric influence during layout while remaining epistemically separate from confirmed structure.
 
 ## 8. Candidate-Link Inference
 
@@ -257,23 +280,16 @@ Candidate relations are computed by a deterministic scoring function.
 
 ### 8.1 Signal extraction
 
-For each thought `theta`, define extracted signal sets such as:
+For each thought `theta`, define signal sets such as:
 
 - `Tok(theta)` = token set from label and description,
 - `Ref(theta)` = reference or citation set,
 - `Top(theta)` = topic set,
 - `Year(theta)` = representative temporal signal.
 
-These correspond to the signal extraction described through `computeNodeSignals(node)` and fields like:
-
-- `tokenSet`
-- `refSet`
-- `topicSet`
-- `yearAvg`
-
 ### 8.2 Scoring function
 
-Define the candidate-link score as:
+A candidate-link score can be expressed as:
 
 `S(theta_1, theta_2) =`
 - `0.28 * s_sem`
@@ -283,204 +299,204 @@ Define the candidate-link score as:
 - `+ 0.09 * s_ont`
 - `+ 0.05 * s_rec`
 
-Where each component is normalized to the range `[0,1]`, and:
+Where the components encode semantic similarity, citation overlap, topic overlap, confirmed-neighbor overlap, ontology match, and recency.
 
-- `s_sem` = semantic similarity,
-- `s_cit` = citation overlap,
-- `s_top` = shared topic signal,
-- `s_nei` = shared confirmed-neighbor signal,
-- `s_ont` = ontology or domain match,
-- `s_rec` = recency weight.
-
-A candidate edge is admitted only when:
+A candidate relation is admitted only when:
 
 `S(theta_1, theta_2) >= tau`
 
-With the current threshold:
+with threshold `tau` defined by the current atlas configuration.
 
-`tau = 0.46`
+### 8.3 Explainability
 
-### 8.3 Determinism and explainability
+A candidate relation exists only if:
 
-A key principle is:
+- the score exceeds threshold,
+- and the basis of inference is non-empty.
 
-> Candidate relations must arise from explicit, reviewable signals rather than random suggestion.
-
-More precisely, a candidate relation exists only if:
-
-- the score is above threshold, and
-- the basis of inference is not empty.
-
-This captures the current design: candidate links are deterministic, thresholded, and preserve why they were created.
+This ensures that surfaced hypotheses remain interpretable rather than opaque.
 
 ## 9. Modeling Principles
 
-The following principles define the scientific stance of Project Stars.
+The scientific stance of Project Stars is defined by the following principles.
 
 ### 9.1 Thoughts are structured objects
 
-A thought is not just a label. It is an attributed object with semantic, relational, evidential, and review-bearing structure.
+A thought is an attributed object with semantic, relational, evidential, and review-bearing structure.
 
 ### 9.2 Inference is not confirmation
 
-Candidate links are epistemic hypotheses. Confirmed links are reviewed commitments.
+Candidate links are hypotheses. Confirmed links are reviewed commitments.
 
 ### 9.3 Explainability is required
 
-Every candidate link must preserve the reasons it was surfaced.
+Every surfaced relation must preserve the basis on which it was proposed.
 
-### 9.4 Only confirmed structure shapes stable layout
+### 9.4 Stable structure and hypothesis remain distinct
 
-Hypothetical relations may be shown, but they should not deform the stable topology of the graph.
+Accepted structure and hypothetical relation should not be conflated.
 
-### 9.5 Provenance is part of the model
+### 9.5 Outcomes are mediated
 
-Sources, review state, citations, evidence class, and rationale are not optional extras. They are part of the scientific object.
+Intention does not map directly to social outcome. Outcomes are filtered through environment, institutions, norms, opportunity, and constraint.
 
-### 9.6 Visualization is an embedding, not the ontology itself
+### 9.6 Balanced testing and realistic simulation are different tasks
 
-The visible 2D layout is a dynamic projection of the relational system, not the thought system in full.
+Symmetry is used for fairness of theory testing. Asymmetry is introduced for realism.
+
+### 9.7 Visualization is an embedding, not the ontology itself
+
+The visible 2D map is a projection of the underlying system, not the full conceptual structure.
 
 ## 10. Layout Dynamics
 
-The displayed graph is not identical to the thought space. It is a time-dependent visual embedding of the graph into 2D.
-
-Define:
+The visible graph is a time-dependent embedding:
 
 `p(t) : Theta -> R^2`
-
-Where `p(t)(theta)` is the rendered position of thought `theta` at time `t`.
 
 Each thought also carries velocity:
 
 `v_theta(t) = d/dt p_theta(t)`
 
-The current force-layout design can be expressed as:
+The force-layout system can be written schematically as:
 
 `m_theta * p_theta'' =`
 - `sum of pairwise repulsion forces`
-- `+ sum of spring forces over confirmed edges only`
+- `+ sum of spring forces over confirmed edges`
+- `+ weak spring contribution from selected strong candidate edges`
 - `+ weak centering force`
-- `- damping term`
+- `- damping`
 
-Where:
+This means that:
 
 - repulsion prevents collapse,
-- confirmed-edge springs preserve reviewed structure,
-- centering keeps the graph bounded,
-- damping reduces instability.
+- confirmed edges preserve reviewed structure,
+- strong candidate hypotheses can weakly influence geometry,
+- centering keeps the system bounded,
+- damping stabilizes motion.
 
-### 10.1 Confirmed-only spring axiom
+The layout can also be interpreted through an energy lens as approximately minimizing a combination of:
 
-A central axiom of the layout is:
+- spring energy,
+- repulsion,
+- weak centering,
+- and hypothesis-sensitive tension.
 
-> Spring force is zero unless the relation is confirmed.
+## 11. Environment, Mediation, and Outcome Formation
 
-This formalizes a key design choice: uncertain hypotheses may annotate the map, but they should not determine its equilibrium geometry.
+A major feature of the current atlas is the separation between internal disposition and external outcome.
 
-### 10.2 Energy interpretation
+Rather than assuming direct transitions such as:
 
-The layout can also be understood as approximately minimizing an energy function made from:
+- `Intention -> Kindness`
+- `Intention -> Crime`
 
-- spring energy on confirmed edges,
-- pairwise repulsion,
-- weak centering.
+Project Stars models mediated pathways such as:
 
-That gives the visualization a more rigorous basis than just “animated nodes.”
+`Intention -> Action Tendency`
 
-## 11. Visual Encoding as Epistemic Encoding
+and then:
 
-The interface uses visual hierarchy to distinguish certainty levels:
+`Action Tendency + Opportunity + Norms + Enforcement + Empathy + Resources -> Outcome`
 
-- confirmed edges = solid,
-- possible edges = faint and dashed,
-- selected possible edges = slightly more visible,
-- candidate-neighbor labels = faint and conditional.
+Key mediator nodes include:
 
-This should be understood as an epistemic encoding scheme, not mere styling.
+- Action Tendency
+- Opportunity
+- Constraint
+- Norm Pressure
+- Enforcement
+- Incentive
+- Legitimacy
+- Visibility
+- Risk
+- Resources
 
-### 11.1 Structural layer
+This makes the atlas more appropriate for representing uneven evidence, conflicting pressures, institutions, and time.
 
-Confirmed edges and confirmed topology represent accepted relational structure.
+## 12. Activation Field and Disturbance
 
-### 11.2 Hypothesis layer
+The atlas includes a continuous activation background that evokes:
 
-Possible edges and faint related labels represent epistemic hypotheses above threshold.
-
-### 11.3 Activation layer
-
-Selection, hover, and wave disturbances represent temporary local activation rather than truth status.
-
-## 12. Wave Field and Activation
-
-The animated wave background is meant to evoke:
-
-- oscillation,
 - propagation,
-- emergence,
 - resonance,
-- disturbance.
+- disturbance,
+- and emergence.
 
-When a node is selected, the node acts as a local disturbance source.
-
-A formal way to express this is through a scalar field:
+A selected node acts as a local disturbance source in a scalar field:
 
 `phi(x, t)`
 
-over the 2D visual plane, behaving like a damped driven wave.
+The graph provides discrete conceptual structure, while the background field provides a continuous representation of local activation and influence.
 
-In practical terms:
+This supports the interpretation that ideas are not only connected, but also dynamically active within a wider conceptual environment.
 
-- the graph provides discrete relational structure,
-- the background provides a continuous activation field,
-- selected thoughts act like local excitations in that field.
+## 13. Receiver Quality and Heterogeneous Interpretation
 
-This supports the conceptual reading that ideas are not isolated points but sources of local influence in a surrounding system.
-
-## 13. Receiver Quality and Experimental Metrics
-
-The finalized atlas introduces an explicit receiver-state control.
-
-### 13.1 Receiver quality
-
-Receiver quality is represented by a scalar:
+Receiver quality is represented through a tunable state parameter:
 
 `Q in [0,1]`
 
-`Q` is intended as a controllable tuning parameter for testing how well the current system state supports coherent activation and stable conceptual resolution.
+### 13.1 Global tuning
 
-In the current atlas framing:
+The atlas exposes a receiver-quality control for experimental manipulation. Low values correspond to noisier or weaker resolution; high values correspond to stronger and more coherent conceptual response.
 
-- low `Q` corresponds to weak tuning and noisier local resolution,
-- high `Q` corresponds to stronger tuning and cleaner emergence of coherent local structure.
+### 13.2 Local variation
 
-### 13.2 Experimental interpretation
+A more realistic interpretation of the system treats receiver state as heterogeneous rather than globally uniform.
 
-This turns a philosophical claim into a manipulable computational hypothesis:
+This allows different nodes, groups, or domains to respond differently to the same pressure. In practical terms, one part of the atlas may interpret a signal as:
 
-> precision depends not only on structure, but also on receiver-state tuning.
+- threat,
+- cooperation,
+- ambiguity,
+- or irrelevance,
 
-Rather than asserting this as a theorem, Project Stars now exposes it as an interactive experimental variable.
+while another part responds differently.
 
-### 13.3 Live metrics
+### 13.3 Metrics
 
-The atlas also introduces an observability bundle `Xi`, which can include:
+The observability bundle `Xi` may include:
 
-- **precision**,
-- **coherence**,
-- **convergence**,
-- **receiver state**.
+- precision,
+- coherence,
+- convergence,
+- receiver state,
+- moral valence,
+- collective pull.
 
-These metrics make the system more testable by allowing the user to compare different receiver states under the same conceptual structure.
+These metrics support comparison across experimental conditions.
 
-## 14. Inspector as Research Interface
+## 14. Scenarios and Experimental Conditions
 
-The detail inspector is the main explanatory surface of the application.
+Project Stars supports structured scenario-based interpretation.
 
-For a selected node it shows:
+### 14.1 Balanced Test
+
+Used to inspect symmetry, mirrored moral structure, and fairness of graph geometry.
+
+### 14.2 World Mode
+
+Used to study realism under institutions, scarcity, conflict, leadership, norms, and historical pressure.
+
+### 14.3 Crisis Shock
+
+Used to test the stability of formation under disturbance, such as misinformation, scarcity spikes, or threat amplification.
+
+### 14.4 Repair Cycle
+
+Used to study the recovery of trust, legitimacy, and cooperation after breakdown.
+
+These scenario conditions distinguish theory testing from world simulation and make the atlas more experimentally legible.
+
+## 15. Inspector and Research Interface
+
+The detail inspector is the primary explanatory surface of the application.
+
+For a selected node it may show:
 
 - domain,
-- confirmed degree,
+- degree,
 - evidence class,
 - consensus,
 - review state,
@@ -489,253 +505,142 @@ For a selected node it shows:
 - references,
 - confirmed connections,
 - possible related thoughts,
-- relationship notes.
+- relation notes.
 
 Scientifically, the inspector is where the graph becomes interpretable. It translates:
 
-- graph structure into readable relation lists,
+- topology into readable relation lists,
 - candidate inference into inspectable evidence,
-- node metadata into explicit epistemic context.
+- and metadata into epistemic context.
 
-## 15. Add-Thought Workflow as Curation Mechanism
+## 16. Navigation and View Modes
 
-The add-thought workflow allows new node creation and optional confirmed-edge creation with rationale, citations, provenance, and review metadata. Candidate edges are recomputed after addition.
-
-This means the system is not just an observer of thought structure. It is also a curation environment.
-
-Each addition extends the current graph by:
-
-- adding a new thought object,
-- optionally adding a reviewed confirmed relation,
-- recomputing the candidate layer.
-
-This makes Project Stars a dynamic research object rather than a static diagram.
-
-## 16. Multi-View Navigation
-
-The current implementation supports several navigation modes, including:
+The atlas supports multiple forms of navigation and inspection, including:
 
 - constellation view,
-- domain view,
-- focus view,
-
-along with:
-
+- structural grouping,
+- local focus,
 - search,
-- filters,
+- domain filters,
+- minimap,
 - zoom,
 - fit,
 - home reset,
-- minimap,
 - pause or resume,
-- manual rearrangement.
+- drag and manual inspection.
 
-These are not just view presets. They are different ways of projecting the same underlying system:
+These are not merely visual presets. They are different ways of reading the same research object:
 
-- global structural inspection,
-- domain grouping,
-- local neighborhood analysis.
+- global structure,
+- domain organization,
+- causal neighborhood,
+- and local disturbance.
 
 ## 17. Export Semantics
 
 The export layer preserves:
 
-- categories,
 - nodes,
 - edges,
+- categories,
 - metadata,
-- integration configuration,
-- and the distinction between confirmed and candidate relationships.
-
-It also preserves:
-
+- confirmed vs candidate distinction,
 - provenance,
-- uncertainty,
 - review state,
 - rationale,
-- relation type,
 - score components,
-- and receiver-state or experiment metrics where available.
+- receiver-state metrics,
+- and scenario-relevant fields where available.
 
-This is scientifically important. A graph export that discards uncertainty or provenance is weak as a research artifact.
+This is essential to treating the atlas as a research artifact rather than a transient visualization.
 
-## 18. External Research-Source Layer
-
-The current build models an external-source integration layer through:
-
-- OpenAlex,
-- Crossref,
-- Semantic Scholar,
-- Wikidata.
-
-These sources support future or parallel workflows such as:
-
-- citation overlap,
-- metadata resolution,
-- author-neighborhood analysis,
-- recommendation expansion,
-- ontology or entity matching.
-
-This staged design is methodologically sound:
-
-1. define the internal semantics,
-2. define the scoring and review model,
-3. connect live data once the evidence structure is stable.
-
-## 19. Research Foundations and Scientific Framing
+## 18. Research Foundations
 
 The design draws from several research areas:
 
 - graph drawing and information visualization,
-- link prediction,
+- interpretable link prediction,
 - bibliometrics and citation structure,
 - similarity and retrieval,
-- ontology matching,
-- human-centered knowledge systems.
+- ontology alignment,
+- human-centered knowledge systems,
+- dynamical systems,
+- predictive processing,
+- and energy-based interpretations of organization.
 
-These map onto the model as follows:
+These influences are used analogically and computationally rather than as claims of full identity with any one framework.
 
-### 19.1 Graph drawing
+## 19. Scientific Contribution
 
-Force-directed layout motivates the dynamic embedding `p(t)`.
-
-### 19.2 Link prediction
-
-Candidate-link generation is interpretable link prediction over a layered graph.
-
-### 19.3 Bibliometrics
-
-Citation overlap and neighborhood structure support research-grounded relation signals.
-
-### 19.4 Information retrieval
-
-Semantic and token-level similarity provide a retrieval-style basis for conceptual adjacency.
-
-### 19.5 Ontology matching
-
-Category and entity alignment help distinguish true conceptual relation from lexical coincidence.
-
-### 19.6 Human review
-
-Human review defines the hard boundary between surfaced hypotheses and accepted structure.
-
-### 19.7 Isomorphism to established frameworks
-
-The current atlas is best interpreted as a **computationally analogous** or **partially isomorphic** system rather than a full identity claim.
-
-#### Free Energy Principle
-
-The layout dynamics can be read as an energy-minimizing process over a structured state space. Confirmed-edge springs, repulsion, damping, and centering together define a low-energy settling process that is broadly analogous to variational or predictive-error minimization.
-
-#### Predictive processing / active inference
-
-The candidate-link layer functions like a structured hypothesis layer, while confirmed structure functions like stabilized commitment. In this reading, candidate scores act as interpretable update pressures rather than opaque suggestions.
-
-#### Dynamical systems neuroscience
-
-The evolving embedding `p(t)` and activation field `phi(x,t)` can be interpreted as a metastable conceptual dynamics. Receiver quality `Q` provides a controllable parameter for testing how tuning changes the emergence of coherent local structure.
-
-## 20. Scientific Contribution
-
-The main contribution of Project Stars is the coupling of several ideas into one interpretable system:
+The main contribution of Project Stars is the coupling of several ideas into a single interpretable atlas:
 
 1. **Thoughts as structured research objects**  
    Nodes carry provenance, evidence, review, and ontology-bearing metadata.
 
 2. **Epistemically separated relation layers**  
-   Confirmed and candidate relations are kept distinct both visually and structurally.
+   Confirmed and candidate relations remain distinct.
 
-3. **Explainable candidate inference**  
-   Candidate links are generated from explicit weighted signals and preserve their basis.
+3. **Explainable relation inference**  
+   Candidate links are surfaced through explicit weighted signals.
 
-4. **Structural vs perceptual separation**  
-   Only confirmed relations shape equilibrium layout; candidate relations remain inspectable but non-deforming.
+4. **Balanced testing versus realistic world modeling**  
+   Symmetry is used for fairness tests; asymmetry is introduced for realism.
 
-5. **Field-based activation metaphor**  
-   Selection and local activity are modeled through a wave-like background rather than collapsed into graph structure.
+5. **Mediated outcome formation**  
+   Internal states do not map directly to social outcomes; environment and institutions intervene.
 
-6. **Receiver-state experimentation**  
-   Receiver quality and live metrics make the central claim computationally testable rather than purely rhetorical.
+6. **Layered social representation**  
+   Individual, interpersonal, institutional, and collective levels coexist in one framework.
 
-7. **Research-preserving export**  
-   The JSON schema retains rationale, provenance, review state, uncertainty, and score components.
+7. **Receiver-state experimentation**  
+   Precision and coherence depend not only on structure, but also on tuning and interpretation.
 
-This makes Project Stars interpretable as a research system for thought relations rather than merely a browser visualization.
+8. **Research-preserving export**  
+   The artifact retains rationale, provenance, uncertainty, and experiment-relevant metadata.
 
-## 21. Limitations
+## 20. Limitations
 
-The current build has important limits:
+The current atlas has important limits:
 
-1. it is client-side only,
-2. the force simulation is intentionally lightweight,
-3. token-based similarity is interpretable but not state-of-the-art,
-4. candidate quality depends on the quality of underlying text and references,
-5. the build prioritizes interpretability over automation.
+1. it is client-side,
+2. the layout and field models are deliberately lightweight,
+3. the scoring function is interpretable but hand-weighted,
+4. candidate quality depends on the quality of source text and references,
+5. the ontology remains curated rather than exhaustive,
+6. the field layer remains partly metaphorical,
+7. large-scale collaborative review is not yet implemented.
 
-Additional limitations include:
+The project prioritizes interpretability and explicit structure over automation.
 
-- the embedding layer may be approximate or implicit,
-- the score is interpretable but hand-weighted,
-- the ontology layer is still modest,
-- the field layer is partly metaphorical,
-- there is no persistent collaborative review backend,
-- large-scale graph behavior is not yet the main target.
-
-## 22. Future Extensions
+## 21. Future Directions
 
 Natural next steps include:
 
 - stronger embedding-based retrieval,
-- calibrated or learned score weights,
-- typed morphisms between thoughts,
-- explicit cluster or tightness measures,
+- calibrated or learned relation weights,
 - richer ontology structure,
-- field behavior tied more directly to graph activation.
+- explicit group-level receiver models,
+- direct memory terms such as trust history and conflict residue,
+- richer shock models,
+- longitudinal scenario comparison,
+- and stronger export-to-analysis workflows.
 
-A deeper theoretical extension would reinterpret confirmed relations as morphisms:
-
-`r : theta_i -> theta_j`
-
-Another would treat the semantic space as curved rather than flat, so conceptual distance depends on local structure.
-
-## 23. Implementation Mapping
+## 22. Implementation Mapping
 
 A practical mapping from theory to implementation is:
 
-- `Theta` -> node collection (`SEED_NODES` plus added nodes),
-- `A` -> node fields such as label, description, references, evidence, review, and provenance,
-- `Rc` and `Rp` -> edge collection with relation status,
-- `S` -> `recomputeCandidateEdges()` and stored score components,
-- `p(t)` -> node position, velocity, and animation tick,
-- `phi` -> background wave canvas and selected-node disturbance logic,
-- `Q` -> receiver-quality control,
-- `Xi` -> live experiment metrics,
-- export semantics -> JSON schema preserving relation layer and evidence metadata.
+- `Theta` -> node collection,
+- `A` -> node fields such as label, description, evidence, review, provenance, and layer,
+- `Rc` and `Rp` -> confirmed and candidate edge collections,
+- `S` -> candidate-edge recomputation and stored score components,
+- `p(t)` -> node positions, velocities, and animation ticks,
+- `phi` -> background field and disturbance rendering,
+- `Q` -> receiver-quality controls,
+- `E` -> environment and mediation nodes,
+- `H` -> memory-oriented state where represented,
+- `Xi` -> live experiment metrics and scenario readouts.
 
-## 24. Updates — 28/03/2026
-
-The README and live atlas were updated on **28/03/2026** to reflect the finalized theory framing and interface changes.
-
-### Added to the atlas
-
-- **Receiver Quality control (`Q`)** with low, medium, and high experimental presets,
-- **live experiment metrics** for precision, coherence, convergence, and receiver state,
-- **finalized mathematical framing** in the interface using the language of a formal hypothesis rather than an overclaimed proof,
-- **science-link framing** connecting the atlas to free-energy, predictive-processing, and dynamical-systems interpretations,
-- **extended export semantics** so receiver-state and experiment metrics travel with the exported research artifact,
-- **responsiveness and stability improvements** to improve minimap interaction and overall browser robustness.
-
-### Why this matters
-
-These updates move Project Stars from a compelling conceptual visualization toward a more testable computational research instrument. The atlas now makes the central claim experimentally manipulable:
-
-> precision depends not only on structure, but also on receiver-state tuning.
-
-### Repository note
-
-The interactive file prepared on **28/03/2026** is intended to serve as the current hosted `index.html` for the project.
-
-## 25. Copyright
+## 23. Copyright
 
 Unless otherwise stated for third-party materials, services, or marks:
 
