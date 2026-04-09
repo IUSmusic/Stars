@@ -80,24 +80,12 @@ const ctx=gc.getContext('2d');
 const mm=document.getElementById('minimap');
 const mmx=mm.getContext('2d');
 
-function getViewportSize(){
-  const vv = window.visualViewport;
-  return {
-    width: Math.max(1, Math.round(vv ? vv.width : window.innerWidth)),
-    height: Math.max(1, Math.round(vv ? vv.height : window.innerHeight))
-  };
-}
-
 function resize(){
-  const viewport = getViewportSize();
-  W = gc.width = bgC.width = viewport.width;
-  H = gc.height = bgC.height = viewport.height;
+  W=gc.width=bgC.width=window.innerWidth;
+  H=gc.height=bgC.height=window.innerHeight;
   drawStars();
 }
-window.addEventListener('resize', resize, { passive:true });
-if(window.visualViewport){
-  window.visualViewport.addEventListener('resize', resize, { passive:true });
-}
+window.addEventListener('resize',resize);
 window.addEventListener('online',renderSourceStatus);
 window.addEventListener('offline',renderSourceStatus);
 
