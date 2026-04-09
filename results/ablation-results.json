@@ -1,0 +1,1518 @@
+{
+  "generatedAt": "2026-04-09T20:05:36.486Z",
+  "atlasVersion": "v1.0",
+  "dataset": {
+    "datasetTag": "data-v1.0",
+    "exportedFrom": "index.html",
+    "nodeCount": 108,
+    "confirmedEdgeCount": 344,
+    "candidateEdgeCount": 0,
+    "categoryCount": 10,
+    "notes": "Atlas content externalized from the original single-file renderer for reproducible dataset versioning."
+  },
+  "candidateRanking": {
+    "totalPairsScored": 5481,
+    "benchmarkSize": 24,
+    "metrics": {
+      "aucRoc": 0.6528,
+      "precisionAt5": 0.6,
+      "precisionAt10": 0.6,
+      "meanReciprocalRank": 0.2225
+    },
+    "rankedGroundTruth": [
+      {
+        "a": 53,
+        "b": 54,
+        "labelA": "Story",
+        "labelB": "Music",
+        "expected": "candidate",
+        "rationale": "Narrative and music are closely linked forms of temporal, affective structure.",
+        "score": 0.171681,
+        "basis": [
+          "shared topics 0.22",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.0851063829787234,
+          "citationOverlap": 0,
+          "sharedTopics": 0.2222222222222222,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0.77,
+          "recencyWeight": 0.62,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 94,
+        "b": 98,
+        "labelA": "Crime",
+        "labelB": "Harm",
+        "expected": "candidate",
+        "rationale": "Crime and harm are tightly linked in social-risk and pathway analyses.",
+        "score": 0.147963,
+        "basis": [
+          "shared topics 0.16",
+          "shared neighbors 0.20",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.041666666666666664,
+          "citationOverlap": 0,
+          "sharedTopics": 0.15789473684210525,
+          "sharedNeighbors": 0.2,
+          "ontologyMatch": 0.77,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 47,
+        "b": 49,
+        "labelA": "Pattern Recognition",
+        "labelB": "Conceptual Metaphor",
+        "expected": "candidate",
+        "rationale": "Pattern recognition and conceptual metaphor share abstraction machinery.",
+        "score": 0.068119,
+        "basis": [
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0.047619047619047616,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 100,
+        "b": 41,
+        "labelA": "Fear Contagion",
+        "labelB": "Holographic Principle",
+        "expected": "not-candidate",
+        "rationale": "Fear contagion and the holographic principle are not a useful candidate pair.",
+        "score": 0.067081,
+        "basis": [
+          "citation overlap 0.06"
+        ],
+        "components": {
+          "semanticSimilarity": 0.023255813953488372,
+          "citationOverlap": 0.0625,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0.98,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 30,
+        "b": 104,
+        "labelA": "Sleep & Memory",
+        "labelB": "Exploitation",
+        "expected": "not-candidate",
+        "rationale": "Sleep & memory and exploitation are not a plausible direct candidate edge.",
+        "score": 0.049,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0.98,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 13,
+        "b": 108,
+        "labelA": "Grief",
+        "labelB": "Historical Memory",
+        "expected": "candidate",
+        "rationale": "Collective and historical memory shape grief and memorialisation.",
+        "score": 0.035,
+        "basis": [
+          "shared neighbors 0.25"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0.25,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 40,
+        "b": 19,
+        "labelA": "Dark Matter",
+        "labelB": "Shame",
+        "expected": "not-candidate",
+        "rationale": "Dark matter and shame are not a meaningful research-candidate bridge in this atlas.",
+        "score": 0.029,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0.5800000000000001,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 17,
+        "b": 71,
+        "labelA": "Loneliness",
+        "labelB": "Trust",
+        "expected": "candidate",
+        "rationale": "Loneliness and trust belong in a shared social-cohesion research neighborhood.",
+        "score": 0.027455,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0.022727272727272728,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0.43999999999999995,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 45,
+        "b": 97,
+        "labelA": "Theory of Mind",
+        "labelB": "Empathy / Compassion",
+        "expected": "candidate",
+        "rationale": "Theory of mind and empathy/compassion are adjacent social-cognition concepts.",
+        "score": 0.021538,
+        "basis": [
+          "shared neighbors 0.15"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0.15384615384615385,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 36,
+        "b": 95,
+        "labelA": "Infinity",
+        "labelB": "Kindness",
+        "expected": "not-candidate",
+        "rationale": "Infinity and kindness should be negative in a direct ranking benchmark.",
+        "score": 0.0175,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0.35,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 61,
+        "b": 86,
+        "labelA": "Death",
+        "labelB": "Impermanence",
+        "expected": "candidate",
+        "rationale": "Death and impermanence are tightly coupled existential concepts.",
+        "score": 0.013,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0.26,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 4,
+        "b": 22,
+        "labelA": "Consciousness",
+        "labelB": "Predictive Processing",
+        "expected": "candidate",
+        "rationale": "Predictive coding offers a natural bridge to theories of consciousness.",
+        "score": 0.01,
+        "basis": [
+          "shared neighbors 0.07"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0.07142857142857142,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 33,
+        "b": 69,
+        "labelA": "Glymphatic System",
+        "labelB": "Justice",
+        "expected": "not-candidate",
+        "rationale": "The glymphatic system and justice are not a plausible direct candidate edge.",
+        "score": 0.006,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0.12,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 4,
+        "b": 23,
+        "labelA": "Consciousness",
+        "labelB": "Default Mode Network",
+        "expected": "candidate",
+        "rationale": "Self-referential network research is relevant to models of consciousness.",
+        "score": 0,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 6,
+        "b": 37,
+        "labelA": "Causality",
+        "labelB": "Information Theory",
+        "expected": "candidate",
+        "rationale": "Causality and information-theoretic structure often travel together conceptually.",
+        "score": 0,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 62,
+        "b": 85,
+        "labelA": "Purpose",
+        "labelB": "Meaning",
+        "expected": "candidate",
+        "rationale": "Purpose and meaning are an intuitive high-value candidate bridge.",
+        "score": 0,
+        "basis": [
+          "pair absent from ranked candidate list"
+        ],
+        "components": {}
+      },
+      {
+        "a": 80,
+        "b": 89,
+        "labelA": "Symbiosis",
+        "labelB": "Interconnection",
+        "expected": "candidate",
+        "rationale": "Symbiosis and interconnection are close systems-level concepts.",
+        "score": 0,
+        "basis": [
+          "pair absent from ranked candidate list"
+        ],
+        "components": {}
+      },
+      {
+        "a": 35,
+        "b": 71,
+        "labelA": "Quantum Superposition",
+        "labelB": "Trust",
+        "expected": "not-candidate",
+        "rationale": "Quantum superposition and trust should rank very low.",
+        "score": 0,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 58,
+        "b": 40,
+        "labelA": "Ritual",
+        "labelB": "Dark Matter",
+        "expected": "not-candidate",
+        "rationale": "Ritual and dark matter are intentionally unrelated in this benchmark.",
+        "score": 0,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 46,
+        "b": 80,
+        "labelA": "Working Memory",
+        "labelB": "Symbiosis",
+        "expected": "not-candidate",
+        "rationale": "Working memory and symbiosis should remain distant.",
+        "score": 0,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 24,
+        "b": 87,
+        "labelA": "Neuroplasticity",
+        "labelB": "Sacred",
+        "expected": "not-candidate",
+        "rationale": "Neuroplasticity and the sacred are too indirect for a benchmark-positive pair.",
+        "score": 0,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 52,
+        "b": 103,
+        "labelA": "Beauty",
+        "labelB": "Coercion",
+        "expected": "not-candidate",
+        "rationale": "Beauty and coercion should not rank as a useful conceptual bridge.",
+        "score": 0,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 65,
+        "b": 105,
+        "labelA": "Dream",
+        "labelB": "Law",
+        "expected": "not-candidate",
+        "rationale": "Dream and law are not expected to be a candidate edge here.",
+        "score": 0,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 27,
+        "b": 74,
+        "labelA": "Synaptic Pruning",
+        "labelB": "Freedom",
+        "expected": "not-candidate",
+        "rationale": "Synaptic pruning and freedom are too weakly coupled for positive ground truth.",
+        "score": 0,
+        "basis": [
+          "multi-signal weak match"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0,
+          "recencyWeight": 0,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      }
+    ],
+    "topSuggestions": [
+      {
+        "a": 91,
+        "b": 102,
+        "labelA": "Collective Intention",
+        "labelB": "Fragmentation",
+        "catA": "society",
+        "catB": "society",
+        "score": 0.205579,
+        "basis": [
+          "shared topics 0.17",
+          "shared neighbors 0.30",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.0425531914893617,
+          "citationOverlap": 0,
+          "sharedTopics": 0.16666666666666666,
+          "sharedNeighbors": 0.3,
+          "ontologyMatch": 0.77,
+          "recencyWeight": 0.84,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 23,
+        "b": 33,
+        "labelA": "Default Mode Network",
+        "labelB": "Glymphatic System",
+        "catA": "neuroscience",
+        "catB": "neuroscience",
+        "score": 0.202935,
+        "basis": [
+          "shared topics 0.18",
+          "shared neighbors 0.20",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.075,
+          "citationOverlap": 0,
+          "sharedTopics": 0.17647058823529413,
+          "sharedNeighbors": 0.2,
+          "ontologyMatch": 0.77,
+          "recencyWeight": 0.88,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 94,
+        "b": 101,
+        "labelA": "Crime",
+        "labelB": "Dehumanization",
+        "catA": "society",
+        "catB": "society",
+        "score": 0.193654,
+        "basis": [
+          "citation overlap 0.23",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.1,
+          "citationOverlap": 0.23076923076923078,
+          "sharedTopics": 0.1,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.94,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 75,
+        "b": 99,
+        "labelA": "Reciprocity",
+        "labelB": "Distrust",
+        "catA": "society",
+        "catB": "society",
+        "score": 0.18599,
+        "basis": [
+          "citation overlap 0.08",
+          "shared neighbors 0.25",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.05,
+          "citationOverlap": 0.08333333333333333,
+          "sharedTopics": 0.11764705882352941,
+          "sharedNeighbors": 0.25,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.86,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 72,
+        "b": 93,
+        "labelA": "Tribalism",
+        "labelB": "Moral Valence",
+        "catA": "society",
+        "catB": "society",
+        "score": 0.185785,
+        "basis": [
+          "citation overlap 0.29",
+          "shared neighbors 0.06",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.11627906976744186,
+          "citationOverlap": 0.2857142857142857,
+          "sharedTopics": 0.1,
+          "sharedNeighbors": 0.058823529411764705,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.31999999999999995,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 24,
+        "b": 33,
+        "labelA": "Neuroplasticity",
+        "labelB": "Glymphatic System",
+        "catA": "neuroscience",
+        "catB": "neuroscience",
+        "score": 0.175833,
+        "basis": [
+          "shared neighbors 0.40",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.022222222222222223,
+          "citationOverlap": 0,
+          "sharedTopics": 0.05,
+          "sharedNeighbors": 0.4,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.92,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 53,
+        "b": 54,
+        "labelA": "Story",
+        "labelB": "Music",
+        "catA": "art",
+        "catB": "art",
+        "score": 0.171681,
+        "basis": [
+          "shared topics 0.22",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.0851063829787234,
+          "citationOverlap": 0,
+          "sharedTopics": 0.2222222222222222,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0.77,
+          "recencyWeight": 0.62,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 23,
+        "b": 24,
+        "labelA": "Default Mode Network",
+        "labelB": "Neuroplasticity",
+        "catA": "neuroscience",
+        "catB": "neuroscience",
+        "score": 0.166455,
+        "basis": [
+          "citation overlap 0.06",
+          "shared neighbors 0.29",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.022727272727272728,
+          "citationOverlap": 0.0625,
+          "sharedTopics": 0.05,
+          "sharedNeighbors": 0.2857142857142857,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.8,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 40,
+        "b": 41,
+        "labelA": "Dark Matter",
+        "labelB": "Holographic Principle",
+        "catA": "physics",
+        "catB": "physics",
+        "score": 0.166342,
+        "basis": [
+          "shared neighbors 0.25",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.025,
+          "citationOverlap": 0,
+          "sharedTopics": 0.10526315789473684,
+          "sharedNeighbors": 0.25,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.96,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 91,
+        "b": 94,
+        "labelA": "Collective Intention",
+        "labelB": "Crime",
+        "catA": "society",
+        "catB": "society",
+        "score": 0.164801,
+        "basis": [
+          "shared neighbors 0.18",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.057692307692307696,
+          "citationOverlap": 0,
+          "sharedTopics": 0.1,
+          "sharedNeighbors": 0.18181818181818182,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.98,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 48,
+        "b": 107,
+        "labelA": "Decision Making",
+        "labelB": "Incentive",
+        "catA": "cognitive",
+        "catB": "society",
+        "score": 0.164566,
+        "basis": [
+          "citation overlap 0.38",
+          "shared neighbors 0.11"
+        ],
+        "components": {
+          "semanticSimilarity": 0.10869565217391304,
+          "citationOverlap": 0.38461538461538464,
+          "sharedTopics": 0,
+          "sharedNeighbors": 0.1111111111111111,
+          "ontologyMatch": 0,
+          "recencyWeight": 0.92,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 18,
+        "b": 95,
+        "labelA": "Empathy",
+        "labelB": "Kindness",
+        "catA": "emotion",
+        "catB": "emotion",
+        "score": 0.159548,
+        "basis": [
+          "shared neighbors 0.23",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.02040816326530612,
+          "citationOverlap": 0,
+          "sharedTopics": 0.10526315789473684,
+          "sharedNeighbors": 0.23076923076923078,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.9,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 23,
+        "b": 25,
+        "labelA": "Default Mode Network",
+        "labelB": "Interoception",
+        "catA": "neuroscience",
+        "catB": "neuroscience",
+        "score": 0.158485,
+        "basis": [
+          "citation overlap 0.07",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.09523809523809523,
+          "citationOverlap": 0.07142857142857142,
+          "sharedTopics": 0.10526315789473684,
+          "sharedNeighbors": 0,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.88,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 23,
+        "b": 30,
+        "labelA": "Default Mode Network",
+        "labelB": "Sleep & Memory",
+        "catA": "neuroscience",
+        "catB": "neuroscience",
+        "score": 0.155131,
+        "basis": [
+          "shared neighbors 0.29",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.024390243902439025,
+          "citationOverlap": 0,
+          "sharedTopics": 0.1111111111111111,
+          "sharedNeighbors": 0.2857142857142857,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.62,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 71,
+        "b": 72,
+        "labelA": "Trust",
+        "labelB": "Tribalism",
+        "catA": "society",
+        "catB": "society",
+        "score": 0.153536,
+        "basis": [
+          "shared neighbors 0.18",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.023255813953488372,
+          "citationOverlap": 0,
+          "sharedTopics": 0.1,
+          "sharedNeighbors": 0.18181818181818182,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.92,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 99,
+        "b": 101,
+        "labelA": "Distrust",
+        "labelB": "Dehumanization",
+        "catA": "society",
+        "catB": "society",
+        "score": 0.1525,
+        "basis": [
+          "shared neighbors 0.30",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0.05,
+          "sharedNeighbors": 0.3,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.84,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 76,
+        "b": 102,
+        "labelA": "Status",
+        "labelB": "Fragmentation",
+        "catA": "society",
+        "catB": "society",
+        "score": 0.151861,
+        "basis": [
+          "citation overlap 0.08",
+          "shared neighbors 0.11",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.025,
+          "citationOverlap": 0.07692307692307693,
+          "sharedTopics": 0.05263157894736842,
+          "sharedNeighbors": 0.1111111111111111,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.92,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 19,
+        "b": 21,
+        "labelA": "Shame",
+        "labelB": "Nostalgia",
+        "catA": "emotion",
+        "catB": "emotion",
+        "score": 0.1505,
+        "basis": [
+          "shared neighbors 0.25",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0,
+          "citationOverlap": 0,
+          "sharedTopics": 0.05,
+          "sharedNeighbors": 0.25,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.94,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 49,
+        "b": 50,
+        "labelA": "Conceptual Metaphor",
+        "labelB": "Linguistic Relativity",
+        "catA": "cognitive",
+        "catB": "cognitive",
+        "score": 0.150273,
+        "basis": [
+          "shared neighbors 0.25",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.02564102564102564,
+          "citationOverlap": 0,
+          "sharedTopics": 0.047619047619047616,
+          "sharedNeighbors": 0.25,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.8200000000000001,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      },
+      {
+        "a": 94,
+        "b": 104,
+        "labelA": "Crime",
+        "labelB": "Exploitation",
+        "catA": "society",
+        "catB": "society",
+        "score": 0.149606,
+        "basis": [
+          "shared neighbors 0.20",
+          "same domain"
+        ],
+        "components": {
+          "semanticSimilarity": 0.02127659574468085,
+          "citationOverlap": 0,
+          "sharedTopics": 0.05,
+          "sharedNeighbors": 0.2,
+          "ontologyMatch": 0.55,
+          "recencyWeight": 0.96,
+          "sharedAuthors": 0,
+          "entityMatch": 0,
+          "sourceQuality": 0
+        }
+      }
+    ]
+  },
+  "topCandidates": [
+    {
+      "a": 91,
+      "b": 102,
+      "labelA": "Collective Intention",
+      "labelB": "Fragmentation",
+      "catA": "society",
+      "catB": "society",
+      "score": 0.205579,
+      "basis": [
+        "shared topics 0.17",
+        "shared neighbors 0.30",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.0425531914893617,
+        "citationOverlap": 0,
+        "sharedTopics": 0.16666666666666666,
+        "sharedNeighbors": 0.3,
+        "ontologyMatch": 0.77,
+        "recencyWeight": 0.84,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 23,
+      "b": 33,
+      "labelA": "Default Mode Network",
+      "labelB": "Glymphatic System",
+      "catA": "neuroscience",
+      "catB": "neuroscience",
+      "score": 0.202935,
+      "basis": [
+        "shared topics 0.18",
+        "shared neighbors 0.20",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.075,
+        "citationOverlap": 0,
+        "sharedTopics": 0.17647058823529413,
+        "sharedNeighbors": 0.2,
+        "ontologyMatch": 0.77,
+        "recencyWeight": 0.88,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 94,
+      "b": 101,
+      "labelA": "Crime",
+      "labelB": "Dehumanization",
+      "catA": "society",
+      "catB": "society",
+      "score": 0.193654,
+      "basis": [
+        "citation overlap 0.23",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.1,
+        "citationOverlap": 0.23076923076923078,
+        "sharedTopics": 0.1,
+        "sharedNeighbors": 0,
+        "ontologyMatch": 0.55,
+        "recencyWeight": 0.94,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 75,
+      "b": 99,
+      "labelA": "Reciprocity",
+      "labelB": "Distrust",
+      "catA": "society",
+      "catB": "society",
+      "score": 0.18599,
+      "basis": [
+        "citation overlap 0.08",
+        "shared neighbors 0.25",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.05,
+        "citationOverlap": 0.08333333333333333,
+        "sharedTopics": 0.11764705882352941,
+        "sharedNeighbors": 0.25,
+        "ontologyMatch": 0.55,
+        "recencyWeight": 0.86,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 72,
+      "b": 93,
+      "labelA": "Tribalism",
+      "labelB": "Moral Valence",
+      "catA": "society",
+      "catB": "society",
+      "score": 0.185785,
+      "basis": [
+        "citation overlap 0.29",
+        "shared neighbors 0.06",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.11627906976744186,
+        "citationOverlap": 0.2857142857142857,
+        "sharedTopics": 0.1,
+        "sharedNeighbors": 0.058823529411764705,
+        "ontologyMatch": 0.55,
+        "recencyWeight": 0.31999999999999995,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 24,
+      "b": 33,
+      "labelA": "Neuroplasticity",
+      "labelB": "Glymphatic System",
+      "catA": "neuroscience",
+      "catB": "neuroscience",
+      "score": 0.175833,
+      "basis": [
+        "shared neighbors 0.40",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.022222222222222223,
+        "citationOverlap": 0,
+        "sharedTopics": 0.05,
+        "sharedNeighbors": 0.4,
+        "ontologyMatch": 0.55,
+        "recencyWeight": 0.92,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 53,
+      "b": 54,
+      "labelA": "Story",
+      "labelB": "Music",
+      "catA": "art",
+      "catB": "art",
+      "score": 0.171681,
+      "basis": [
+        "shared topics 0.22",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.0851063829787234,
+        "citationOverlap": 0,
+        "sharedTopics": 0.2222222222222222,
+        "sharedNeighbors": 0,
+        "ontologyMatch": 0.77,
+        "recencyWeight": 0.62,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 23,
+      "b": 24,
+      "labelA": "Default Mode Network",
+      "labelB": "Neuroplasticity",
+      "catA": "neuroscience",
+      "catB": "neuroscience",
+      "score": 0.166455,
+      "basis": [
+        "citation overlap 0.06",
+        "shared neighbors 0.29",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.022727272727272728,
+        "citationOverlap": 0.0625,
+        "sharedTopics": 0.05,
+        "sharedNeighbors": 0.2857142857142857,
+        "ontologyMatch": 0.55,
+        "recencyWeight": 0.8,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 40,
+      "b": 41,
+      "labelA": "Dark Matter",
+      "labelB": "Holographic Principle",
+      "catA": "physics",
+      "catB": "physics",
+      "score": 0.166342,
+      "basis": [
+        "shared neighbors 0.25",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.025,
+        "citationOverlap": 0,
+        "sharedTopics": 0.10526315789473684,
+        "sharedNeighbors": 0.25,
+        "ontologyMatch": 0.55,
+        "recencyWeight": 0.96,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 91,
+      "b": 94,
+      "labelA": "Collective Intention",
+      "labelB": "Crime",
+      "catA": "society",
+      "catB": "society",
+      "score": 0.164801,
+      "basis": [
+        "shared neighbors 0.18",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.057692307692307696,
+        "citationOverlap": 0,
+        "sharedTopics": 0.1,
+        "sharedNeighbors": 0.18181818181818182,
+        "ontologyMatch": 0.55,
+        "recencyWeight": 0.98,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 48,
+      "b": 107,
+      "labelA": "Decision Making",
+      "labelB": "Incentive",
+      "catA": "cognitive",
+      "catB": "society",
+      "score": 0.164566,
+      "basis": [
+        "citation overlap 0.38",
+        "shared neighbors 0.11"
+      ],
+      "components": {
+        "semanticSimilarity": 0.10869565217391304,
+        "citationOverlap": 0.38461538461538464,
+        "sharedTopics": 0,
+        "sharedNeighbors": 0.1111111111111111,
+        "ontologyMatch": 0,
+        "recencyWeight": 0.92,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    },
+    {
+      "a": 18,
+      "b": 95,
+      "labelA": "Empathy",
+      "labelB": "Kindness",
+      "catA": "emotion",
+      "catB": "emotion",
+      "score": 0.159548,
+      "basis": [
+        "shared neighbors 0.23",
+        "same domain"
+      ],
+      "components": {
+        "semanticSimilarity": 0.02040816326530612,
+        "citationOverlap": 0,
+        "sharedTopics": 0.10526315789473684,
+        "sharedNeighbors": 0.23076923076923078,
+        "ontologyMatch": 0.55,
+        "recencyWeight": 0.9,
+        "sharedAuthors": 0,
+        "entityMatch": 0,
+        "sourceQuality": 0
+      }
+    }
+  ],
+  "candidateThreshold": 0.17,
+  "ablations": {
+    "confirmedOnlyVsFull": {
+      "confirmedOnly": {
+        "scenario": "Balanced Test",
+        "includeCandidates": false,
+        "nodeCount": 108,
+        "edgeCount": 344,
+        "meanDegree": 6.3704,
+        "maxDegree": 17,
+        "fragmentation": 0,
+        "coherenceXi": 1,
+        "clustering": 0.2048,
+        "modularityProxy": 0.407,
+        "moralValenceBalance": 0.1507,
+        "layoutEnergyProxy": 0.9225,
+        "betweennessMean": 116.6574,
+        "betweennessMax": 812.4406
+      },
+      "fullGraph": {
+        "scenario": "Balanced Test",
+        "includeCandidates": true,
+        "nodeCount": 108,
+        "edgeCount": 351,
+        "meanDegree": 6.5,
+        "maxDegree": 17,
+        "fragmentation": 0,
+        "coherenceXi": 1,
+        "clustering": 0.2044,
+        "modularityProxy": 0.4086,
+        "moralValenceBalance": 0.1499,
+        "layoutEnergyProxy": 1.0414,
+        "betweennessMean": 115.8426,
+        "betweennessMax": 807.5771
+      }
+    },
+    "balancedVsWorld": {
+      "balanced": {
+        "scenario": "Balanced Test",
+        "includeCandidates": true,
+        "nodeCount": 108,
+        "edgeCount": 351,
+        "meanDegree": 6.5,
+        "maxDegree": 17,
+        "fragmentation": 0,
+        "coherenceXi": 1,
+        "clustering": 0.2044,
+        "modularityProxy": 0.4086,
+        "moralValenceBalance": 0.1499,
+        "layoutEnergyProxy": 1.0414,
+        "betweennessMean": 115.8426,
+        "betweennessMax": 807.5771
+      },
+      "world": {
+        "scenario": "World Mode",
+        "includeCandidates": true,
+        "nodeCount": 108,
+        "edgeCount": 351,
+        "meanDegree": 6.5,
+        "maxDegree": 17,
+        "fragmentation": 0,
+        "coherenceXi": 1,
+        "clustering": 0.2044,
+        "modularityProxy": 0.4101,
+        "moralValenceBalance": 0.1338,
+        "layoutEnergyProxy": 1.0612,
+        "betweennessMean": 115.8426,
+        "betweennessMax": 807.5771
+      }
+    },
+    "lowQVsHighQ": {
+      "lowQ": {
+        "scenario": "Low-Q",
+        "includeCandidates": true,
+        "nodeCount": 108,
+        "edgeCount": 351,
+        "meanDegree": 6.5,
+        "maxDegree": 17,
+        "fragmentation": 0,
+        "coherenceXi": 1,
+        "clustering": 0.2044,
+        "modularityProxy": 0.4112,
+        "moralValenceBalance": 0.1263,
+        "layoutEnergyProxy": 1.1606,
+        "betweennessMean": 115.8426,
+        "betweennessMax": 807.5771
+      },
+      "highQ": {
+        "scenario": "High-Q",
+        "includeCandidates": true,
+        "nodeCount": 108,
+        "edgeCount": 351,
+        "meanDegree": 6.5,
+        "maxDegree": 17,
+        "fragmentation": 0,
+        "coherenceXi": 1,
+        "clustering": 0.2044,
+        "modularityProxy": 0.4098,
+        "moralValenceBalance": 0.1756,
+        "layoutEnergyProxy": 0.9839,
+        "betweennessMean": 115.8426,
+        "betweennessMax": 807.5771
+      }
+    },
+    "crisisShockVsRepair": {
+      "crisis": {
+        "scenario": "Crisis Shock",
+        "trials": 50,
+        "baseline": {
+          "scenario": "Crisis Shock",
+          "includeCandidates": true,
+          "nodeCount": 108,
+          "edgeCount": 351,
+          "meanDegree": 6.5,
+          "maxDegree": 17,
+          "fragmentation": 0,
+          "coherenceXi": 1,
+          "clustering": 0.2044,
+          "modularityProxy": 0.4185,
+          "moralValenceBalance": 0.0958,
+          "layoutEnergyProxy": 1.0471,
+          "betweennessMean": 115.8426,
+          "betweennessMax": 807.5771
+        },
+        "deltas": {
+          "coherenceXi": {
+            "mean": -0.0017,
+            "std": 0.0036
+          },
+          "layoutEnergyProxy": {
+            "mean": 0.0008,
+            "std": 0.021
+          },
+          "modularityProxy": {
+            "mean": 0.0029,
+            "std": 0.012
+          }
+        }
+      },
+      "repair": {
+        "scenario": "Repair Cycle",
+        "trials": 50,
+        "baseline": {
+          "scenario": "Repair Cycle",
+          "includeCandidates": true,
+          "nodeCount": 108,
+          "edgeCount": 351,
+          "meanDegree": 6.5,
+          "maxDegree": 17,
+          "fragmentation": 0,
+          "coherenceXi": 1,
+          "clustering": 0.2044,
+          "modularityProxy": 0.4115,
+          "moralValenceBalance": 0.1934,
+          "layoutEnergyProxy": 0.9542,
+          "betweennessMean": 115.8426,
+          "betweennessMax": 807.5771
+        },
+        "deltas": {
+          "coherenceXi": {
+            "mean": -0.002,
+            "std": 0.005
+          },
+          "layoutEnergyProxy": {
+            "mean": 0.0035,
+            "std": 0.0175
+          },
+          "modularityProxy": {
+            "mean": 0.002,
+            "std": 0.0109
+          }
+        }
+      }
+    }
+  }
+}
