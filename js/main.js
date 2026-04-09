@@ -1357,7 +1357,7 @@ bootstrap().catch(error => {
 });
 
 (function(){
-  const leftIds = ['brand-card','metrics-corner','receiver-card','experiment-card'];
+  const leftIds = ['brand-card','metrics-corner','receiver-card','experiment-card','detail-panel','math-panel'];
   const rightIds = ['research-corner','view-switcher','energy-card','neighborhood-card','layer-legend'];
   const leftDock = document.createElement('div');
   leftDock.id = 'left-dock';
@@ -1365,8 +1365,24 @@ bootstrap().catch(error => {
   rightDock.id = 'right-dock';
   document.body.appendChild(leftDock);
   document.body.appendChild(rightDock);
-  leftIds.forEach(id => { const el = document.getElementById(id); if (el) leftDock.appendChild(el); });
-  rightIds.forEach(id => { const el = document.getElementById(id); if (el) rightDock.appendChild(el); });
+
+  const moveInto = (id, target) => {
+    const el = document.getElementById(id);
+    if (el) target.appendChild(el);
+  };
+
+  leftIds.forEach(id => moveInto(id, leftDock));
+  rightIds.forEach(id => moveInto(id, rightDock));
+
+  const minimap = document.getElementById('minimap');
+  if (minimap) {
+    const minimapCard = document.createElement('div');
+    minimapCard.id = 'minimap-card';
+    minimapCard.className = 'ui-corner';
+    minimapCard.innerHTML = '<div class="corner-title">Map overview</div>';
+    minimapCard.appendChild(minimap);
+    leftDock.appendChild(minimapCard);
+  }
 
   const appControls = document.createElement('div');
   appControls.id = 'app-controls-card';
@@ -1376,50 +1392,59 @@ bootstrap().catch(error => {
   title.textContent = 'Search & Controls';
   const note = document.createElement('div');
   note.className = 'controls-note';
-  note.textContent = 'Pinch to zoom the map. Search, filters, and controls stay in the HUD.';
+  note.textContent = 'All search, filter, and action controls stay inside the right panel.';
   appControls.appendChild(title);
   const searchWrap = document.getElementById('search-wrap');
   const filters = document.getElementById('filters');
   const controls = document.getElementById('controls');
-  if (searchWrap) { searchWrap.style.display='block'; appControls.appendChild(searchWrap); }
-  if (filters) { filters.style.display='flex'; appControls.appendChild(filters); }
-  if (controls) { controls.style.display='grid'; appControls.appendChild(controls); }
+  if (searchWrap) appControls.appendChild(searchWrap);
+  if (filters) appControls.appendChild(filters);
+  if (controls) appControls.appendChild(controls);
   appControls.appendChild(note);
   rightDock.appendChild(appControls);
 
-  const scenarioCard=document.createElement('div');
-  scenarioCard.id='scenario-card';
-  scenarioCard.className='ui-corner';
-  scenarioCard.innerHTML=`<div class="corner-title">Scenario Presets</div><div class="scenario-grid"><button class="ctrl-btn scenario-btn" data-scenario="balanced">Balanced Test</button><button class="ctrl-btn scenario-btn" data-scenario="world">World Mode</button><button class="ctrl-btn scenario-btn" data-scenario="crisis">Crisis Shock</button><button class="ctrl-btn scenario-btn" data-scenario="repair">Repair Cycle</button></div><div class="scenario-note" id="scenario-note">Use these presets to compare fairness testing, world asymmetry, crisis disturbance, and repair.</div>`;
+  const scenarioCard = document.createElement('div');
+  scenarioCard.id = 'scenario-card';
+  scenarioCard.className = 'ui-corner';
+  scenarioCard.innerHTML = `<div class="corner-title">Scenario Presets</div><div class="scenario-grid"><button class="ctrl-btn scenario-btn" data-scenario="balanced">Balanced Test</button><button class="ctrl-btn scenario-btn" data-scenario="world">World Mode</button><button class="ctrl-btn scenario-btn" data-scenario="crisis">Crisis Shock</button><button class="ctrl-btn scenario-btn" data-scenario="repair">Repair Cycle</button></div><div class="scenario-note" id="scenario-note">Use these presets to compare fairness testing, world asymmetry, crisis disturbance, and repair.</div>`;
   rightDock.appendChild(scenarioCard);
 
-  const framingCard=document.createElement('div');
-  framingCard.id='final-framing-card';
-  framingCard.className='ui-corner';
-  framingCard.innerHTML=`<div class="corner-title">Experimental Demo</div><div class="framing-note"><strong>Confirmed</strong> edges anchor the stable ontology. <strong>Strong candidates</strong> now weakly influence geometry. Use <strong>Balanced Test</strong> for fairness checking and <strong>World Mode</strong> for social realism under uneven institutions, memory, and pressure.</div>`;
+  const framingCard = document.createElement('div');
+  framingCard.id = 'final-framing-card';
+  framingCard.className = 'ui-corner';
+  framingCard.innerHTML = `<div class="corner-title">Experimental Demo</div><div class="framing-note"><strong>Confirmed</strong> edges anchor the stable ontology. <strong>Strong candidates</strong> now weakly influence geometry. Use <strong>Balanced Test</strong> for fairness checking and <strong>World Mode</strong> for social realism under uneven institutions, memory, and pressure.</div>`;
+  rightDock.appendChild(framingCard);
 
-rightDock.appendChild(framingCard);
+  installEvaluationPanel({
+    container: rightDock,
+    onRun: async () => {
+      const report = runEvaluationSuite(getAtlasSnapshot(), GROUNDTRUTH_DATA || { positive: [], negative: [] });
+      report.summary = summarizeEvaluationReport(report);
+      window.__starsLastEvaluation = report;
+      return report;
+    },
+    onExport: async (report) => {
+      const payload = report || window.__starsLastEvaluation || runEvaluationSuite(getAtlasSnapshot(), GROUNDTRUTH_DATA || { positive: [], negative: [] });
+      downloadJSON(`stars-evaluation-${new Date().toISOString().slice(0,10)}.json`, payload);
+    }
+  });
 
-installEvaluationPanel({
-  container: rightDock,
-  onRun: async () => {
-    const report = runEvaluationSuite(getAtlasSnapshot(), GROUNDTRUTH_DATA || { positive: [], negative: [] });
-    report.summary = summarizeEvaluationReport(report);
-    window.__starsLastEvaluation = report;
-    return report;
-  },
-  onExport: async (report) => {
-    const payload = report || window.__starsLastEvaluation || runEvaluationSuite(getAtlasSnapshot(), GROUNDTRUTH_DATA || { positive: [], negative: [] });
-    downloadJSON(`stars-evaluation-${new Date().toISOString().slice(0,10)}.json`, payload);
-  }
-});
+  const statusCard = document.createElement('div');
+  statusCard.id = 'status-card';
+  statusCard.className = 'ui-corner';
+  statusCard.innerHTML = '<div class="corner-title">Interaction</div>';
+  const hint = document.getElementById('hint');
+  const simStatus = document.getElementById('sim-status');
+  if (hint) statusCard.appendChild(hint);
+  if (simStatus) statusCard.appendChild(simStatus);
+  rightDock.appendChild(statusCard);
 
-scenarioCard.querySelectorAll('[data-scenario]').forEach(btn=>btn.addEventListener('click',()=>applyScenarioPreset(btn.dataset.scenario)));
+  scenarioCard.querySelectorAll('[data-scenario]').forEach(btn => btn.addEventListener('click', () => applyScenarioPreset(btn.dataset.scenario)));
 
-  const refreshViewport = ()=>{
-    if(typeof fitAll==='function'){
-      setTimeout(()=>fitAll(), 60);
-      setTimeout(()=>fitAll(), 420);
+  const refreshViewport = () => {
+    if (typeof fitAll === 'function') {
+      setTimeout(() => fitAll(), 60);
+      setTimeout(() => fitAll(), 420);
     }
   };
   window.addEventListener('resize', refreshViewport);
