@@ -766,7 +766,6 @@ The current results are best read as **release-candidate benchmarks** rather tha
 | Layout energy proxy | +0.0008 ± 0.0210 | +0.0035 ± 0.0175 |
 | Modularity proxy | +0.0029 ± 0.0120 | +0.0020 ± 0.0109 |
 
-These are **offline proxy metrics** derived from the exported graph and scenario parameters. They are intentionally lightweight, reproducible, and suitable for release validation, but they should be expanded before journal submission.
 
 ## 23. Copyright
 
