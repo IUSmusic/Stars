@@ -80,12 +80,54 @@ const ctx=gc.getContext('2d');
 const mm=document.getElementById('minimap');
 const mmx=mm.getContext('2d');
 
+const UNLOCK_STAGE_WIDTH = 1500;
+const UNLOCK_STAGE_HEIGHT = 1200;
+
+function getViewportMetrics(){
+  const vv = window.visualViewport;
+  const width = Math.round(vv && vv.width ? vv.width : window.innerWidth);
+  const height = Math.round(vv && vv.height ? vv.height : window.innerHeight);
+  return { width, height };
+}
+
+function shouldUnlockViewport(){
+  const { width, height } = getViewportMetrics();
+  return width < 1180 || height < 820;
+}
+
+function applyViewportMode(){
+  const unlocked = shouldUnlockViewport();
+  const root = document.documentElement;
+  const body = document.body;
+  if (!body) return { width: window.innerWidth, height: window.innerHeight, unlocked: false };
+  root.classList.toggle('viewport-unlocked', unlocked);
+  body.classList.toggle('viewport-unlocked', unlocked);
+  const stageWidth = unlocked ? Math.max(UNLOCK_STAGE_WIDTH, window.innerWidth) : window.innerWidth;
+  const stageHeight = unlocked ? Math.max(UNLOCK_STAGE_HEIGHT, window.innerHeight) : window.innerHeight;
+  root.style.setProperty('--stage-width', `${stageWidth}px`);
+  root.style.setProperty('--stage-height', `${stageHeight}px`);
+  if (unlocked) {
+    body.style.width = `${stageWidth}px`;
+    body.style.minWidth = `${stageWidth}px`;
+    body.style.minHeight = `${stageHeight}px`;
+  } else {
+    body.style.width = '';
+    body.style.minWidth = '';
+    body.style.minHeight = '';
+  }
+  return { width: stageWidth, height: stageHeight, unlocked };
+}
+
 function resize(){
-  W=gc.width=bgC.width=window.innerWidth;
-  H=gc.height=bgC.height=window.innerHeight;
+  const viewport = applyViewportMode();
+  W = gc.width = bgC.width = viewport.width;
+  H = gc.height = bgC.height = viewport.height;
   drawStars();
 }
-window.addEventListener('resize',resize);
+window.addEventListener('resize', resize);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', resize);
+}
 window.addEventListener('online',renderSourceStatus);
 window.addEventListener('offline',renderSourceStatus);
 
