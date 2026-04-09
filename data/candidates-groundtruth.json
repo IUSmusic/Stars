@@ -1,0 +1,200 @@
+{
+  "version": "v1.0",
+  "description": "Small transparent benchmark set for candidate-link ranking. Labels are deliberately hand-curated and should be expanded before publication.",
+  "positive": [
+    {
+      "a": 4,
+      "b": 22,
+      "labelA": "Consciousness",
+      "labelB": "Predictive Processing",
+      "expected": "candidate",
+      "rationale": "Predictive coding offers a natural bridge to theories of consciousness."
+    },
+    {
+      "a": 4,
+      "b": 23,
+      "labelA": "Consciousness",
+      "labelB": "Default Mode Network",
+      "expected": "candidate",
+      "rationale": "Self-referential network research is relevant to models of consciousness."
+    },
+    {
+      "a": 6,
+      "b": 37,
+      "labelA": "Causality",
+      "labelB": "Information Theory",
+      "expected": "candidate",
+      "rationale": "Causality and information-theoretic structure often travel together conceptually."
+    },
+    {
+      "a": 53,
+      "b": 54,
+      "labelA": "Story",
+      "labelB": "Music",
+      "expected": "candidate",
+      "rationale": "Narrative and music are closely linked forms of temporal, affective structure."
+    },
+    {
+      "a": 13,
+      "b": 108,
+      "labelA": "Grief",
+      "labelB": "Historical Memory",
+      "expected": "candidate",
+      "rationale": "Collective and historical memory shape grief and memorialisation."
+    },
+    {
+      "a": 17,
+      "b": 71,
+      "labelA": "Loneliness",
+      "labelB": "Trust",
+      "expected": "candidate",
+      "rationale": "Loneliness and trust belong in a shared social-cohesion research neighborhood."
+    },
+    {
+      "a": 94,
+      "b": 98,
+      "labelA": "Crime",
+      "labelB": "Harm",
+      "expected": "candidate",
+      "rationale": "Crime and harm are tightly linked in social-risk and pathway analyses."
+    },
+    {
+      "a": 47,
+      "b": 49,
+      "labelA": "Pattern Recognition",
+      "labelB": "Conceptual Metaphor",
+      "expected": "candidate",
+      "rationale": "Pattern recognition and conceptual metaphor share abstraction machinery."
+    },
+    {
+      "a": 61,
+      "b": 86,
+      "labelA": "Death",
+      "labelB": "Impermanence",
+      "expected": "candidate",
+      "rationale": "Death and impermanence are tightly coupled existential concepts."
+    },
+    {
+      "a": 62,
+      "b": 85,
+      "labelA": "Purpose",
+      "labelB": "Meaning",
+      "expected": "candidate",
+      "rationale": "Purpose and meaning are an intuitive high-value candidate bridge."
+    },
+    {
+      "a": 80,
+      "b": 89,
+      "labelA": "Symbiosis",
+      "labelB": "Interconnection",
+      "expected": "candidate",
+      "rationale": "Symbiosis and interconnection are close systems-level concepts."
+    },
+    {
+      "a": 45,
+      "b": 97,
+      "labelA": "Theory of Mind",
+      "labelB": "Empathy / Compassion",
+      "expected": "candidate",
+      "rationale": "Theory of mind and empathy/compassion are adjacent social-cognition concepts."
+    }
+  ],
+  "negative": [
+    {
+      "a": 40,
+      "b": 19,
+      "labelA": "Dark Matter",
+      "labelB": "Shame",
+      "expected": "not-candidate",
+      "rationale": "Dark matter and shame are not a meaningful research-candidate bridge in this atlas."
+    },
+    {
+      "a": 35,
+      "b": 71,
+      "labelA": "Quantum Superposition",
+      "labelB": "Trust",
+      "expected": "not-candidate",
+      "rationale": "Quantum superposition and trust should rank very low."
+    },
+    {
+      "a": 33,
+      "b": 69,
+      "labelA": "Glymphatic System",
+      "labelB": "Justice",
+      "expected": "not-candidate",
+      "rationale": "The glymphatic system and justice are not a plausible direct candidate edge."
+    },
+    {
+      "a": 58,
+      "b": 40,
+      "labelA": "Ritual",
+      "labelB": "Dark Matter",
+      "expected": "not-candidate",
+      "rationale": "Ritual and dark matter are intentionally unrelated in this benchmark."
+    },
+    {
+      "a": 46,
+      "b": 80,
+      "labelA": "Working Memory",
+      "labelB": "Symbiosis",
+      "expected": "not-candidate",
+      "rationale": "Working memory and symbiosis should remain distant."
+    },
+    {
+      "a": 100,
+      "b": 41,
+      "labelA": "Fear Contagion",
+      "labelB": "Holographic Principle",
+      "expected": "not-candidate",
+      "rationale": "Fear contagion and the holographic principle are not a useful candidate pair."
+    },
+    {
+      "a": 24,
+      "b": 87,
+      "labelA": "Neuroplasticity",
+      "labelB": "Sacred",
+      "expected": "not-candidate",
+      "rationale": "Neuroplasticity and the sacred are too indirect for a benchmark-positive pair."
+    },
+    {
+      "a": 52,
+      "b": 103,
+      "labelA": "Beauty",
+      "labelB": "Coercion",
+      "expected": "not-candidate",
+      "rationale": "Beauty and coercion should not rank as a useful conceptual bridge."
+    },
+    {
+      "a": 65,
+      "b": 105,
+      "labelA": "Dream",
+      "labelB": "Law",
+      "expected": "not-candidate",
+      "rationale": "Dream and law are not expected to be a candidate edge here."
+    },
+    {
+      "a": 27,
+      "b": 74,
+      "labelA": "Synaptic Pruning",
+      "labelB": "Freedom",
+      "expected": "not-candidate",
+      "rationale": "Synaptic pruning and freedom are too weakly coupled for positive ground truth."
+    },
+    {
+      "a": 36,
+      "b": 95,
+      "labelA": "Infinity",
+      "labelB": "Kindness",
+      "expected": "not-candidate",
+      "rationale": "Infinity and kindness should be negative in a direct ranking benchmark."
+    },
+    {
+      "a": 30,
+      "b": 104,
+      "labelA": "Sleep & Memory",
+      "labelB": "Exploitation",
+      "expected": "not-candidate",
+      "rationale": "Sleep & memory and exploitation are not a plausible direct candidate edge."
+    }
+  ]
+}
