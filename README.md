@@ -9,7 +9,7 @@
 ![Language](https://img.shields.io/badge/Language-JavaScript-f7df1e)
 ![Platform](https://img.shields.io/badge/Platform-Browser-2ea44f)
 
-[Stars](https://iusmusic.github.io/Stars/)
+[Project Stars V1.0.0](https://iusmusic.github.io/Stars/)
 
 ![Preview](/starspreview01.png)
 ![Preview](/starspreview02.png)
