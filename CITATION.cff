@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: "Project Stars"
+type: software
+authors:
+  - name: "IUSmusic"
+repository-code: "https://github.com/IUSmusic/Stars"
+url: "https://iusmusic.github.io/stars/"
+abstract: >
+  Project Stars is a browser-based research atlas for representing thoughts, concepts, values, institutions, and social pressures as structured objects within an interpretable conceptual system. It combines an evidence-aware graph, conceptual geometry, dynamical layout, activation-field modeling, and an experimental research interface.
+keywords:
+  - research atlas
+  - knowledge graph
+  - conceptual modeling
+  - cognitive modeling
+  - dynamical systems
+  - semantic space
+  - predictive processing
+  - browser-based research software
+license: "MIT"
