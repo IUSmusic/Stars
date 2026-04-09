@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Stars</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+
+
+<style id="ui-hotfix-compact-layout">
+/* compact non-overlapping HUD hotfix */
+:root{--dock-gap:10px;}
+#left-dock,#right-dock{gap:var(--dock-gap)!important;pointer-events:none;}
+#left-dock>* ,#right-dock>*{pointer-events:auto;}
+#left-dock{left:12px!important;top:12px!important;width:220px!important;}
+#right-dock{right:12px!important;top:12px!important;width:240px!important;max-height:calc(100vh - 24px)!important;overflow:auto!important;padding-right:2px;}
+#brand-card,#metrics-corner,#research-corner,#energy-card,#neighborhood-card,#layer-legend,#view-switcher{
+  border-radius:14px!important;
+  backdrop-filter:blur(10px)!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.18)!important;
+}
+#brand-card{padding:10px 12px!important;}
+#brand-card .brand-title{font-size:.88rem!important;}
+#brand-card .brand-sub{font-size:.34rem!important;letter-spacing:.18em!important;line-height:1.45!important;}
+#metrics-corner{padding:10px 12px!important;}
+.metrics-title{margin-bottom:8px!important;font-size:.36rem!important;}
+.metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;}
+.metric-tile{padding:7px 8px!important;border-radius:12px!important;}
+.metric-tile .value{font-size:.84rem!important;}
+.metric-tile .label{font-size:.31rem!important;letter-spacing:.14em!important;}
+#research-corner{padding:9px 10px!important;}
+.corner-title{font-size:.35rem!important;}
+.corner-status{font-size:.4rem!important;line-height:1.3!important;}
+.corner-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important;margin-top:8px!important;}
+.corner-actions .ctrl-btn{padding:7px 8px!important;font-size:.32rem!important;letter-spacing:.12em!important;}
+.source-pills{display:grid!important;grid-template-columns:1fr 1fr!important;gap:5px!important;}
+.source-pill{padding:4px 6px!important;min-height:24px!important;}
+.source-pill .name,.source-pill .state{font-size:.28rem!important;letter-spacing:.12em!important;}
+#view-switcher{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important;padding:0!important;background:transparent!important;border:none!important;box-shadow:none!important;}
+.view-btn{padding:7px 8px!important;font-size:.36rem!important;letter-spacing:.14em!important;border-radius:999px!important;min-width:0!important;}
+#energy-card,#neighborhood-card,#layer-legend{padding:9px 10px!important;}
+#energy-card .corner-status,#neighborhood-card .corner-status,#layer-legend .corner-status,.legend-row{font-size:.38rem!important;line-height:1.35!important;}
+.legend-title,.corner-title{font-size:.34rem!important;}
+.legend-row{gap:6px!important;}
+#search-wrap{top:14px!important;left:50%!important;transform:translateX(-50%)!important;width:min(420px,calc(100vw - 520px))!important;z-index:14!important;}
+#search{font-size:.5rem!important;padding:8px 12px!important;}
+#filters{top:54px!important;left:50%!important;transform:translateX(-50%)!important;width:min(660px,calc(100vw - 560px))!important;max-width:min(660px,calc(100vw - 560px))!important;gap:4px!important;justify-content:center!important;z-index:14!important;}
+.filter-chip{font-size:.34rem!important;padding:4px 8px!important;letter-spacing:.12em!important;}
+#controls{left:50%!important;bottom:12px!important;transform:translateX(-50%)!important;width:min(780px,calc(100vw - 520px))!important;max-width:min(780px,calc(100vw - 520px))!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;z-index:14!important;}
+.ctrl-btn{padding:8px 10px!important;font-size:.4rem!important;letter-spacing:.14em!important;}
+canvas#minimap{left:12px!important;bottom:12px!important;width:104px!important;height:74px!important;z-index:12!important;}
+#zoom-controls{right:12px!important;top:auto!important;bottom:12px!important;transform:none!important;gap:4px!important;z-index:14!important;}
+.zc-btn{width:34px!important;height:34px!important;font-size:.86rem!important;}
+.zc-btn.fit{font-size:.44rem!important;}
+#detail-panel{left:244px!important;top:96px!important;bottom:84px!important;transform:none!important;width:min(340px,calc(100vw - 520px))!important;max-height:none!important;z-index:15!important;}
+#sim-status{right:56px!important;bottom:88px!important;font-size:.34rem!important;max-width:200px!important;text-align:right!important;}
+#hint{display:none!important;}
+#legend{display:none!important;}
+
+@media (max-width: 1400px){
+  #left-dock{width:200px!important;}
+  #right-dock{width:220px!important;}
+  #search-wrap{width:min(360px,calc(100vw - 470px))!important;}
+  #filters{width:min(560px,calc(100vw - 500px))!important;max-width:min(560px,calc(100vw - 500px))!important;}
+  #controls{width:min(680px,calc(100vw - 470px))!important;max-width:min(680px,calc(100vw - 470px))!important;}
+  #detail-panel{left:222px!important;width:min(320px,calc(100vw - 470px))!important;}
+}
+@media (max-width: 1180px){
+  #left-dock{width:186px!important;}
+  #right-dock{width:200px!important;}
+  #search-wrap{width:min(320px,calc(100vw - 420px))!important;}
+  #filters{width:min(420px,calc(100vw - 440px))!important;max-width:min(420px,calc(100vw - 440px))!important;}
+  #controls{width:min(560px,calc(100vw - 420px))!important;max-width:min(560px,calc(100vw - 420px))!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  #detail-panel{left:206px!important;width:min(300px,calc(100vw - 430px))!important;top:112px!important;}
+}
+@media (max-width: 980px){
+  #left-dock{left:10px!important;top:10px!important;width:176px!important;}
+  #right-dock{right:10px!important;top:10px!important;width:184px!important;max-height:calc(100vh - 120px)!important;}
+  #search-wrap{width:min(280px,calc(100vw - 400px))!important;}
+  #filters{width:min(320px,calc(100vw - 400px))!important;max-width:min(320px,calc(100vw - 400px))!important;justify-content:flex-start!important;overflow:auto hidden!important;white-space:nowrap!important;padding-bottom:2px!important;}
+  #controls{width:min(460px,calc(100vw - 400px))!important;max-width:min(460px,calc(100vw - 400px))!important;}
+  #detail-panel{left:194px!important;width:min(280px,calc(100vw - 390px))!important;}
+  canvas#minimap{width:92px!important;height:66px!important;}
+}
+@media (max-width: 860px){
+  #left-dock,#right-dock{position:fixed!important;width:calc(50vw - 14px)!important;max-height:34vh!important;overflow:auto!important;}
+  #left-dock{left:8px!important;top:8px!important;}
+  #right-dock{right:8px!important;top:8px!important;}
+  #search-wrap{left:8px!important;right:8px!important;top:auto!important;bottom:126px!important;transform:none!important;width:auto!important;}
+  #filters{left:8px!important;right:8px!important;top:auto!important;bottom:88px!important;transform:none!important;width:auto!important;max-width:none!important;justify-content:flex-start!important;overflow:auto hidden!important;}
+  #controls{left:8px!important;right:8px!important;bottom:8px!important;transform:none!important;width:auto!important;max-width:none!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+  #detail-panel{left:8px!important;right:8px!important;top:auto!important;bottom:176px!important;width:auto!important;max-height:28vh!important;}
+  canvas#minimap,#sim-status{display:none!important;}
+}
+@media (max-width: 640px){
+  #left-dock,#right-dock{width:auto!important;left:8px!important;right:8px!important;}
+  #right-dock{top:126px!important;max-height:20vh!important;}
+  #search-wrap{bottom:146px!important;}
+  #filters{bottom:100px!important;}
+  #controls{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  #detail-panel{bottom:206px!important;max-height:24vh!important;}
+}
+
+
+/* ── RECEIVER / EXPERIMENT PATCH ── */
+#receiver-card { padding:10px 12px; }
+.receiver-topline { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.receiver-value { font-family:'Cormorant Garamond',serif; color:var(--glow-gold); font-size:1rem; line-height:1; }
+.receiver-slider { width:100%; accent-color:#f5d97a; }
+.receiver-sub { margin-top:6px; font-size:0.4rem; line-height:1.45; color:var(--muted); }
+.receiver-presets { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-top:8px; }
+.receiver-presets .mini-hud-btn { padding:6px 8px; font-size:0.32rem; }
+.intent-stack { display:grid; gap:10px; margin-top:10px; }
+.intent-control { display:grid; gap:5px; }
+.intent-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.intent-label { font-size:0.36rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); }
+.intent-value { font-family:'Cormorant Garamond',serif; font-size:0.88rem; color:var(--glow-gold); line-height:1; }
+.intent-slider { width:100%; accent-color:#f5d97a; }
+.intent-sub { font-size:0.36rem; line-height:1.45; color:var(--muted); }
+#experiment-card { padding:10px 12px; }
+.experiment-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; margin-top:8px; }
+.experiment-tile { padding:7px 8px; border-radius:12px; border:1px solid rgba(132,145,214,0.16); background:rgba(8,12,30,0.16); }
+.experiment-tile .k { font-size:0.33rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); }
+.experiment-tile .v { margin-top:4px; font-size:0.72rem; color:var(--text-soft); font-family:'Cormorant Garamond',serif; }
+.experiment-note { margin-top:8px; font-size:0.38rem; line-height:1.45; color:var(--muted); }
+.formal-note { font-size:0.48rem; line-height:1.7; color:var(--text-soft); }
+.science-list { display:grid; gap:8px; }
+.science-item { padding:8px 10px; border-radius:12px; border:1px solid rgba(132,145,214,0.14); background:rgba(8,12,30,0.14); }
+.science-item strong { color:var(--glow-gold); font-weight:400; display:block; margin-bottom:4px; }
+@media (max-width: 980px){
+  #receiver-card,#experiment-card{padding:9px 10px;}
+}
+</style>
+
+
+<style id="ui-visibility-fix">
+/* Visibility fix: keep the compact UI but ensure the full model remains visible and reachable */
+#left-dock{width:220px!important;max-height:calc(100vh - 24px)!important;overflow:auto!important;padding-right:2px;}
+#right-dock{width:240px!important;max-height:calc(100vh - 24px)!important;overflow:auto!important;padding-right:2px;}
+#search-wrap{top:14px!important;left:50%!important;transform:translateX(-50%)!important;width:min(460px,calc(100vw - 560px))!important;z-index:40!important;display:block!important;opacity:1!important;visibility:visible!important;}
+#search{background:rgba(8,12,30,0.56)!important;border:1px solid rgba(132,145,214,0.30)!important;box-shadow:0 0 18px rgba(0,0,0,0.18)!important;}
+#filters{top:58px!important;left:50%!important;transform:translateX(-50%)!important;width:min(760px,calc(100vw - 600px))!important;max-width:min(760px,calc(100vw - 600px))!important;z-index:40!important;display:flex!important;opacity:1!important;visibility:visible!important;}
+.filter-chip{background:rgba(8,12,30,0.42)!important;border-color:rgba(132,145,214,0.28)!important;}
+#controls{left:50%!important;bottom:12px!important;transform:translateX(-50%)!important;width:min(820px,calc(100vw - 600px))!important;max-width:min(820px,calc(100vw - 600px))!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;z-index:40!important;opacity:1!important;visibility:visible!important;}
+.ctrl-btn{background:rgba(8,12,30,0.50)!important;border-color:rgba(132,145,214,0.30)!important;}
+#zoom-controls{right:258px!important;top:auto!important;bottom:14px!important;transform:none!important;z-index:41!important;display:flex!important;opacity:1!important;visibility:visible!important;}
+canvas#minimap{left:244px!important;bottom:14px!important;width:124px!important;height:86px!important;z-index:39!important;display:block!important;opacity:1!important;visibility:visible!important;}
+#detail-panel{left:244px!important;top:104px!important;bottom:112px!important;width:min(350px,calc(100vw - 620px))!important;max-height:none!important;z-index:42!important;}
+#sim-status{right:258px!important;bottom:94px!important;z-index:41!important;display:block!important;opacity:1!important;visibility:visible!important;}
+#hint{display:block!important;left:50%!important;bottom:86px!important;z-index:39!important;}
+@media (max-width: 1400px){
+  #search-wrap{width:min(400px,calc(100vw - 520px))!important;}
+  #filters{width:min(620px,calc(100vw - 560px))!important;max-width:min(620px,calc(100vw - 560px))!important;}
+  #controls{width:min(720px,calc(100vw - 540px))!important;max-width:min(720px,calc(100vw - 540px))!important;}
+  #detail-panel{width:min(320px,calc(100vw - 580px))!important;}
+}
+@media (max-width: 1180px){
+  #left-dock{width:190px!important;}
+  #right-dock{width:200px!important;}
+  #search-wrap{width:min(330px,calc(100vw - 440px))!important;}
+  #filters{width:min(460px,calc(100vw - 460px))!important;max-width:min(460px,calc(100vw - 460px))!important;}
+  #controls{width:min(560px,calc(100vw - 460px))!important;max-width:min(560px,calc(100vw - 460px))!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  #detail-panel{left:210px!important;width:min(300px,calc(100vw - 440px))!important;}
+  canvas#minimap{left:206px!important;}
+  #zoom-controls,#sim-status{right:216px!important;}
+}
+@media (max-width: 860px){
+  #search-wrap{left:8px!important;right:8px!important;top:auto!important;bottom:154px!important;transform:none!important;width:auto!important;}
+  #filters{left:8px!important;right:8px!important;top:auto!important;bottom:114px!important;transform:none!important;width:auto!important;max-width:none!important;justify-content:flex-start!important;overflow:auto hidden!important;}
+  #controls{left:8px!important;right:8px!important;bottom:8px!important;transform:none!important;width:auto!important;max-width:none!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+  #detail-panel{left:8px!important;right:8px!important;top:auto!important;bottom:206px!important;width:auto!important;max-height:28vh!important;}
+  canvas#minimap,#zoom-controls,#sim-status,#hint{display:none!important;}
+}
+@media (max-width: 640px){
+  #controls{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+}
+</style>
+<script id="ui-visibility-fix-script">
+window.addEventListener('load',()=>{
+  const ids=['search-wrap','filters','controls','zoom-controls','minimap'];
+  ids.forEach(id=>{const el=document.getElementById(id); if(el){el.style.opacity='1'; el.style.visibility='visible';}});
+});
+</script>
+
+
+<style id="hud-controls-mobile-patch">
+#zoom-controls{display:none!important;}
+#app-controls-card{padding:10px 12px;}
+#app-controls-card #search-wrap,
+#app-controls-card #filters,
+#app-controls-card #controls{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;width:100%!important;max-width:none!important;margin:0!important;}
+#app-controls-card #search-wrap{margin-top:8px!important;}
+#app-controls-card #search{width:100%!important;}
+#app-controls-card #filters{display:flex!important;flex-wrap:wrap!important;justify-content:flex-start!important;gap:5px!important;margin-top:8px!important;overflow:visible!important;white-space:normal!important;padding-bottom:0!important;}
+#app-controls-card #controls{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;margin-top:8px!important;}
+#app-controls-card .ctrl-btn{width:100%!important;}
+#app-controls-card .controls-note{margin-top:8px;font-size:.38rem;line-height:1.45;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;}
+#search-wrap,#filters,#controls{display:none;}
+@media (max-width: 860px){
+  #right-dock{max-height:calc(100vh - 16px)!important;overflow:auto!important;}
+  #app-controls-card #controls{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  #detail-panel{bottom:24px!important;}
+}
+@media (max-width: 640px){
+  #left-dock,#right-dock{max-height:none!important;}
+  #right-dock{top:10px!important;}
+  #app-controls-card #controls{grid-template-columns:1fr 1fr!important;}
+}
+</style>
+
+<style id="research-final-patch">
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;}
+.scenario-btn{width:100%;padding:7px 8px;font-size:0.34rem;letter-spacing:0.14em;text-transform:uppercase;}
+.scenario-note,.framing-note{margin-top:8px;font-size:0.42rem;line-height:1.55;color:var(--text-soft);}
+.framing-note strong{color:var(--glow-gold);font-weight:400;}
+@media (max-width:860px){.scenario-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<canvas id="graph"></canvas>
+<canvas id="minimap"></canvas>
+
+<div id="header">
+  <div id="title-block">
+    <h1>Project Stars</h1>
+    <p>Research-grounded atlas of meaning</p>
+  </div>
+  <div id="stats">
+    <div class="num" id="node-count">0</div>
+    <div class="lbl">thoughts charted</div>
+  </div>
+</div>
+
+
+<div id="brand-card" class="ui-corner">
+  <div class="brand-title-row">
+    <div>
+      <div class="brand-title">Project Stars</div>
+      <div class="brand-sub">Research-grounded atlas of meaning</div>
+    </div>
+    <button class="mini-hud-btn" id="math-toggle">Math</button>
+  </div>
+</div>
+
+<div id="research-corner" class="ui-corner">
+  <div class="corner-head">
+    <div>
+      <div class="corner-title">Research sync</div>
+      <div class="corner-status" id="research-status"><span class="research-live-dot"></span>API live · 4/4 sources ready</div>
+    </div>
+  </div>
+  <div class="corner-actions">
+    <button class="ctrl-btn" id="sync-selected-btn">Sync Selected</button>
+    <button class="ctrl-btn" id="sync-user-btn">Sync Added Thoughts</button>
+  </div>
+  <div class="source-pills" id="hud-source-grid"></div>
+</div>
+
+<div id="metrics-corner" class="ui-corner">
+  <div class="metrics-title">Map overview</div>
+  <div class="metrics-grid">
+    <div class="metric-tile"><div class="value" id="metric-nodes">0</div><div class="label">Concept nodes</div></div>
+    <div class="metric-tile"><div class="value" id="metric-edges">0</div><div class="label">Confirmed links</div></div>
+    <div class="metric-tile"><div class="value" id="metric-candidates">0</div><div class="label">Candidate links</div></div>
+    <div class="metric-tile"><div class="value" id="metric-domains">0</div><div class="label">Domains</div></div>
+  </div>
+</div>
+
+
+
+<div id="receiver-card" class="ui-corner">
+  <div class="corner-title">Receiver quality</div>
+  <div class="receiver-topline">
+    <div class="corner-status">Precision tuning for the active receiver</div>
+    <div class="receiver-value" id="receiver-value">1.00</div>
+  </div>
+  <input class="receiver-slider" type="range" id="receiver-slider" min="0.20" max="1.00" value="1.00" step="0.01">
+  <div class="receiver-sub">Low values increase ambiguity and damping pressure. High values sharpen field response, coherence, and convergence.</div>
+  <div class="receiver-presets">
+    <button class="mini-hud-btn" data-rq="0.35">Low Q</button>
+    <button class="mini-hud-btn" data-rq="0.70">Mid Q</button>
+    <button class="mini-hud-btn" data-rq="1.00">High Q</button>
+  </div>
+  <div class="intent-stack">
+    <div class="intent-control">
+      <div class="intent-row"><div class="intent-label">Intention strength</div><div class="intent-value" id="intention-value">0.50</div></div>
+      <input class="intent-slider" type="range" id="intention-slider" min="0" max="1" value="0.50" step="0.01">
+      <div class="intent-sub">Scales how strongly thought resolves into coordinated action.</div>
+    </div>
+    <div class="intent-control">
+      <div class="intent-row"><div class="intent-label">Moral polarity</div><div class="intent-value" id="polarity-value">0.00</div></div>
+      <input class="intent-slider" type="range" id="polarity-slider" min="-1" max="1" value="0.00" step="0.01">
+      <div class="intent-sub">Negative values bias toward crime-like pathways; positive values bias toward kindness-like pathways.</div>
+    </div>
+    <div class="intent-control">
+      <div class="intent-row"><div class="intent-label">Empathy field</div><div class="intent-value" id="empathy-value">0.50</div></div>
+      <input class="intent-slider" type="range" id="empathy-slider" min="0" max="1" value="0.50" step="0.01">
+      <div class="intent-sub">Raises the odds that intention flips from harm to repair and prosocial cooperation.</div>
+    </div>
+  </div>
+</div>
+
+<div id="experiment-card" class="ui-corner">
+  <div class="corner-title">Experiment panel</div>
+  <div class="experiment-grid">
+    <div class="experiment-tile"><div class="k">Precision</div><div class="v" id="metric-precision">0.000</div></div>
+    <div class="experiment-tile"><div class="k">Coherence</div><div class="v" id="metric-coherence">0.000</div></div>
+    <div class="experiment-tile"><div class="k">Convergence</div><div class="v" id="metric-convergence">0%</div></div>
+    <div class="experiment-tile"><div class="k">Receiver state</div><div class="v" id="metric-rq">High</div></div>
+    <div class="experiment-tile"><div class="k">Moral valence</div><div class="v" id="metric-moral">0.000</div></div>
+    <div class="experiment-tile"><div class="k">Collective pull</div><div class="v" id="metric-collective">0.000</div></div>
+  </div>
+  <div class="experiment-note" id="experiment-note">Formal hypothesis: semantic precision emerges from structural constraints, receiver-state tuning, and an intention field that can flip from harm to care.</div>
+</div>
+
+<div id="view-switcher">
+  <button class="view-btn active" data-view="research">Research</button>
+  <button class="view-btn" data-view="structure">Structure</button>
+  <button class="view-btn" data-view="hypothesis">Hypothesis</button>
+  <button class="view-btn" data-view="field">Field</button>
+</div>
+
+<div id="energy-card" class="ui-corner">
+  <div class="corner-title">Layout energy</div>
+  <div class="energy-line" id="energy-summary"><strong>Settling</strong> · computing structural pull</div>
+  <div class="energy-line" id="energy-detail">Hypothesis tension and cluster stability update live.</div>
+</div>
+
+<div id="neighborhood-card" class="ui-corner">
+  <div class="corner-title">Neighborhood mode</div>
+  <select id="neighbor-mode">
+    <option value="confirmed">Confirmed neighborhood</option>
+    <option value="candidate">Candidate neighborhood</option>
+    <option value="semantic">Semantic neighborhood</option>
+    <option value="citation">Citation neighborhood</option>
+    <option value="ontology">Ontology neighborhood</option>
+  </select>
+</div>
+
+<div id="layer-legend" class="ui-corner">
+  <div class="legend-title">Model legend</div>
+  <div class="legend-list">
+    <div class="legend-row"><span class="legend-sample-line"></span><span>Gold = confirmed structure</span></div>
+    <div class="legend-row"><span class="legend-sample-line candidate"></span><span>Gray dashed = candidate relation</span></div>
+    <div class="legend-row"><span class="legend-sample-dot"></span><span>Gold labels = confirmed connected labels</span></div>
+    <div class="legend-row"><span class="legend-sample-dot candidate"></span><span>Gray labels = candidate or sub-related labels</span></div>
+    <div class="legend-row"><span class="legend-sample-wave"></span><span>Wave / glow = activation field</span></div>
+    <div class="legend-row"><span class="legend-sample-stars"></span><span>Stars = ambient field only</span></div>
+  </div>
+</div>
+
+<div id="math-panel" class="ui-corner">
+  <div class="math-panel-head">
+    <div class="legend-title">Mathematical model</div>
+    <button class="mini-hud-btn" id="math-close">✕</button>
+  </div>
+  <div class="math-section">
+    <div class="math-label">Candidate scoring functional</div>
+    <pre id="math-score">S(a,b)=0.24·sem + 0.20·cit + 0.16·topic + 0.14·nbr + 0.11·ont + 0.05·rec + 0.06·author + 0.02·entity + 0.02·source
+Candidate iff S(a,b) &gt; τ,  τ = 0.46</pre>
+  </div>
+  <div class="math-section">
+    <div class="math-label">Layout dynamics</div>
+    <pre id="math-force">Repulsion: F_rep ∝ (3200·cooling + 800) / r²
+Weighted springs: F_spring = w_e·0.015·(d - d_target)
+where w_e = 1.00 for confirmed, 0.25 for strong candidates, 0 otherwise
+Damping = 0.80, gravity = 0.005
+Axiom: confirmed structure dominates, but strong candidates can weakly shape geometry.</pre>
+  </div>
+  <div class="math-section">
+    <div class="math-label">Field source term</div>
+    <pre id="math-wave">A(x,t)=Σ_i s_i exp(-||x-x_i||² / σ_i²) · (0.55 + 0.45 sin(ωt + φ_i))
+Int_i'(t)=α·A(x_i,t)·Q·MoralValence_i - β·|Int_i|
+MoralValence_i = tanh(γ·(EmpathyField - Threshold)) + user polarity bias
+Positive intention strengthens collective attractors; negative valence strengthens crime-like pathways.</pre>
+    <div class="math-section">
+    <div class="math-label">Formal hypothesis</div>
+    <div class="formal-note">This atlas is framed as a computational <strong>formalization</strong>, not a theorem-proof. Thoughts, feelings, goals, and intentions are modeled as state transitions in a partially free dynamical field. Precision is operationalized as a measured function of low layout energy, activation coherence, receiver quality, and an intention field whose moral valence can flip under empathy tuning.</div>
+  </div>
+  <div class="math-section">
+    <div class="math-label">Science links</div>
+    <div class="science-list">
+      <div class="science-item"><strong>Free Energy Principle</strong>Layout settling plays the role of prediction-error reduction under structural constraints.</div>
+      <div class="science-item"><strong>Predictive Processing</strong>Candidate relations behave like update proposals; confirmed structure behaves like stabilized priors.</div>
+      <div class="science-item"><strong>Dynamical Systems Neuroscience</strong>Receiver quality acts like a metastability / gain parameter controlling whether the field resolves cleanly.</div>
+      <div class="science-item"><strong>Theory of Planned Behavior</strong>Intention is modeled as the bridge from cognition to action, consistent with Ajzen's attitude-norm-control framework.</div>
+      <div class="science-item"><strong>Moral Psychology & Social Identity</strong>Empathy and collective identity tune whether the same structural field resolves toward crime-like or kindness-like attractors.</div>
+    </div>
+  </div>
+</div>
+
+<div id="search-wrap">
+  <input type="text" id="search" placeholder="Search concepts, descriptions, references">
+</div>
+
+<div id="filters"></div>
+<div id="legend"></div>
+
+
+<div id="detail-panel">
+  <button id="dp-close">✕</button>
+  <div id="dp-name"></div>
+  <div class="dp-cat" id="dp-cat"></div>
+  <div class="detail-grid">
+    <div class="meta-grid">
+      <div class="meta-pill"><div class="meta-k">Domain</div><div class="meta-v" id="dp-domain"></div></div>
+      <div class="meta-pill"><div class="meta-k">Confirmed Links</div><div class="meta-v" id="dp-degree"></div></div>
+      <div class="meta-pill"><div class="meta-k">Evidence Class</div><div class="meta-v" id="dp-evidence"></div></div>
+      <div class="meta-pill"><div class="meta-k">Consensus</div><div class="meta-v" id="dp-consensus"></div></div>
+      <div class="meta-pill"><div class="meta-k">Review State</div><div class="meta-v" id="dp-review"></div></div>
+      <div class="meta-pill"><div class="meta-k">Epistemic State</div><div class="meta-v" id="dp-epistemic"></div></div>
+      <div class="meta-pill"><div class="meta-k">Candidate Links</div><div class="meta-v" id="dp-candidates"></div></div>
+      <div class="meta-pill"><div class="meta-k">Cluster Tightness</div><div class="meta-v" id="dp-cluster-badge"></div></div>
+    </div>
+    <div class="dp-desc" id="dp-desc"></div>
+    <div class="dp-ref" id="dp-ref"></div>
+    <div>
+      <div class="dp-section-title">Research Provenance</div>
+      <div class="dp-subtle" id="dp-source-summary">No external research sync has been recorded for this concept yet.</div>
+      <div class="dp-mini-list" id="dp-source-list"></div>
+    </div>
+    <div>
+      <div class="dp-section-title">Confirmed Connections</div>
+      <div class="dp-conn-list" id="dp-conns"></div>
+    </div>
+    <div>
+      <div class="dp-section-title">Candidate Relations</div>
+      <div class="dp-mini-list" id="dp-possible"></div>
+    </div>
+    <div>
+      <div class="dp-section-title">Relation Status</div>
+      <div id="cluster-chip-row">
+        <span class="epistemic-badge confirmed">Confirmed</span>
+        <span class="epistemic-badge candidate">Candidate</span>
+        <span class="epistemic-badge review">Under review</span>
+        <span class="epistemic-badge rejected">Rejected</span>
+        <span class="epistemic-badge insufficient">Insufficient evidence</span>
+      </div>
+      <div class="dp-desc" id="dp-edge-notes"></div>
+    </div>
+    <div>
+      <div class="dp-section-title">Relation Basis</div>
+      <div class="dp-score-grid" id="dp-score-list"></div>
+    </div>
+    <div>
+      <div class="dp-section-title">Cluster Metrics</div>
+      <div class="dp-mini-list" id="dp-cluster-list"></div>
+    </div>
+    <div>
+      <div class="dp-section-title">Provenance & Review</div>
+      <div class="dp-subtle" id="dp-edge-citations">No candidate edge selected.</div>
+    </div>
+    <button class="ctrl-btn" id="dp-focus">Center on concept</button>
+  </div>
+</div>
+
+<div id="tooltip">
+  <h3 id="tt-name"></h3>
+  <p id="tt-desc"></p>
+  <div class="tt-tag" id="tt-cat"></div>
+</div>
+
+<div id="controls">
+  <button class="ctrl-btn accent" id="add-btn">Add Thought</button>
+  <button class="ctrl-btn" id="connect-btn">Connect Mode</button>
+  <button class="ctrl-btn" id="pause-btn">Pause</button>
+  <button class="ctrl-btn" id="layout-btn">Rearrange</button>
+  <button class="ctrl-btn" id="research-btn">Research Sync</button>
+  <button class="ctrl-btn green" id="export-btn">Export JSON + Matrices</button>
+</div>
+
+<div id="hint">Drag to pan - Pinch to zoom - Click a node to inspect - Double-click for detail</div>
+<div id="sim-status"></div>
+<div id="toast"></div>
+
+<div id="modal-bg">
+  <div id="modal">
+    <h2>Chart a New Thought</h2>
+    <div class="field"><label>Concept</label>
+      <input type="text" id="m-name" placeholder="e.g. Embodied Cognition, Dark Energy…"></div>
+    <div class="field"><label>Description</label>
+      <textarea id="m-desc" placeholder="What does this concept encompass?"></textarea></div>
+    <div class="field"><label>Scientific Reference</label>
+      <input type="text" id="m-ref" placeholder="e.g. Clark & Chalmers, 1998"></div>
+    <div class="field"><label>Domain</label><select id="m-cat"></select></div>
+    <div class="field"><label>Evidence Class</label>
+      <select id="m-evidence">
+        <option value="research-grounded">Research-grounded</option>
+        <option value="theoretical">Theoretical</option>
+        <option value="interpretive">Interpretive synthesis</option>
+        <option value="speculative">Speculative</option>
+      </select></div>
+    <div class="field"><label>Consensus label</label>
+      <select id="m-consensus">
+        <option value="curated">Curated</option>
+        <option value="strong">Strong support</option>
+        <option value="emerging">Emerging</option>
+        <option value="contested">Contested</option>
+      </select></div>
+    <div class="field"><label>Connect to (node name, optional)</label>
+      <input type="text" id="m-connect" placeholder="e.g. Consciousness, Memory…"></div>
+    <div class="field"><label>Relationship type</label>
+      <select id="m-relation">
+        <option value="related">Related</option>
+        <option value="extends">Extends</option>
+        <option value="contrasts-with">Contrasts with</option>
+        <option value="supports">Supports</option>
+        <option value="informs">Informs</option>
+        <option value="shares-literature">Shares literature</option>
+      </select></div>
+    <div class="field"><label>Relationship layer</label>
+      <select id="m-edge-status">
+        <option value="confirmed">Confirmed</option>
+        <option value="possible">Possible / candidate</option>
+      </select></div>
+    <div class="field"><label>Confidence (0-1)</label>
+      <input type="number" id="m-confidence" min="0" max="1" step="0.01" placeholder="e.g. 0.72"></div>
+    <div class="field"><label>Grounding basis</label>
+      <input type="text" id="m-basis" placeholder="e.g. semantic overlap; citation overlap; shared authors"></div>
+    <div class="field"><label>Ontology / entity hints</label>
+      <input type="text" id="m-entities" placeholder="e.g. predictive processing; self-model; Q12345"></div>
+    <div class="field"><label>Edge rationale</label>
+      <textarea id="m-edge-rationale" placeholder="Why should this connection exist? Cite overlap, shared authors, topic proximity, or bridge structure."></textarea></div>
+    <div class="field"><label>Edge citations / provenance</label>
+      <input type="text" id="m-edge-citations" placeholder="e.g. OpenAlex:W123; Crossref:10.xxxx/xxxx; Semantic Scholar:paperId"></div>
+    <div class="field"><label>Review metadata</label>
+      <input type="text" id="m-review" placeholder="e.g. pending-review · curator note · checked 2026-03-27"></div>
+    <div id="modal-btns">
+      <button class="modal-btn cancel" id="modal-cancel">Cancel</button>
+      <button class="modal-btn confirm" id="modal-confirm">Chart It</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
