@@ -11,7 +11,8 @@
 
 [Stars](https://iusmusic.github.io/Stars/)
 
-![Preview](/image.png)
+![Preview](/starspreview01.png)
+![Preview](/starspreview02.png)
 
 Project Stars is a browser-based research atlas for representing thoughts, concepts, values, institutions, and social pressures as structured objects within an interpretable conceptual system.
 
