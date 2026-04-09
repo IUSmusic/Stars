@@ -80,12 +80,25 @@ const ctx=gc.getContext('2d');
 const mm=document.getElementById('minimap');
 const mmx=mm.getContext('2d');
 
+function syncViewportVars(){
+  const vv = window.visualViewport;
+  const width = Math.round(vv?.width || window.innerWidth || document.documentElement.clientWidth || 0);
+  const height = Math.round(vv?.height || window.innerHeight || document.documentElement.clientHeight || 0);
+  document.documentElement.style.setProperty('--app-height', `${height}px`);
+  document.documentElement.style.setProperty('--app-width', `${width}px`);
+  return { width, height };
+}
+
 function resize(){
-  W=gc.width=bgC.width=window.innerWidth;
-  H=gc.height=bgC.height=window.innerHeight;
+  const viewport = syncViewportVars();
+  W = gc.width = bgC.width = viewport.width;
+  H = gc.height = bgC.height = viewport.height;
   drawStars();
 }
 window.addEventListener('resize',resize);
+window.visualViewport?.addEventListener('resize', resize);
+window.visualViewport?.addEventListener('scroll', syncViewportVars);
+window.addEventListener('orientationchange',resize);
 window.addEventListener('online',renderSourceStatus);
 window.addEventListener('offline',renderSourceStatus);
 
@@ -1356,52 +1369,158 @@ bootstrap().catch(error => {
   }
 });
 
-(function(){
-  const leftIds = ['brand-card','metrics-corner','receiver-card','experiment-card'];
-  const rightIds = ['research-corner','view-switcher','energy-card','neighborhood-card','layer-legend'];
+
+function createResponsiveShell(){
+  const leftStaticIds = ['brand-card','metrics-corner','receiver-card','experiment-card'];
+  const rightStaticIds = ['research-corner','view-switcher','energy-card','neighborhood-card','layer-legend'];
+  const mobileBreakpoint = 860;
+
   const leftDock = document.createElement('div');
   leftDock.id = 'left-dock';
   const rightDock = document.createElement('div');
   rightDock.id = 'right-dock';
-  document.body.appendChild(leftDock);
-  document.body.appendChild(rightDock);
-  leftIds.forEach(id => { const el = document.getElementById(id); if (el) leftDock.appendChild(el); });
-  rightIds.forEach(id => { const el = document.getElementById(id); if (el) rightDock.appendChild(el); });
 
-  const appControls = document.createElement('div');
-  appControls.id = 'app-controls-card';
-  appControls.className = 'ui-corner';
-  const title = document.createElement('div');
-  title.className = 'corner-title';
-  title.textContent = 'Search & Controls';
-  const note = document.createElement('div');
-  note.className = 'controls-note';
-  note.textContent = 'Pinch to zoom the map. Search, filters, and controls stay in the HUD.';
-  appControls.appendChild(title);
-  const searchWrap = document.getElementById('search-wrap');
-  const filters = document.getElementById('filters');
-  const controls = document.getElementById('controls');
-  if (searchWrap) { searchWrap.style.display='block'; appControls.appendChild(searchWrap); }
-  if (filters) { filters.style.display='flex'; appControls.appendChild(filters); }
-  if (controls) { controls.style.display='grid'; appControls.appendChild(controls); }
-  appControls.appendChild(note);
-  rightDock.appendChild(appControls);
+  const toolbar = document.createElement('div');
+  toolbar.id = 'mobile-toolbar';
+  toolbar.innerHTML = `
+    <div class="mobile-toolbar-group">
+      <button type="button" class="mobile-shell-btn" data-shell-open="left">Atlas</button>
+    </div>
+    <div class="mobile-toolbar-group">
+      <button type="button" class="mobile-shell-btn" data-shell-open="right">Research</button>
+    </div>`;
 
-  const scenarioCard=document.createElement('div');
-  scenarioCard.id='scenario-card';
-  scenarioCard.className='ui-corner';
-  scenarioCard.innerHTML=`<div class="corner-title">Scenario Presets</div><div class="scenario-grid"><button class="ctrl-btn scenario-btn" data-scenario="balanced">Balanced Test</button><button class="ctrl-btn scenario-btn" data-scenario="world">World Mode</button><button class="ctrl-btn scenario-btn" data-scenario="crisis">Crisis Shock</button><button class="ctrl-btn scenario-btn" data-scenario="repair">Repair Cycle</button></div><div class="scenario-note" id="scenario-note">Use these presets to compare fairness testing, world asymmetry, crisis disturbance, and repair.</div>`;
-  rightDock.appendChild(scenarioCard);
+  const scrim = document.createElement('button');
+  scrim.type = 'button';
+  scrim.id = 'mobile-scrim';
+  scrim.setAttribute('aria-label', 'Close drawers');
 
-  const framingCard=document.createElement('div');
-  framingCard.id='final-framing-card';
-  framingCard.className='ui-corner';
-  framingCard.innerHTML=`<div class="corner-title">Experimental Demo</div><div class="framing-note"><strong>Confirmed</strong> edges anchor the stable ontology. <strong>Strong candidates</strong> now weakly influence geometry. Use <strong>Balanced Test</strong> for fairness checking and <strong>World Mode</strong> for social realism under uneven institutions, memory, and pressure.</div>`;
+  const leftDrawer = document.createElement('aside');
+  leftDrawer.id = 'mobile-left-drawer';
+  leftDrawer.className = 'mobile-drawer';
+  leftDrawer.innerHTML = `
+    <div class="mobile-drawer-head">
+      <div class="mobile-drawer-title">Atlas controls</div>
+      <button type="button" class="mobile-shell-btn" data-shell-close="left">Close</button>
+    </div>
+    <div class="mobile-drawer-content"></div>`;
 
-rightDock.appendChild(framingCard);
+  const rightDrawer = document.createElement('aside');
+  rightDrawer.id = 'mobile-right-drawer';
+  rightDrawer.className = 'mobile-drawer';
+  rightDrawer.innerHTML = `
+    <div class="mobile-drawer-head">
+      <div class="mobile-drawer-title">Research console</div>
+      <button type="button" class="mobile-shell-btn" data-shell-close="right">Close</button>
+    </div>
+    <div class="mobile-drawer-content"></div>`;
+
+  document.body.append(leftDock, rightDock, toolbar, scrim, leftDrawer, rightDrawer);
+
+  const leftDrawerContent = leftDrawer.querySelector('.mobile-drawer-content');
+  const rightDrawerContent = rightDrawer.querySelector('.mobile-drawer-content');
+  const dynamicRight = [];
+  let isMobile = false;
+
+  function closeDrawers(){
+    document.body.classList.remove('drawer-left-open','drawer-right-open');
+  }
+
+  function openDrawer(side){
+    document.body.classList.remove(side === 'left' ? 'drawer-right-open' : 'drawer-left-open');
+    document.body.classList.add(side === 'left' ? 'drawer-left-open' : 'drawer-right-open');
+  }
+
+  function moveIds(ids, target){
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.parentElement !== target) target.appendChild(el);
+    });
+  }
+
+  function currentRightHost(){
+    return isMobile ? rightDrawerContent : rightDock;
+  }
+
+  function syncDynamicRight(){
+    const target = currentRightHost();
+    dynamicRight.forEach(el => {
+      if (el.parentElement !== target) target.appendChild(el);
+    });
+  }
+
+  function applyLayout(){
+    const mobileNow = window.innerWidth <= mobileBreakpoint;
+    if (mobileNow !== isMobile) {
+      isMobile = mobileNow;
+      document.body.classList.toggle('is-mobile-shell', isMobile);
+      moveIds(leftStaticIds, isMobile ? leftDrawerContent : leftDock);
+      moveIds(rightStaticIds, isMobile ? rightDrawerContent : rightDock);
+      syncDynamicRight();
+      if (!isMobile) closeDrawers();
+    } else {
+      moveIds(leftStaticIds, isMobile ? leftDrawerContent : leftDock);
+      moveIds(rightStaticIds, isMobile ? rightDrawerContent : rightDock);
+      syncDynamicRight();
+    }
+  }
+
+  toolbar.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-shell-open]');
+    if (!btn) return;
+    openDrawer(btn.dataset.shellOpen);
+  });
+  leftDrawer.addEventListener('click', (event) => {
+    if (event.target.closest('[data-shell-close]')) closeDrawers();
+  });
+  rightDrawer.addEventListener('click', (event) => {
+    if (event.target.closest('[data-shell-close]')) closeDrawers();
+  });
+  scrim.addEventListener('click', closeDrawers);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeDrawers();
+  });
+  window.addEventListener('resize', applyLayout);
+  window.addEventListener('orientationchange', applyLayout);
+  applyLayout();
+
+  return {
+    applyLayout,
+    attachRight(el){
+      dynamicRight.push(el);
+      currentRightHost().appendChild(el);
+    },
+    closeDrawers,
+    isMobile(){ return isMobile; }
+  };
+}
+
+const shell = createResponsiveShell();
+
+const scenarioCard=document.createElement('div');
+scenarioCard.id='scenario-card';
+scenarioCard.className='ui-corner';
+scenarioCard.innerHTML=`<div class="corner-title">Scenario presets</div><div class="scenario-grid"><button class="ctrl-btn scenario-btn" data-scenario="balanced">Balanced test</button><button class="ctrl-btn scenario-btn" data-scenario="world">World mode</button><button class="ctrl-btn scenario-btn" data-scenario="crisis">Crisis shock</button><button class="ctrl-btn scenario-btn" data-scenario="repair">Repair cycle</button></div><div class="scenario-note" id="scenario-note">Use presets to compare fairness checking, world asymmetry, crisis disturbance, and repair on the same atlas.</div>`;
+shell.attachRight(scenarioCard);
+scenarioCard.addEventListener('click', (event) => {
+  const btn = event.target.closest('[data-scenario]');
+  if (!btn) return;
+  applyScenarioPreset(btn.dataset.scenario);
+  if (shell.isMobile()) shell.closeDrawers();
+});
+
+const framingCard=document.createElement('div');
+framingCard.id='final-framing-card';
+framingCard.className='ui-corner';
+framingCard.innerHTML=`<div class="corner-title">Research framing</div><div class="framing-note"><strong>Confirmed</strong> edges anchor the ontology. <strong>Candidate</strong> links remain inspectable hypotheses. The interface stays graph-first across desktop, tablet, and mobile.</div>`;
+shell.attachRight(framingCard);
+
+const evaluationHost = document.createElement('div');
+evaluationHost.dataset.shellDynamic = 'right';
+shell.attachRight(evaluationHost);
 
 installEvaluationPanel({
-  container: rightDock,
+  container: evaluationHost,
   onRun: async () => {
     const report = runEvaluationSuite(getAtlasSnapshot(), GROUNDTRUTH_DATA || { positive: [], negative: [] });
     report.summary = summarizeEvaluationReport(report);
@@ -1414,15 +1533,4 @@ installEvaluationPanel({
   }
 });
 
-scenarioCard.querySelectorAll('[data-scenario]').forEach(btn=>btn.addEventListener('click',()=>applyScenarioPreset(btn.dataset.scenario)));
-
-  const refreshViewport = ()=>{
-    if(typeof fitAll==='function'){
-      setTimeout(()=>fitAll(), 60);
-      setTimeout(()=>fitAll(), 420);
-    }
-  };
-  window.addEventListener('resize', refreshViewport);
-  refreshViewport();
-  syncExperimentSliders();
-})();
+shell.applyLayout();
