@@ -1,6 +1,6 @@
 # Project Stars
 
-[![DOI](https://zenodo.org/badge/1193605849.svg)](https://doi.org/10.5281/zenodo.19486171)
+[![DOI](https://zenodo.org/badge/1193605849.svg)](https://doi.org/10.5281/zenodo.19489299)
 ![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-0a0a0a)
 ![Status](https://img.shields.io/badge/Status-Research%20Prototype-8A2BE2)
 ![Type](https://img.shields.io/badge/Type-Conceptual%20Atlas-1f6feb)
