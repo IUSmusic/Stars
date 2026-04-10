@@ -3,7 +3,7 @@ message: "If you use this software, please cite it using the metadata below."
 title: "Project Stars"
 type: software
 authors:
-  - name: "IUSmusic"
+  - name: "Pezhman Farhangi"
 repository-code: "https://github.com/IUSmusic/Stars"
 url: "https://iusmusic.github.io/stars/"
 abstract: >
